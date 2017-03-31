@@ -1,0 +1,14 @@
+.metadata
+bin/
+tmp/
+*.tmp
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.classpath
+*.log
+*.jar
+*.class
+target/
