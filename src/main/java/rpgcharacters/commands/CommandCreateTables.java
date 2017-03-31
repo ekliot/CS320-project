@@ -8,7 +8,7 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "Create database tables")
 public class CommandCreateTables implements Command {
-    
+    // heres a comment
     public void run(Connection conn) {
         // Creates all tables in the database
         try {
