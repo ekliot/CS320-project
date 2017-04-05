@@ -16,19 +16,19 @@ public class CommandCreateQuest implements Command {
     private String name;
 
     // pass as '... --description "this is an example description" ...'
-    @Parameter(names = "--description",
+    @Parameter(names = {"--description","--desc"},
                description = "Description for the quest being created",
                required = true)
     private String description;
 
     // pass as '... --experience 35 ...'
-    @Parameter(names = {"--experience","--exp"},
+    @Parameter(names = {"--experience","--exp","--xp"},
                description = "Ammount of experience gained by completing the quest",
                required = true)
     private int experience;
 
     // pass as '... --item-name "sword thing" ...'
-    @Parameter(names = "--item-name",
+    @Parameter(names = {"--item-name","--item"},
                description = "Name of the reward item",
                required = true)
     private String itemName;
@@ -36,7 +36,6 @@ public class CommandCreateQuest implements Command {
     @Override
     public void run(Connection conn) {
         try {
-
             String query = "INSERT INTO quest VALUES ("
                          + "'" + name + "'"
                          + ","
@@ -49,11 +48,10 @@ public class CommandCreateQuest implements Command {
 
             Statement stmt = conn.createStatement();
             stmt.execute(query);
-	    
-            System.out.println("Quest " + name + " has been created!");
-      } catch (SQLException e) {
-          e.printStackTrace();
-      }
-    }
 
+            System.out.println("Quest " + name + " has been created!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
