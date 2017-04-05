@@ -35,6 +35,7 @@ public class CommandLogin implements Command {
             results.last();
             if (results.getRow() == 1) {
                 System.out.println("Welcome, " + results.getString("username") + "!");
+                // TODO: persist user login
             } else {
                 System.out.println("Invalid Username/Password Combination");
             }
