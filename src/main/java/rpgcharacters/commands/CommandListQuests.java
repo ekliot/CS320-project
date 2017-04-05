@@ -9,18 +9,26 @@ import com.beust.jcommander.Parameters;
 public class CommandListQuests implements Command {
 
     private void printQuest (String name,String desc,int exp,String item) {
-      System.out.println("Quest Name: " + name);
-      System.out.println("Quest Description:");
+        System.out.println("Quest Name: " + name);
+        System.out.println("Quest Description:");
 
-      String[] descTokens = desc.split("(?<=\\G.{46})"); // split string into lines of max length 46
-      for (String tok : descTokens) {
-        System.out.println("\t" + tok);
-      }
+        String[] descTokens = desc.split(" ");
+        int curLen = 0;
+        for (String tok : descTokens) {
+          if (curLen + tok.length() > 46) {
+              System.out.println(tok);
+              curLen = 0;
+          }
+          else {
+              System.out.print(tok + " ");
+              curLen += tok.length();
+          }
+        }
 
-      System.out.println("Quest Exp: " + Integer.toString(exp));
-      System.out.println("Quest Reward Item: " + item);
+        System.out.println("Quest Exp: " + Integer.toString(exp));
+        System.out.println("Quest Reward Item: " + item);
 
-      System.out.println("--------------------------------------------------"); // length 50
+        System.out.println("--------------------------------------------------"); // length 50
     }
 
     @Override
@@ -32,16 +40,13 @@ public class CommandListQuests implements Command {
             ResultSet results = stmt.executeQuery(query);
 
             results.beforeFirst();
-            results.last();
-            int size = results.getRow();
 
-            for (int i = 0; i < size; i++) {
-              results.absolute(i);
-              String name = results.getString("name");
-              String desc = results.getString("description");
-              int exp = results.getInt("experience");
-              String item = results.getString("item_name");
-              printQuest(name,desc,exp,item);
+            while (results.next()) {
+                String name = results.getString("name");
+                String desc = results.getString("description");
+                int exp = results.getInt("experience");
+                String item = results.getString("item_name");
+                printQuest(name,desc,exp,item);
             }
         } catch (SQLException e) {
             e.printStackTrace();
