@@ -41,7 +41,7 @@ public class CommandCreateQuest implements Command {
 
             Statement stmt = conn.createStatement();
             stmt.execute(query);
-            System.out.println("Welcome, " + username + "!");
+            System.out.println("Quest " + name + " has been created!");
       } catch (SQLException e) {
           e.printStackTrace();
       }
