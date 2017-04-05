@@ -8,6 +8,21 @@ import com.beust.jcommander.Parameters;
 @Parameters(commandDescription = "List all quests")
 public class CommandListQuests implements Command {
 
+    private void printQuest (String name,String desc,int exp,String item) {
+      System.out.println("Quest Name: " + name);
+      System.out.println("Quest Description:");
+
+      String[] descTokens = desc.split("(?<=\\G.{46})"); // split string into lines of max length 46
+      for (String tok : descTokens) {
+        System.out.println("\t" + tok);
+      }
+
+      System.out.println("Quest Exp: " + Integer.toString(exp));
+      System.out.println("Quest Reward Item: " + item);
+
+      System.out.println("--------------------------------------------------"); // length 50
+    }
+
     @Override
     public void run(Connection conn) {
         try {
@@ -16,14 +31,18 @@ public class CommandListQuests implements Command {
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
 
-            Array names = results.getArray("name");
-            Array descs = results.getArray("description");
-            Array exps = results.getArray("experience");
-            Array items = results.getArray("item_name");
+            results.beforeFirst();
+            results.last();
+            int size = results.getRow();
 
-
-
-            System.out.println("Welcome, " + username + "!");
+            for (int i = 0; i < size; i++) {
+              results.absolute(i);
+              String name = results.getString("name");
+              String desc = results.getString("description");
+              int exp = results.getInt("experience");
+              String item = results.getString("item_name");
+              printQuest(name,desc,exp,item);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
