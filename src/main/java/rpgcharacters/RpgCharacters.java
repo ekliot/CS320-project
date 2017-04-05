@@ -10,6 +10,7 @@ import com.beust.jcommander.Parameter;
 
 import rpgcharacters.commands.*;
 
+
 public class RpgCharacters {
     @Parameter(names = { "--help", "-h" },
                description = "Show this message",
@@ -21,24 +22,27 @@ public class RpgCharacters {
         RpgCharacters rpg = new RpgCharacters();
         JCommander jc = new JCommander(rpg);
         jc.setProgramName("RpgCharacters");
-        
+
         // Add commands
         Hashtable<String, Command> commands = new Hashtable<String, Command>();
+      
         commands.put("create-tables", new CommandCreateTables());
         commands.put("create-user", new CommandCreateUser());
+        commands.put("create-item", new CommandCreateItem());
+
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));
         }
-        
+
         // Parse args
         jc.parse(args);
-        
+
         // Output usage if no args or help option input
         if (args.length == 0 || rpg.help) {
             jc.usage();
             return;
         }
-        
+
         // Create db connection
         Connection conn;
         try {
@@ -51,7 +55,7 @@ public class RpgCharacters {
             e.printStackTrace();
             return;
         }
-        
+
         // Run desired command
         for (String command : commands.keySet()) {
             if (jc.getParsedCommand() == command) {
@@ -59,7 +63,7 @@ public class RpgCharacters {
                 break;
             }
         }
-        
+
         // Close db connection
         try {
             conn.close();
