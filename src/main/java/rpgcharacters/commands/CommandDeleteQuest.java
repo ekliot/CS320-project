@@ -19,11 +19,11 @@ public class CommandDeleteQuest implements Command {
     @Override
     public void run(Connection conn) {
         try {
-          String checkQuery = "SELECT * FROM quest" +
+          String query = "SELECT * FROM quest" +
                               "WHERE name='" + name + "';";
 
           Statement checkStmt = conn.createStatement();
-          ResultSet results = checkStmt.executeQuery(checkQuery);
+          ResultSet results = checkStmt.executeQuery(query);
 
           results.last();
           int total = results.getRow();
@@ -32,11 +32,11 @@ public class CommandDeleteQuest implements Command {
             System.out.println("Quest " + name + " does not exist.");
           }
           else {
-            String deleteQuery = "DELETE FROM quest " +
+            query = "DELETE FROM quest " +
                                  "WHERE name='" + name + "';";
 
             Statement deleteStmt = conn.createStatement();
-            deleteStmt.execute(deleteQuery);
+            deleteStmt.execute(query);
 
             System.out.println("Quest " + name + " has been deleted.");
           }
