@@ -28,6 +28,12 @@ public class CommandCreateQuest implements Command {
                required = true)
     private int experience;
 
+    // pass as '... --item "sword thing" ...'
+    @Parameter(names = "--item",
+               description = "Name of the reward item",
+               required = true)
+    private String item;
+
     @Override
     public void run(Connection conn) {
         try {
@@ -37,6 +43,8 @@ public class CommandCreateQuest implements Command {
                          + "'" + description + "'"
                          + ","
                          + "'" + experience + "'"
+                         + ","
+                         + "'" + item + "'"
                          + ");";
 
             Statement stmt = conn.createStatement();
