@@ -25,10 +25,11 @@ public class RpgCharacters {
 
         // Add commands
         Hashtable<String, Command> commands = new Hashtable<String, Command>();
-      
+
         commands.put("create-tables", new CommandCreateTables());
         commands.put("create-user", new CommandCreateUser());
         commands.put("create-item", new CommandCreateItem());
+        commands.put("delete-item", new CommandDeleteItem());
 
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));
