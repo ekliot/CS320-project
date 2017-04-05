@@ -1,5 +1,4 @@
 package rpgcharacters.commands;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,27 +27,29 @@ public class CommandCreateQuest implements Command {
                required = true)
     private int experience;
 
-    // pass as '... --item "sword thing" ...'
-    @Parameter(names = "--item",
+    // pass as '... --item-name "sword thing" ...'
+    @Parameter(names = "--item-name",
                description = "Name of the reward item",
                required = true)
-    private String item;
+    private String itemName;
 
     @Override
     public void run(Connection conn) {
         try {
+
             String query = "INSERT INTO quest VALUES ("
                          + "'" + name + "'"
                          + ","
                          + "'" + description + "'"
                          + ","
-                         + "'" + experience + "'"
+                         + experience
                          + ","
-                         + "'" + item + "'"
+                         + "'" + itemName + "'"
                          + ");";
 
             Statement stmt = conn.createStatement();
             stmt.execute(query);
+	    
             System.out.println("Quest " + name + " has been created!");
       } catch (SQLException e) {
           e.printStackTrace();
