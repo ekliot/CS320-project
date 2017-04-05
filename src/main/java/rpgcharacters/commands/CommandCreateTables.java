@@ -42,9 +42,9 @@ public class CommandCreateTables implements Command {
             String query = "CREATE TABLE IF NOT EXISTS race("
                          + "name VARCHAR(255) PRIMARY KEY,"
                          + "power_mod INT NOT NULL,"
+                         + "proficiency_mod INT NOT NULL,"
                          + "personality_mod INT NOT NULL,"
-                         + "perception_mod INT NOT NULL,"
-                         + "proficiency_mod INT NOT NULL"
+                         + "perception_mod INT NOT NULL"
                          + ");";
 
             Statement stmt = conn.createStatement();
@@ -60,9 +60,9 @@ public class CommandCreateTables implements Command {
             String query = "CREATE TABLE IF NOT EXISTS archetype("
                     + "name VARCHAR(255) PRIMARY KEY,"
                     + "power_mod INT NOT NULL,"
+                    + "proficiency_mod INT NOT NULL,"
                     + "personality_mod INT NOT NULL,"
-                    + "perception_mod INT NOT NULL,"
-                    + "proficiency_mod INT NOT NULL"
+                    + "perception_mod INT NOT NULL"
                     + ");";
 
             Statement stmt = conn.createStatement();
@@ -77,7 +77,7 @@ public class CommandCreateTables implements Command {
         try {
             String query = "CREATE TABLE IF NOT EXISTS item("
                          + "name VARCHAR(255) PRIMARY KEY,"
-                         + "description VARCHAR(255)"
+                         + "description VARCHAR(65535)"
                          + ");";
 
             Statement stmt = conn.createStatement();
@@ -113,11 +113,11 @@ public class CommandCreateTables implements Command {
                          + "party_id INT NOT NULL,"
                          + "race_name VARCHAR(255) NOT NULL,"
                          + "archetype_name VARCHAR(255) NOT NULL,"
-                         + "story VARCHAR(255),"
+                         + "story VARCHAR(65535),"
                          + "power INT NOT NULL,"
+                         + "proficiency INT NOT NULL,"
                          + "personality INT NOT NULL,"
                          + "perception INT NOT NULL,"
-                         + "proficiency INT NOT NULL,"
                          + "experience INT NOT NULL,"
                          + "PRIMARY KEY (user_username, name),"
                          + "FOREIGN KEY (user_username) references user(username),"
@@ -138,7 +138,7 @@ public class CommandCreateTables implements Command {
         try {
             String query = "CREATE TABLE IF NOT EXISTS quest("
                          + "name VARCHAR(255) PRIMARY KEY,"
-                         + "description VARCHAR(255),"
+                         + "description VARCHAR(65535),"
                          + "experience INT NOT NULL,"
                          + "item_name VARCHAR(255) NOT NULL,"
                          + "FOREIGN KEY (item_name) references item(name)"
@@ -180,7 +180,8 @@ public class CommandCreateTables implements Command {
                          + "status VARCHAR(255) NOT NULL,"
                          + "PRIMARY KEY (party_id, quest_name),"
                          + "FOREIGN KEY (party_id) references party(id),"
-                         + "FOREIGN KEY (quest_name) references quest(name)"
+                         + "FOREIGN KEY (quest_name) references quest(name),"
+                         + "CHECK (status in ('Active', 'Complete'))"
                          + ");";
 
             Statement stmt = conn.createStatement();
