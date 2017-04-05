@@ -9,7 +9,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "Create a item")
-public class CommandCreateQuest implements Command {
+public class CommandCreateItem implements Command {
     // pass as '... --name "example name" ...'
     @Parameter(names = "--name",
                description = "Name of the item being created",

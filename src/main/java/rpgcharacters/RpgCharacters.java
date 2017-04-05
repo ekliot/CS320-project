@@ -10,6 +10,7 @@ import com.beust.jcommander.Parameter;
 
 import rpgcharacters.commands.Command;
 import rpgcharacters.commands.CommandCreateTables;
+import rpgcharacters.commands.CommandCreateItem;
 
 public class RpgCharacters {
     @Parameter(names = { "--help", "-h" },
