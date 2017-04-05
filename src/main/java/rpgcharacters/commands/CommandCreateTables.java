@@ -110,7 +110,7 @@ public class CommandCreateTables implements Command {
             String query = "CREATE TABLE IF NOT EXISTS character("
                          + "user_username VARCHAR(255) NOT NULL,"
                          + "name VARCHAR(255) NOT NULL,"
-                         + "party_id INT NOT NULL,"
+                         + "party_id INT,"
                          + "race_name VARCHAR(255) NOT NULL,"
                          + "archetype_name VARCHAR(255) NOT NULL,"
                          + "story VARCHAR(65535),"
