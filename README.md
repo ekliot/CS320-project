@@ -23,6 +23,19 @@ The Foreign Keys
   Commands:
     create-tables      Create database tables
       Usage: create-tables [options]
+    create-character   Creates a character
+      Usage: create-character [character options]
+  Options:
+    Character options:
+      --name           The name of the character to create
+      --username       The username of the character's owner
+      --race           The character's race
+      --archetype      The character's archetype
+      --story          <optional> The characters story
+      --power          The power stat of the character
+      --proficiency    The proficiency stat of the character
+      --personality    The personality stat of the character
+      --perception     The perception stat of the character
 ```
 
 This project uses [JCommander](http://jcommander.org/) to parse command line arguments.

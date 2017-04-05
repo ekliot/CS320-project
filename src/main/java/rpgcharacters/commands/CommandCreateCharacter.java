@@ -82,7 +82,6 @@ public class CommandCreateItem implements Command {
     @Override
     public void run( Connection conn ) {
         try {
-            // TODO double check the ordering of values after the table creation schema is finalized
             String query =
                 "INSERT INTO character VALUES ( "
                 + "'" + username    + "', "
@@ -94,10 +93,10 @@ public class CommandCreateItem implements Command {
                   : ""
                 )
                 + "'" + power       + "', "
+                + "'" + proficiency + "', "
                 + "'" + personality + "', "
                 + "'" + perception  + "', "
-                + "'" + proficiency + "', "
-                + "'" + experience  + "', "
+                + "'" + 0           + "', " // characters have 0 xp on creation
                 + " );";
 
             Statement stmt = conn.createStatement();
