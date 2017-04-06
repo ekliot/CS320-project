@@ -84,15 +84,20 @@ public class CommandListCharacters implements Command {
         if ( partyID != null ) {
             String query = "SELECT name FROM party WHERE id=" + partyID + ";";
             Statement stmt = conn.createStatement();
-            ResultSet result = stmt.execute( query );
 
-            result.beforeFirst();
+            try {
+                ResultSet result = stmt.execute( query );
 
-            // if the partyID matches an existing party
-            if ( result.next() ) {
-                System.out.println( "Member of " + result.getString( name ) );
+                result.beforeFirst();
+
+                // if the partyID matches an existing party
+                if ( result.next() ) {
+                    System.out.println( "Member of " + result.getString( name ) );
+                }
+                // no else, user shouldn't care
+            } catch ( SQLException e ) {
+                e.printStackTrace();
             }
-            // no else, user shouldn't care
 
             // TODO print out user's party members?
         }
@@ -145,7 +150,7 @@ public class CommandListCharacters implements Command {
      * TODO docstring
     **/
     @Override
-    public void run(Connection conn) {
+    public void run( Connection conn ) {
         try {
             // root (unfinished) query
             String query = "SELECT * FROM character";
@@ -177,7 +182,7 @@ public class CommandListCharacters implements Command {
             result = stmt.execute( query );
             printCharacters( result );
 
-        } catch (SQLException e) {
+        } catch ( SQLException e ) {
             e.printStackTrace();
         }
     }
