@@ -23,6 +23,11 @@ The Foreign Keys
   Commands:
     create-tables      Create database tables
       Usage: create-tables [options]
+    list-characters    List characters in the database
+      Usage: list-characters [list-characters options]
+  Options:
+    list-characters
+      --username, --user  <optional> specify which user's characters to list
 ```
 
 This project uses [JCommander](http://jcommander.org/) to parse command line arguments.
