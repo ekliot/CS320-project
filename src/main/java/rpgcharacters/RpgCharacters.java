@@ -8,8 +8,7 @@ import java.util.Hashtable;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
-import rpgcharacters.commands.Command;
-import rpgcharacters.commands.CommandCreateTables;
+import rpgcharacters.commands.*;
 
 public class RpgCharacters {
     @Parameter(names = { "--help", "-h" },
@@ -25,8 +24,15 @@ public class RpgCharacters {
 
         // Add commands
         Hashtable<String, Command> commands = new Hashtable<String, Command>();
+      
         commands.put("create-tables", new CommandCreateTables());
+  
+        commands.put("login", new CommandLogin());
+      
+        commands.put("create-user", new CommandCreateUser());
+        commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
+
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));
         }
