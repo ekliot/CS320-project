@@ -8,7 +8,7 @@ import com.beust.jcommander.Parameters;
 @Parameters(commandDescription = "List all items")
 public class CommandListItems implements Command {
 
-    private void printQuest (String name,String desc) {
+    private void printItem (String name,String desc) {
         System.out.println("Item Name: " + name);
         System.out.println("Item Description:");
 
@@ -16,16 +16,16 @@ public class CommandListItems implements Command {
         int curLen = 0;
         for (String tok : descTokens) {
           if (curLen + tok.length() > 46) {
-              System.out.println(tok);
+              System.out.println("\n" + tok);
               curLen = 0;
           }
           else {
               System.out.print(tok + " ");
-              curLen += tok.length();
+              curLen += tok.length() + 1;
           }
         }
 
-        System.out.println("--------------------------------------------------"); // length 50
+        System.out.println("\n--------------------------------------------------"); // length 50
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CommandListItems implements Command {
             while (results.next()) {
                 String name = results.getString("name");
                 String desc = results.getString("description");
-                printQuest(name,desc);
+                printItem(name,desc);
             }
         } catch (SQLException e) {
             e.printStackTrace();
