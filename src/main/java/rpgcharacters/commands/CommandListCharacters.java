@@ -40,7 +40,7 @@ public class CommandListCharacters implements Command {
 
             printCharacter( count,
                 results.getString( "name" ),
-                results.getInt( "partyID" ),
+                results.getInt( "party_id" ),
                 results.getString( "race" ),
                 results.getString( "archetype" ),
                 results.getString( "story" ),
@@ -160,7 +160,7 @@ public class CommandListCharacters implements Command {
             // if a username was specified, modify the query to get only that user's characters
             if ( username != "" ) {
                 // count the users with this username (should be 0 or 1)
-                String userCheck = "SELECT COUNT(username) AS usercount FROM user WHERE username=" + username + ";";
+                String userCheck = "SELECT COUNT(username) AS usercount FROM user WHERE username='" + username + "';";
                 result = stmt.execute( userCheck );
 
                 // sanity check to go before first
@@ -169,7 +169,7 @@ public class CommandListCharacters implements Command {
                 // check if the result set actually has a row, and that the
                 // usercount isn't 0 (i.e. a user of username==username exists)
                 if ( result.next() && result.getInt( "usercount" ) == 1 ) {
-                    query += " WHERE username=" + username + ";";
+                    query += " WHERE username='" + username + "';";
                 } else {
                     System.out.println( "User with username " + username + " could not be found, listing all characters instead" );
                     username = "";
