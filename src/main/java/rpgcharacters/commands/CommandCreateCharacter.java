@@ -86,25 +86,26 @@ public class CommandCreateItem implements Command {
                 "INSERT INTO character VALUES ( "
                 + "'" + username    + "', "
                 + "'" + name        + "', "
+                + "NULL, " // party_id = NULL
                 + "'" + race        + "', "
                 + "'" + archetype   + "', "
-                + ( story != "NULL" // just add an empty string if a story wasn't provided
-                  ? "'" + story       + "', "
-                  : ""
-                )
-                + "'" + power       + "', "
-                + "'" + proficiency + "', "
-                + "'" + personality + "', "
-                + "'" + perception  + "', "
-                + "'" + 0           + "', " // characters have 0 xp on creation
+                + ( story != "NULL" // wrap story in single-quotes if story is provided
+                  ? "'" + story     + "'"
+                  : story
+                ) + ", "
+                + power       + ", "
+                + proficiency + ", "
+                + personality + ", "
+                + perception  + ", "
+                + 0           + ", " // characters have 0 xp on creation
                 + " );";
 
             Statement stmt = conn.createStatement();
             stmt.execute( query );
             System.out.println( username + "'s character, " + name + ", has been created!" );
-      } catch ( SQLException e ) {
-          e.printStackTrace();
-      }
+        } catch ( SQLException e ) {
+            e.printStackTrace();
+        }
     }
 
 }
