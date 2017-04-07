@@ -23,7 +23,7 @@ public class CommandListCharacters implements Command {
     /**
      * TODO docstring
      **/
-    private void printCharacters( ResultSet chars ) {
+    private void printCharacters( Connection conn, ResultSet chars ) {
         // print a buffer line
         System.out.println();
 
@@ -38,7 +38,7 @@ public class CommandListCharacters implements Command {
 
             count++;
 
-            printCharacter( count,
+            printCharacter( conn, count,
                 results.getString( "name" ),
                 results.getInt( "party_id" ),
                 results.getString( "race" ),
@@ -65,7 +65,7 @@ public class CommandListCharacters implements Command {
     /**
      * TODO docstring
      **/
-    private void printCharacter( Int number, String name, Int partyID,
+    private void printCharacter( Connection conn, Int number, String name, Int partyID,
                                  String race, String archetype, String story,
                                  Int power, Int proficiency, Int personality,
                                  Int perception, Int experience ) {
@@ -180,7 +180,7 @@ public class CommandListCharacters implements Command {
             }
 
             result = stmt.execute( query );
-            printCharacters( result );
+            printCharacters( conn, result );
 
         } catch ( SQLException e ) {
             e.printStackTrace();
