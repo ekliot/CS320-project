@@ -19,7 +19,7 @@ public class CommandDeleteItem implements Command {
     @Override
     public void run(Connection conn) {
         try {
-            String checkQuery = "SELECT * FROM item" +
+            String checkQuery = "SELECT * FROM item " +
                                 "WHERE name='" + name + "';";
 
             Statement checkStmt = conn.createStatement();
@@ -29,16 +29,16 @@ public class CommandDeleteItem implements Command {
             int total = results.getRow();
 
             if (total == 0) {
-              System.out.println("Item " + name + " does not exist.");
+                System.out.println("Item " + name + " does not exist.");
             }
             else {
-              String deleteQuery = "DELETE FROM item " +
-                                   "WHERE name='" + name + "';";
+                String deleteQuery = "DELETE FROM item " +
+                                     "WHERE name='" + name + "';";
 
-              Statement deleteStmt = conn.createStatement();
-              deleteStmt.execute(deleteQuery);
+                Statement deleteStmt = conn.createStatement();
+                deleteStmt.execute(deleteQuery);
 
-              System.out.println("Item " + name + " has been deleted.");
+                System.out.println("Item " + name + " has been deleted.");
             }
       } catch (SQLException e) {
           e.printStackTrace();
