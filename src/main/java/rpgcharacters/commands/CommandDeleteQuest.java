@@ -19,7 +19,7 @@ public class CommandDeleteQuest implements Command {
     @Override
     public void run(Connection conn) {
         try {
-          String query = "SELECT * FROM quest" +
+          String query = "SELECT * FROM quest " +
                               "WHERE name='" + name + "';";
 
           Statement checkStmt = conn.createStatement();
