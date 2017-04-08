@@ -16,13 +16,19 @@ public class CommandAddParty implements Command {
             description = "Name of party",
             required = true)
     private String party;
+    
+    @Parameter(names = "--username",
+            description = "",
+            required = true)
+    private String username;
 
     @Override
     public void run(Connection connection) {
         try {
             String query = "SELECT * "
                     +"FROM character "
-                    + "WHERE name =" + this.name + ";";
+                    + "WHERE name =" + "'" + this.name
+                    + "' AND user_name ='" + this.username + "';";
 
             Statement st = connection.createStatement();
             ResultSet results = st.executeQuery(query);
@@ -32,13 +38,12 @@ public class CommandAddParty implements Command {
             if( total == 0 ) {
                 query = "SELECT party_id, name "
                         + "FROM party "
-                        + "WHERE name =" + this.name + ";";
+                        + "WHERE name ='" + this.name + "';";
                 Statement findID = connection.createStatement();
 
                 String query2 = "UPDATE character "
                         + "SET party_id = " + findID.executeQuery(query).getInt("party_id")
-                        + " WHERE name =" + this.name + ";";
-
+                        + " WHERE name ='" + this.name + "';";
                 Statement rm = connection.createStatement();
                 rm.execute(query2);
 
