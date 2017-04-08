@@ -10,7 +10,6 @@ import com.beust.jcommander.Parameter;
 
 import rpgcharacters.commands.*;
 
-
 public class RpgCharacters {
     @Parameter(names = { "--help", "-h" },
                description = "Show this message",
@@ -27,9 +26,16 @@ public class RpgCharacters {
         Hashtable<String, Command> commands = new Hashtable<String, Command>();
 
         commands.put("create-tables", new CommandCreateTables());
+  
+        commands.put("login", new CommandLogin());
+      
         commands.put("create-user", new CommandCreateUser());
         commands.put("create-item", new CommandCreateItem());
+        commands.put("create-quest", new CommandCreateQuest());
+        
         commands.put("list-items", new CommandListItems());
+        commands.put("list-quests", new CommandListQuests());
+
 
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));

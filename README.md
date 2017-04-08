@@ -23,6 +23,8 @@ The Foreign Keys
   Commands:
     create-tables      Create database tables
       Usage: create-tables [options]
+    list-quests        Lists all quests
+      Usage: list-quests
 ```
 
 This project uses [JCommander](http://jcommander.org/) to parse command line arguments.
