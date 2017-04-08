@@ -12,13 +12,19 @@ public class CommandDeleteParty implements Command {
     description = "Name of character to delete from party",
             required = true)
     private String name;
+    
+    @Parameter(names = "--username",
+            description = "",
+            required = true)
+    private String username;
 
     @Override
     public void run(Connection connection) {
         try {
             String query = "SELECT * "
                     +"FROM character "
-                    + "WHERE name =" + this.name + ";";
+                    + "WHERE name = '" + this.name
+                    + "' AND user_name ='" + this.username + "';";
 
             Statement st = connection.createStatement();
             ResultSet results = st.executeQuery(query);
@@ -29,8 +35,9 @@ public class CommandDeleteParty implements Command {
                 System.out.format("Character %s is not in the party\n", this.name);
             } else {
                 query = "UPDATE character "
-                        + "SET party_id = NULL"
-                        + "WHERE character.name =" + this.name + ";";
+                        + "SET party_id = NULL "
+                        + "WHERE character.name ='" + this.name + "';";
+                
                 Statement rm = connection.createStatement();
                 rm.execute(query);
                 System.out.format("Character %s has been successfully deleted from the party.\n",
