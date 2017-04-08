@@ -35,12 +35,12 @@ public class CommandListParties implements Command {
 
                 try {
                     String query2 = "SELECT * FROM character"
-                            + "WHERE" + id + "= party_id";
+                            + " WHERE party_id=" + id;
                     Statement s2 = connection.createStatement();
                     ResultSet results2 = s2.executeQuery(query2);
                     results2.beforeFirst();
                     resultsStr.clear();
-                    while( results2 != null) {
+                    while( results2.next()) {
                         resultsStr.add(results2.getString("name"));
                     }
                 } catch( SQLException e ) {
