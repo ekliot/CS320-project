@@ -17,12 +17,14 @@ public class CommandCreateParty implements Command {
     required = true)
     private String gm;
 
-    public void run(Connection connection {
+    public void run(Connection connection) {
         try {
-            String query = "INSEERT * INTO party ("
+            String query = "INSEERT INTO party ('"
+                            + this.name + "', '" + this.gm
+                         + "') VALUES("
                          + "'" + this.name + "'"
                          + "'" + this.name + "'"
-                         + "'" + this.gm + "'";
+                         + "'" + this.gm + "';";
 
             Statement st = connection.createStatement();
             st.executeQuery(query);
