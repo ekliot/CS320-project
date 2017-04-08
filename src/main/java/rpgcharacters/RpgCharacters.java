@@ -31,9 +31,9 @@ public class RpgCharacters {
       
         commands.put("create-user", new CommandCreateUser());
         commands.put("create-character", new CommandCreateCharacter());
+        commands.put("list-characters", new CommandListCharacters());
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
-        
         commands.put("list-quests", new CommandListQuests());
 
         for (String command : commands.keySet()) {
