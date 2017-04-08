@@ -23,6 +23,8 @@ The Foreign Keys
   Commands:
     create-tables      Create database tables
       Usage: create-tables [options]
+    list-quests        Lists all quests
+      Usage: list-quests
     create-character   Creates a character
       Usage: create-character [character options]
   Options:
