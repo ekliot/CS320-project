@@ -14,9 +14,14 @@ public class CommandRemoveFromParty implements Command {
     private String name;
 
     @Parameter(names = "--username",
-            description = "",
+            description = "Owner of character",
             required = true)
     private String username;
+    
+    @Parameter(names = "--party",
+             description = "Name of party",
+             required = true)
+    private String party;
 
     @Override
     public void run(Connection connection) {
@@ -33,12 +38,12 @@ public class CommandRemoveFromParty implements Command {
             results.last();
             int total = results.getRow();
             if( total == 0 ) {
-                System.out.format("Character %s is not in the party\n", this.name);
+                System.out.format("Could not find character %s in party %s\n", this.name, this.party);
             } else {
                 query = "UPDATE character "
                         + "SET party_id = NULL "
                         + "WHERE character.name ='" + this.name + "' "
-                        + "AND character.user_username ='" + this.name + "';";
+                        + "AND character.user_username ='" + this.username + "';";
                 Statement rm = connection.createStatement();
                 rm.execute(query);
                 System.out.format("Character %s has been successfully deleted from the party.\n",
