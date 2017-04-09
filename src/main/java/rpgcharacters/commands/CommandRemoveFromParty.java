@@ -24,7 +24,7 @@ public class CommandRemoveFromParty implements Command {
             String query = "SELECT * "
                     +"FROM character "
                     + "WHERE name = '" + this.name
-                    + "' AND user_name ='" + this.username + "'"
+                    + "' AND user_name ='" + this.username + "' "
                     + "AND party_id IS NOT NULL;";
 
             Statement st = connection.createStatement();
@@ -37,7 +37,7 @@ public class CommandRemoveFromParty implements Command {
             } else {
                 query = "UPDATE character "
                         + "SET party_id = NULL "
-                        + "WHERE character.name ='" + this.name + "'"
+                        + "WHERE character.name ='" + this.name + "' "
                         + "AND character.user_username ='" + this.name + "';";
                 Statement rm = connection.createStatement();
                 rm.execute(query);
