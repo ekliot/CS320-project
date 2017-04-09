@@ -2,7 +2,6 @@ package rpgcharacters.commands;
 
 import java.sql.*;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "List all quests")

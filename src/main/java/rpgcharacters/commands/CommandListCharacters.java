@@ -27,29 +27,34 @@ public class CommandListCharacters implements Command {
         // print a buffer line
         System.out.println();
 
-        Int count = 0;
-        chars.beforeFirst();
-
-        while ( chars.next() ) {
-            // only print divider before non-first characters (or after non-last characters)
-            if ( count > 0 ) {
-                System.out.println( "--------------------------------------------------" ); // '-' * 50
+        int count = 0;
+        
+        try {
+            chars.beforeFirst();
+    
+            while ( chars.next() ) {
+                // only print divider before non-first characters (or after non-last characters)
+                if ( count > 0 ) {
+                    System.out.println( "--------------------------------------------------" ); // '-' * 50
+                }
+    
+                count++;
+    
+                printCharacter( conn, count,
+                    chars.getString( "name" ),
+                    chars.getInt( "party_id" ),
+                    chars.getString( "race" ),
+                    chars.getString( "archetype" ),
+                    chars.getString( "story" ),
+                    chars.getInt( "power" ),
+                    chars.getInt( "proficiency" ),
+                    chars.getInt( "personality" ),
+                    chars.getInt( "perception" ),
+                    chars.getInt( "experience" )
+                );
             }
-
-            count++;
-
-            printCharacter( conn, count,
-                results.getString( "name" ),
-                results.getInt( "party_id" ),
-                results.getString( "race" ),
-                results.getString( "archetype" ),
-                results.getString( "story" ),
-                results.getInt( "power" ),
-                results.getInt( "proficiency" ),
-                results.getInt( "personality" ),
-                results.getInt( "perception" ),
-                results.getInt( "experience" )
-            );
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         // if count was unmodified (i.e. ResultSet had no characters), print an error
@@ -65,10 +70,10 @@ public class CommandListCharacters implements Command {
     /**
      * TODO docstring
      **/
-    private void printCharacter( Connection conn, Int number, String name, Int partyID,
+    private void printCharacter( Connection conn, int number, String name, int partyID,
                                  String race, String archetype, String story,
-                                 Int power, Int proficiency, Int personality,
-                                 Int perception, Int experience ) {
+                                 int power, int proficiency, int personality,
+                                 int perception, int experience ) {
 
         System.out.println( "Character " + number );
 
@@ -81,12 +86,13 @@ public class CommandListCharacters implements Command {
         }
 
         // if the character has a partyID, find the name of the associated party
-        if ( partyID != null ) {
+        // ResultSet getInt returns 0 if the value is null
+        if ( partyID != 0 ) {
             String query = "SELECT name FROM party WHERE id=" + partyID + ";";
-            Statement stmt = conn.createStatement();
 
             try {
-                ResultSet result = stmt.execute( query );
+                Statement stmt = conn.createStatement();
+                ResultSet result = stmt.executeQuery( query );
 
                 result.beforeFirst();
 
@@ -110,7 +116,7 @@ public class CommandListCharacters implements Command {
         if ( story != null && story != "" ) {
             System.out.print( "Story: " );
 
-            String[] descTokens = desc.split( " " );
+            String[] descTokens = story.split( " " );
 
             // start at 7 to account for "Story: "
             int curLen = 7;
@@ -161,7 +167,7 @@ public class CommandListCharacters implements Command {
             if ( username != "" ) {
                 // count the users with this username (should be 0 or 1)
                 String userCheck = "SELECT COUNT(username) AS usercount FROM user WHERE username='" + username + "';";
-                result = stmt.execute( userCheck );
+                result = stmt.executeQuery( userCheck );
 
                 // sanity check to go before first
                 result.beforeFirst();
@@ -179,7 +185,7 @@ public class CommandListCharacters implements Command {
                 query += ";";
             }
 
-            result = stmt.execute( query );
+            result = stmt.executeQuery( query );
             printCharacters( conn, result );
 
         } catch ( SQLException e ) {
