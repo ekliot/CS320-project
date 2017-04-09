@@ -24,12 +24,13 @@ public class RpgCharacters {
 
         // Add commands
         Hashtable<String, Command> commands = new Hashtable<String, Command>();
-      
+
         commands.put("create-tables", new CommandCreateTables());
   
         commands.put("login", new CommandLogin());
       
         commands.put("create-user", new CommandCreateUser());
+        commands.put("create-character", new CommandCreateCharacter());        
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
         commands.put("list-quests", new CommandListQuests());
@@ -37,8 +38,13 @@ public class RpgCharacters {
         commands.put("removeFrom-party", new CommandRemoveFromParty());
         commands.put("create-party", new CommandCreateParty());
         commands.put("list-party", new CommandListParties());
-        
+        commands.put("delete-quest", new CommandDeleteQuest());
+        commands.put("delete-item", new CommandDeleteItem());
         commands.put("list-quests", new CommandListQuests());
+        commands.put("list-items", new CommandListItems());
+        commands.put("list-characters", new CommandListCharacters());
+
+
 
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));
