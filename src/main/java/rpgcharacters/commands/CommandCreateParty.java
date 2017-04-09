@@ -13,18 +13,14 @@ public class CommandCreateParty implements Command {
     private String name;
 
     @Parameter(names = "--gm",
-    description = "Name of user acting as the game master for the party",
-    required = true)
+            description = "Name of user acting as the game master for the party",
+            required = true)
     private String gm;
 
     public void run(Connection connection) {
         try {
-            String query = "INSEERT INTO party ('"
-                            + this.name + "', '" + this.gm
-                         + "') VALUES("
-                         + "'" + this.name + "'"
-                         + "'" + this.name + "'"
-                         + "'" + this.gm + "';";
+            String query = "INSERT INTO party (name, gm_username) " +
+                    "VALUES ('" + name + "', '" + gm + "');";
 
             Statement st = connection.createStatement();
             st.executeQuery(query);
