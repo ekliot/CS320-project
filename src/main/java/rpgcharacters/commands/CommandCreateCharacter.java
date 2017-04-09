@@ -1,7 +1,6 @@
 package rpgcharacters.commands;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -9,7 +8,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 @Parameters( commandDescription = "Create a character" )
-public class CommandCreateItem implements Command {
+public class CommandCreateCharacter implements Command {
 
     /**
      || TODO

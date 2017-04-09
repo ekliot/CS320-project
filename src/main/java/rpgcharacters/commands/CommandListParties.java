@@ -3,9 +3,7 @@ package rpgcharacters.commands;
 import java.sql.*;
 import java.util.ArrayList;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.beust.jcommander.StringKey;
 
 @Parameters( commandDescription = "List all parties")
 public class CommandListParties implements Command {
@@ -47,7 +45,7 @@ public class CommandListParties implements Command {
                     e.printStackTrace();
                 }
 
-                printParty(name, gm, resultsStr);
+                printParty(name, gm, partyMembers);
                 partyMembers.clear();
             }
 
