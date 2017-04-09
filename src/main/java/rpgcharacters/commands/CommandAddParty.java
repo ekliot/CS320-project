@@ -44,7 +44,7 @@ public class CommandAddParty implements Command {
 
                 String query2 = "UPDATE character "
                         + "SET party_id = " + findID.executeQuery(query).getInt("party_id")
-                        + " WHERE name ='" + this.name + "';";
+                        + " WHERE name ='" + this.party + "';";
 
                 Statement update = connection.createStatement();
                 update.execute(query2);
