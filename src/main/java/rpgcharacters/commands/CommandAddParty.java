@@ -28,7 +28,8 @@ public class CommandAddParty implements Command {
             String query = "SELECT * "
                     +"FROM character "
                     + "WHERE name ='" + this.name
-                    + "' AND user_name ='" + this.username + "';";
+                    + "' AND user_name ='" + this.username
+                    + "' AND party_id IS NULL";
 
             Statement st = connection.createStatement();
             ResultSet results = st.executeQuery(query);
