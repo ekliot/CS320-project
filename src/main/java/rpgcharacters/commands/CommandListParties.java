@@ -22,9 +22,9 @@ public class CommandListParties implements Command {
 
     @Override
     public void run(Connection connection) {
-        ArrayList<String> resultsStr = new ArrayList<String>();
+        ArrayList<String> partyMembers = new ArrayList<String>();
         try {
-            String query = "SELECT * FROM party";
+            String query = "SELECT * FROM party;";
             Statement s = connection.createStatement();
             ResultSet results = s.executeQuery(query);
 
@@ -36,19 +36,19 @@ public class CommandListParties implements Command {
 
                 try {
                     query = "SELECT name, user_username FROM character"
-                            + " WHERE party_id=" + id;
+                            + " WHERE party_id=" + id + ";";
 
                     ResultSet results2 = s.executeQuery(query);
                     results2.beforeFirst();
                     while( results2.next() ) {
-                        resultsStr.add(results2.getString("name"));
+                        partyMembers.add(results2.getString("name"));
                     }
                 } catch( SQLException e ) {
                     e.printStackTrace();
                 }
 
                 printParty(name, gm, resultsStr);
-                resultsStr.clear();
+                partyMembers.clear();
             }
 
         } catch( SQLException e ) {
