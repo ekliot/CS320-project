@@ -33,12 +33,12 @@ public class RpgCharacters {
         commands.put("create-character", new CommandCreateCharacter());        
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
-
-
+        commands.put("add-party", new CommandAddParty());
+        commands.put("remove-from-party", new CommandRemoveFromParty());
+        commands.put("create-party", new CommandCreateParty());
+        commands.put("list-party", new CommandListParties());
         commands.put("delete-quest", new CommandDeleteQuest());
         commands.put("delete-item", new CommandDeleteItem());
-
-
         commands.put("list-quests", new CommandListQuests());
         commands.put("list-items", new CommandListItems());
         commands.put("list-characters", new CommandListCharacters());
