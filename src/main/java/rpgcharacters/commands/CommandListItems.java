@@ -16,7 +16,7 @@ public class CommandListItems implements Command {
         int curLen = 0;
         for (String tok : descTokens) {
           if (curLen + tok.length() > 46) {
-              System.out.println("\n" + tok);
+              System.out.print("\n" + tok);
               curLen = 0;
           }
           else {
