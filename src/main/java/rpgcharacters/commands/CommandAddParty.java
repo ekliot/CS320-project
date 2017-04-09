@@ -55,6 +55,7 @@ public class CommandAddParty implements Command {
 
             } else {
                 System.out.format("Character %s is already in a party\n", this.name);
+                //TODO: Potential future change to message
             }
         } catch( SQLException e) {
             e.printStackTrace();
