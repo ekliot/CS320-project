@@ -12,9 +12,10 @@ public class CommandListParties implements Command {
 
     private void printParty(String name, String gm, ArrayList<String> members) {
         System.out.format("Party name: %s\n" + name);
-        System.out.format("Game Moderator: %s\n", gm);
+        System.out.format("Game Master: %s\n", gm);
         System.out.format("Members:\n");
         for (String mem : members) {
+            // TODO: print charname + username
             System.out.format("\t%s\n", mem);
         }
     }
@@ -34,13 +35,12 @@ public class CommandListParties implements Command {
                 int id = results.getInt("id");
 
                 try {
-                    String query2 = "SELECT * FROM character"
+                    query = "SELECT name, user_username FROM character"
                             + " WHERE party_id=" + id;
-                    Statement s2 = connection.createStatement();
-                    ResultSet results2 = s2.executeQuery(query2);
+
+                    ResultSet results2 = s.executeQuery(query);
                     results2.beforeFirst();
-                    resultsStr.clear();
-                    while( results2.next()) {
+                    while( results2.next() ) {
                         resultsStr.add(results2.getString("name"));
                     }
                 } catch( SQLException e ) {
@@ -48,6 +48,7 @@ public class CommandListParties implements Command {
                 }
 
                 printParty(name, gm, resultsStr);
+                resultsStr.clear();
             }
 
         } catch( SQLException e ) {
