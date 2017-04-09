@@ -16,7 +16,7 @@ public class CommandAddParty implements Command {
             description = "Name of party",
             required = true)
     private String party;
-    
+
     @Parameter(names = "--username",
             description = "",
             required = true)
@@ -27,7 +27,7 @@ public class CommandAddParty implements Command {
         try {
             String query = "SELECT * "
                     +"FROM character "
-                    + "WHERE name =" + "'" + this.name
+                    + "WHERE name ='" + this.name
                     + "' AND user_name ='" + this.username + "';";
 
             Statement st = connection.createStatement();
@@ -38,20 +38,22 @@ public class CommandAddParty implements Command {
             if( total == 0 ) {
                 query = "SELECT party_id, name "
                         + "FROM party "
-                        + "WHERE name ='" + this.name + "';";
+                        + "WHERE name ='" + this.party + "';";
+
                 Statement findID = connection.createStatement();
 
                 String query2 = "UPDATE character "
                         + "SET party_id = " + findID.executeQuery(query).getInt("party_id")
                         + " WHERE name ='" + this.name + "';";
-                Statement rm = connection.createStatement();
-                rm.execute(query2);
 
-                System.out.format("Character %s has been successfully added to the party.\n",
-                        this.name);
+                Statement update = connection.createStatement();
+                update.execute(query2);
+
+                System.out.format("Character %s has been successfully added to the party %s.\n",
+                        this.name, this.party);
 
             } else {
-                System.out.format("Character %s is already in the party\n", this.name);
+                System.out.format("Character %s is already in a party\n", this.name);
             }
         } catch( SQLException e) {
             e.printStackTrace();
