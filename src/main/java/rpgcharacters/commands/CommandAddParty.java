@@ -28,24 +28,28 @@ public class CommandAddParty implements Command {
             String query = "SELECT * "
                     +"FROM character "
                     + "WHERE name ='" + this.name
-                    + "' AND user_name ='" + this.username
-                    + "' AND party_id IS NULL";
+                    + "' AND user_username ='" + this.username
+                    + "' AND party_id IS NULL;";
 
             Statement st = connection.createStatement();
             ResultSet results = st.executeQuery(query);
 
             results.last();
             int total = results.getRow();
-            if( total == 0 ) {
-                query = "SELECT party_id, name "
+            if( total != 0 ) {
+                // TODO: combine query and query2 into complex query
+                query = "SELECT id, name "
                         + "FROM party "
                         + "WHERE name ='" + this.party + "';";
 
                 Statement findID = connection.createStatement();
+                ResultSet partyResult = findID.executeQuery(query);
+                partyResult.first();
 
                 String query2 = "UPDATE character "
-                        + "SET party_id = " + findID.executeQuery(query).getInt("party_id")
-                        + " WHERE name ='" + this.party + "';";
+                        + "SET party_id = " + partyResult.getInt("id")
+                        + " WHERE name ='" + this.name + "'"
+                        + " AND user_username='" + this.username + "';";
 
                 Statement update = connection.createStatement();
                 update.execute(query2);

@@ -30,6 +30,7 @@ public class CommandListItems implements Command {
     @Override
     public void run(Connection conn) {
         try {
+            // TODO: include characters in this query
             String query = "SELECT * FROM item";
 
             Statement stmt = conn.createStatement();

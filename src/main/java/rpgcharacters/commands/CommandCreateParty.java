@@ -23,7 +23,8 @@ public class CommandCreateParty implements Command {
                     "VALUES ('" + name + "', '" + gm + "');";
 
             Statement st = connection.createStatement();
-            st.executeQuery(query);
+            st.execute(query);
+            // TODO: add success/fail output
         } catch( SQLException e) {
             e.printStackTrace();
         }

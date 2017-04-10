@@ -35,6 +35,9 @@ public class CommandDeleteQuest implements Command {
             query = "DELETE FROM quest " +
                                  "WHERE name='" + name + "';";
 
+            // TODO: remove select query above
+            // use executeUpdate here (returns an int for number of rows affected)
+            // if returned value is 0, quest doesn't exist
             Statement deleteStmt = conn.createStatement();
             deleteStmt.execute(query);
 
