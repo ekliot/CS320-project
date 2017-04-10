@@ -41,16 +41,18 @@ public class CommandListCharacters implements Command {
                 count++;
     
                 printCharacter( conn, count,
-                    chars.getString( "name" ),
+                    chars.getString( "user_username" ),
+                    chars.getString( "character.name" ),
                     chars.getInt( "party_id" ),
-                    chars.getString( "race" ),
-                    chars.getString( "archetype" ),
+                    chars.getString( "race_name" ),
+                    chars.getString( "archetype_name" ),
                     chars.getString( "story" ),
                     chars.getInt( "power" ),
                     chars.getInt( "proficiency" ),
                     chars.getInt( "personality" ),
                     chars.getInt( "perception" ),
-                    chars.getInt( "experience" )
+                    chars.getInt( "experience" ),
+                    chars.getString( "party.name" )
                 );
             }
         } catch (SQLException e) {
@@ -70,41 +72,26 @@ public class CommandListCharacters implements Command {
     /**
      * TODO docstring
      **/
-    private void printCharacter( Connection conn, int number, String name, int partyID,
-                                 String race, String archetype, String story,
-                                 int power, int proficiency, int personality,
-                                 int perception, int experience ) {
+    private void printCharacter( Connection conn, int number, String user_username,
+                                 String char_name, int partyID, String race,
+                                 String archetype, String story, int power,
+                                 int proficiency, int personality, int perception,
+                                 int experience, String party_name ) {
 
         System.out.println( "Character " + number );
 
         // print name
-        System.out.println( "Name: " + name );
+        System.out.println( "Name: " + char_name );
 
         // don't print the username if the user was already specified
         if ( username == "" ) {
-            System.out.println( "Belongs to: " + name );
+            System.out.println( "Belongs to: " + user_username );
         }
 
         // if the character has a partyID, find the name of the associated party
         // ResultSet getInt returns 0 if the value is null
         if ( partyID != 0 ) {
-            String query = "SELECT name FROM party WHERE id=" + partyID + ";";
-
-            try {
-                Statement stmt = conn.createStatement();
-                ResultSet result = stmt.executeQuery( query );
-
-                result.beforeFirst();
-
-                // if the partyID matches an existing party
-                if ( result.next() ) {
-                    System.out.println( "Member of " + result.getString( name ) );
-                }
-                // no else, user shouldn't care
-            } catch ( SQLException e ) {
-                e.printStackTrace();
-            }
-
+            System.out.println( "Member of " + party_name );
             // TODO print out user's party members?
         }
 
@@ -159,7 +146,9 @@ public class CommandListCharacters implements Command {
     public void run( Connection conn ) {
         try {
             // root (unfinished) query
-            String query = "SELECT * FROM character";
+            // TODO: also include race and archetype mods in this query
+            String query = "SELECT * FROM character"
+                         + " LEFT OUTER JOIN party ON character.party_id = party.id";
             Statement stmt = conn.createStatement();
             ResultSet result;
 
@@ -175,7 +164,7 @@ public class CommandListCharacters implements Command {
                 // check if the result set actually has a row, and that the
                 // usercount isn't 0 (i.e. a user of username==username exists)
                 if ( result.next() && result.getInt( "usercount" ) == 1 ) {
-                    query += " WHERE username='" + username + "';";
+                    query += " WHERE user_username='" + username + "';";
                 } else {
                     System.out.println( "User with username " + username + " could not be found, listing all characters instead" );
                     username = "";

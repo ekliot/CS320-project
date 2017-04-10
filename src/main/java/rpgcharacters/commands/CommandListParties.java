@@ -22,6 +22,7 @@ public class CommandListParties implements Command {
     public void run(Connection connection) {
         ArrayList<String> partyMembers = new ArrayList<String>();
         try {
+            // TODO: include quests and characters in this query
             String query = "SELECT * FROM party;";
             Statement s = connection.createStatement();
             ResultSet results = s.executeQuery(query);

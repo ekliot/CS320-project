@@ -35,6 +35,9 @@ public class CommandDeleteItem implements Command {
                 String deleteQuery = "DELETE FROM item " +
                                      "WHERE name='" + name + "';";
 
+                // TODO: remove select query above
+                // use executeUpdate here (returns an int for number of rows affected)
+                // if returned value is 0, item doesn't exist
                 Statement deleteStmt = conn.createStatement();
                 deleteStmt.execute(deleteQuery);
 

@@ -33,6 +33,7 @@ public class CommandListQuests implements Command {
     @Override
     public void run(Connection conn) {
         try {
+            // TODO: include item and quest in this query
             String query = "SELECT * FROM quest";
 
             Statement stmt = conn.createStatement();

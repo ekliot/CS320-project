@@ -44,6 +44,9 @@ public class CommandRemoveFromParty implements Command {
                         + "SET party_id = NULL "
                         + "WHERE character.name ='" + this.name + "' "
                         + "AND character.user_username ='" + this.username + "';";
+                // TODO: remove select query above
+                // use executeUpdate here (returns an int for number of rows affected)
+                // if returned value is 0, character is not in a party
                 Statement rm = connection.createStatement();
                 rm.execute(query);
                 System.out.format("Character %s has been successfully deleted from the party.\n",
