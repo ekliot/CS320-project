@@ -18,9 +18,9 @@ public class PartyMenu implements Menu {
     }
 
     private void printMenuTitle() {
-        System.out.println("\n--------------------------------------------------");
+        System.out.println("\n-------------------------------------------------------");
         System.out.println("Party Menu");
-        System.out.println("--------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
     }
 
     private String printParties () {
@@ -35,7 +35,7 @@ public class PartyMenu implements Menu {
         for (int i = 0; i < parties.size(); i++) {
             partyString += "\t" + (i+1) + ". " + parties.get(i) + "\n";
         }
-        partyString += "--------------------------------------------------";
+        partyString += "-------------------------------------------------------";
 
         System.out.println(partyString);
         System.out.print("Please enter the number of the desired party here: ");
@@ -58,7 +58,7 @@ public class PartyMenu implements Menu {
             "\t3: Delete party\n" +
             "\t4: Remove a character from a party\n" +
             "\t5: Go back\n" +
-            "--------------------------------------------------"; // 50 chars;
+            "-------------------------------------------------------"; // 50 chars;
         System.out.println(optionsString);
         System.out.print("Please enter the number of the desired option here: ");
     }

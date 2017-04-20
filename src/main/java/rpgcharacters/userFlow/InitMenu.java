@@ -13,9 +13,9 @@ public class InitMenu implements Menu {
     }
 
     private void printMenuTitle() {
-        System.out.println("\n--------------------------------------------------");
+        System.out.println("\n-------------------------------------------------------");
         System.out.println("Init Menu");
-        System.out.println("--------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
     }
 
     private void printOptions () {
@@ -24,7 +24,7 @@ public class InitMenu implements Menu {
             "\t1: Login\n" +
             "\t2: Create User\n" +
             "\t3: Exit\n" +
-            "--------------------------------------------------" // 50 chars
+            "-------------------------------------------------------" // 50 chars
         );
         System.out.print("Please enter the number of the desired option here: ");
     }

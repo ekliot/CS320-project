@@ -18,9 +18,9 @@ public class MainMenu implements Menu {
     }
 
     private void printMenuTitle() {
-        System.out.println("\n--------------------------------------------------");
+        System.out.println("\n-------------------------------------------------------");
         System.out.println("Main Menu");
-        System.out.println("--------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
     }
 
     private void printOptions () {
@@ -32,7 +32,7 @@ public class MainMenu implements Menu {
                                     "\t4: Log Out\n";
         else optionsString += "\t3: Log Out\n";
 
-        optionsString += "--------------------------------------------------"; // 50 chars;
+        optionsString += "-------------------------------------------------------"; // 50 chars;
         System.out.println(optionsString);
         System.out.print("Please enter the number of the desired option here: ");
     }

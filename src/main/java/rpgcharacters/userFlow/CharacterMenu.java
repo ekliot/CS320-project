@@ -18,9 +18,9 @@ public class CharacterMenu implements Menu {
     }
 
     private void printMenuTitle() {
-        System.out.println("\n--------------------------------------------------");
+        System.out.println("\n-------------------------------------------------------");
         System.out.println("Character Menu");
-        System.out.println("--------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
     }
 
     private String printChars () {
@@ -35,7 +35,7 @@ public class CharacterMenu implements Menu {
         for (int i = 0; i < characters.size(); i++) {
             charsString += "\t" + (i+1) + ". " + characters.get(i) + "\n";
         }
-        charsString += "--------------------------------------------------";
+        charsString += "-------------------------------------------------------";
 
         System.out.println(charsString);
         System.out.print("Please enter the number of the desired character here: ");
@@ -50,6 +50,74 @@ public class CharacterMenu implements Menu {
         return characters.get(input-1);
     }
 
+    private void deleteCharacter (String charName) {
+
+        // TODO: Delete the character from the database.
+        // Make appropriate print statements if something bad happens.
+
+        System.out.println(charName + " has been deleted!");
+    }
+
+    private void printCharacter (String charName) {
+        String story;
+        String race;
+        String arch;
+        String party;
+        int power;
+        int proficiency;
+        int personality;
+        int percecption;
+        int experience;
+
+        // TODO: Retrieve real data!
+        // Make appropriate print statements if something bad happens.
+
+        story = "He did things and stuff";
+        race = "Hooman";
+        arch = "Hoodrat";
+        party = "Fellowship of the ring";
+        power = 9001;
+        proficiency = 9001;
+        personality = 9001;
+        percecption = 9001;
+        experience = 9001;
+
+        // format story
+        if (story.length() > 35) {
+            String[] tokens = story.split(" ");
+            story = "";
+            int curLineLen = 0;
+            for (String tok : tokens) {
+                if (curLineLen == 0) {
+                    story += "\n\t";
+                }
+                story += tok;
+                curLineLen += tok.length();
+                if (curLineLen > 40) {
+                    curLineLen = 0;
+                }
+            }
+        }
+
+
+        String pString =
+            "\n-------------------------------------------------------\n" + // 50 chars
+            charName + "\n" +
+            "-------------------------------------------------------\n" + // 50 chars
+            "Story:       " + story + "\n" +
+            "Race:        " + race + "\n" +
+            "Archetype:   " + arch + "\n" +
+            "Party:       " + party + "\n" +
+            "Power:       " + power + "\n" +
+            "Proficiency: " + proficiency + "\n" +
+            "Personality: " + personality + "\n" +
+            "Percecption: " + percecption + "\n" +
+            "Experience:  " + experience + "\n" +
+            "-------------------------------------------------------\n";
+
+        System.out.println(pString);
+    }
+
     private void printOptions () {
         String optionsString =
             "Available options:\n" +
@@ -58,7 +126,7 @@ public class CharacterMenu implements Menu {
             "\t3: Delete character\n" +
             "\t4: Remove a character from a party.\n" +
             "\t5: Go back\n" +
-            "--------------------------------------------------"; // 50 chars;
+            "-------------------------------------------------------"; // 50 chars;
 
         System.out.println(optionsString);
         System.out.print("Please enter the number of the desired option here: ");
@@ -79,15 +147,16 @@ public class CharacterMenu implements Menu {
 
             switch (input) {
                 case 1:
-                    System.out.println("\nCreate Character\n");
+                    Menu createCharacterMenu = new CreateCharacterMenu(sc,username);
+                    createCharacterMenu.enter();
                     break;
                 case 2:
                     character = printChars();
-                    System.out.println("\nPrint " + character + "\n");
+                    printCharacter(character);
                     break;
                 case 3:
                     character = printChars();
-                    System.out.println("\nDelete " + character + "\n");
+                    deleteCharacter(character);
                     break;
                 case 4:
                     character = printChars();
