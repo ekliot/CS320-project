@@ -58,6 +58,18 @@ public class CharacterMenu implements Menu {
         System.out.println(charName + " has been deleted!");
     }
 
+    private void removeFromParty (String charName) {
+
+        // TODO: Characters can only have one party, so steps are as follows:
+        // 1. Check if character is in party
+        // 2. if the character is not in a party, make an appropriate print
+        //    statement and return.
+        // 3. else, get the party and remove the character from that party.
+        // 4. Make appropriate print statements if something bad happens.
+
+        System.out.println(charName + " has been deleted!");
+    }
+
     private void printCharacter (String charName) {
         String story;
         String race;
@@ -160,7 +172,7 @@ public class CharacterMenu implements Menu {
                     break;
                 case 4:
                     character = printChars();
-                    System.out.println("\nRemove " + character + " from a party\n");
+                    removeFromParty(character);
                     break;
                 case 5:
                     System.out.println("\nGoing back...\n");
