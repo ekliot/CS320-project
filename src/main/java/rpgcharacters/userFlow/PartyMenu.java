@@ -10,8 +10,8 @@ public class PartyMenu implements Menu {
     private String username;
 
     /**
-    * Constructor Method
-    */
+     * Constructor Method
+     */
     public PartyMenu (Scanner sc, String username) {
         this.sc = sc;
         this.username = username;
@@ -50,6 +50,54 @@ public class PartyMenu implements Menu {
         return parties.get(input-1);
     }
 
+    private void deleteParty (String partyName) {
+
+        // TODO: Delete the character from the database.
+        // Make appropriate print statements if something bad happens.
+
+        System.out.println(partyName + " has been deleted!");
+    }
+
+    private void printParty (String partyName) {
+        String gameMaster;
+        ArrayList<String> charNames = new ArrayList<String>();
+        ArrayList<String> userNames = new ArrayList<String>();
+
+        // TODO: Add all character names to the charNames arraylist and the
+        //       corresponding usernames to the userNames arraylist.
+        // Make appropriate print statements if something bad happens.
+
+        gameMaster = "master dood";
+        charNames.add("Bilbo Baggins");
+        charNames.add("John Cena");
+        charNames.add("Rick C137");
+        userNames.add("idkmanthings");
+        userNames.add("username");
+        userNames.add("souperPerson8");
+
+        System.out.println(
+            "--------------------------------------------------\n" + // 50 chars
+            partyName + "\n" +
+            "--------------------------------------------------\n" + // 50 chars
+            "Game master: " + gameMaster + "\n" +
+            "Characters:"
+        );
+
+        if (charNames.size() != userNames.size()) {
+            System.out.println("Something bad happened.");
+            System.out.println("charNames.size() != userNames.size()");
+        }
+        else {
+            for (int i = 0; i < charNames.size(); i++) {
+                String userPr = userNames.get(i);
+                if (userPr.equals(this.username)) {
+                    userPr = "You";
+                }
+                CharacterMenu.printCharacter(charNames.get(i),userNames.get(i));
+            }
+        }
+    }
+
     private void printOptions () {
         String optionsString =
             "Available options:\n" +
@@ -57,7 +105,8 @@ public class PartyMenu implements Menu {
             "\t2: Print party\n" +
             "\t3: Delete party\n" +
             "\t4: Remove a character from a party\n" +
-            "\t5: Go back\n" +
+            "\t5: Add a character to a party\n" +
+            "\t6: Go back\n" +
             "-------------------------------------------------------"; // 50 chars;
         System.out.println(optionsString);
         System.out.print("Please enter the number of the desired option here: ");
@@ -70,7 +119,7 @@ public class PartyMenu implements Menu {
         printMenuTitle();
         int input;
         String party;
-        int exit = 5;
+        int exit = 6;
         do {
 
             printOptions();
@@ -78,21 +127,30 @@ public class PartyMenu implements Menu {
 
             switch (input) {
                 case 1:
-                    System.out.println("\nCreate Party\n");
+                    Menu createPartyMenu = new CreatePartyMenu(sc,username);
+                    createPartyMenu.enter();
                     break;
                 case 2:
                     party = printParties();
-                    System.out.println("\nPrint " + party + "\n");
+                    printParty(party);
                     break;
                 case 3:
                     party = printParties();
-                    System.out.println("\nDelete " + party + "\n");
+                    deleteParty(party);
                     break;
                 case 4:
                     party = printParties();
+                    Menu partyRemCharMenu = new PartyRemCharMenu(sc,username,party);
+                    partyRemCharMenu.enter();
                     System.out.println("\nRemove character from " + party + "\n");
                     break;
                 case 5:
+                    party = printParties();
+                    Menu partyAddCharMenu = new PartyAddCharMenu(sc,username,party);
+                    partyAddCharMenu.enter();
+                    System.out.println("\nRemove character from " + party + "\n");
+                    break;
+                case 6:
                     System.out.println("\nGoing back...\n");
                     break;
                 default:

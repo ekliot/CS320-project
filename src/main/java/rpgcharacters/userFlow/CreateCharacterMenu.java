@@ -119,7 +119,7 @@ public class CreateCharacterMenu implements Menu {
         } while (!validCharInfo && wrongCount <= 3);
 
         if (validCharInfo) {
-            System.out.println("\nUser has been created!\n");
+            System.out.println("\nCharacter has been created!\n");
         }
         else {
             System.out.println("\nToo many attempts... Returning...\n");

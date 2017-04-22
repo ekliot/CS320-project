@@ -70,7 +70,7 @@ public class CharacterMenu implements Menu {
         System.out.println(charName + " has been deleted!");
     }
 
-    private void printCharacter (String charName) {
+    public static void printCharacter (String charName, String username) {
         String story;
         String race;
         String arch;
@@ -116,6 +116,7 @@ public class CharacterMenu implements Menu {
             "\n-------------------------------------------------------\n" + // 50 chars
             charName + "\n" +
             "-------------------------------------------------------\n" + // 50 chars
+            "User:        " + username + "\n" +
             "Story:       " + story + "\n" +
             "Race:        " + race + "\n" +
             "Archetype:   " + arch + "\n" +
@@ -164,7 +165,7 @@ public class CharacterMenu implements Menu {
                     break;
                 case 2:
                     character = printChars();
-                    printCharacter(character);
+                    printCharacter(character,username);
                     break;
                 case 3:
                     character = printChars();
