@@ -47,16 +47,18 @@ public class EditPartyQuestsMenu implements Menu {
         completed.add("Come up with a theme for these fake quest names");
 
 
-        String questString = "COMPLETED:\n";
+        String questString = "\nAVAILABLE:\n";
         int num = 0;
         for (int i = 0; i < available.size(); i++) {
             num++;
             questString += "\t" + num + ". " + available.get(i) + "\n";
         }
+        questString += "\nACTIVE:\n";
         for (int i = 0; i < active.size(); i++) {
             num++;
             questString += "\t" + num + ". " + active.get(i) + "\n";
         }
+        questString += "\nCOMPLETED:\n";
         for (int i = 0; i < completed.size(); i++) {
             num++;
             questString += "\t" + num + ". " + completed.get(i) + "\n";

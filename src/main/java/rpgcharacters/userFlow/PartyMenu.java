@@ -106,7 +106,7 @@ public class PartyMenu implements Menu {
             "\t3: Delete party\n" +
             "\t4: Remove a character from a party\n" +
             "\t5: Add a character to a party\n" +
-            "\t6: Add a character to a party\n" +
+            "\t6: Edit a party's quests\n" +
             "\t7: Go back\n" +
             "-------------------------------------------------------"; // 50 chars;
         System.out.println(optionsString);
@@ -120,7 +120,7 @@ public class PartyMenu implements Menu {
         printMenuTitle();
         int input;
         String party;
-        int exit = 7;
+        int exit = 6;
         do {
 
             printOptions();
@@ -143,19 +143,16 @@ public class PartyMenu implements Menu {
                     party = printParties();
                     Menu partyRemCharMenu = new PartyRemCharMenu(sc,username,party);
                     partyRemCharMenu.enter();
-                    System.out.println("\nRemove character from " + party + "\n");
                     break;
                 case 5:
                     party = printParties();
                     Menu partyAddCharMenu = new PartyAddCharMenu(sc,username,party);
                     partyAddCharMenu.enter();
-                    System.out.println("\nRemove character from " + party + "\n");
                     break;
                 case 6:
                     party = printParties();
                     Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc,username,party);
                     editPartyQuestsMenu.enter();
-                    System.out.println("\nRemove character from " + party + "\n");
                     break;
                 case 7:
                     System.out.println("\nGoing back...\n");
