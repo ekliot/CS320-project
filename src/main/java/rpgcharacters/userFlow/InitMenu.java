@@ -1,5 +1,6 @@
 package rpgcharacters.userflow;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class InitMenu implements Menu {
 
@@ -38,22 +39,27 @@ public class InitMenu implements Menu {
         do {
 
             printOptions();
-            input = sc.nextInt();
+            try {
+                input = sc.nextInt();
 
-            switch (input) {
-                case 1:
-                    Menu loginMenu = new LoginMenu(sc);
-                    loginMenu.enter();
-                    break;
-                case 2:
-                    Menu createUserMenu = new CreateUserMenu(sc);
-                    createUserMenu.enter();
-                    break;
-                case 3:
-                    System.out.println("\nExiting...\n");
-                    break;
-                default:
-                    System.out.println("\nInvalid input...\n");
+                switch (input) {
+                    case 1:
+                        Menu loginMenu = new LoginMenu(sc);
+                        loginMenu.enter();
+                        break;
+                    case 2:
+                        Menu createUserMenu = new CreateUserMenu(sc);
+                        createUserMenu.enter();
+                        break;
+                    case 3:
+                        System.out.println("\nExiting...\n");
+                        break;
+                    default:
+                        System.out.println("\nInvalid input...\n");
+                }
+            }
+            catch (InputMismatchException e) {
+                continue;
             }
 
         } while (input != 3);

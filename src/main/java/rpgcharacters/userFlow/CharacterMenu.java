@@ -2,6 +2,7 @@ package rpgcharacters.userflow;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class CharacterMenu implements Menu {
 
@@ -156,31 +157,38 @@ public class CharacterMenu implements Menu {
         do {
 
             printOptions();
-            input = sc.nextInt();
+            try {
+                input = sc.nextInt();
 
-            switch (input) {
-                case 1:
-                    Menu createCharacterMenu = new CreateCharacterMenu(sc,username);
-                    createCharacterMenu.enter();
-                    break;
-                case 2:
-                    character = printChars();
-                    printCharacter(character,username);
-                    break;
-                case 3:
-                    character = printChars();
-                    deleteCharacter(character);
-                    break;
-                case 4:
-                    character = printChars();
-                    removeFromParty(character);
-                    break;
-                case 5:
-                    System.out.println("\nGoing back...\n");
-                    break;
-                default:
-                    System.out.println("\nInvalid input...\n");
+                switch (input) {
+                    case 1:
+                        Menu createCharacterMenu = new CreateCharacterMenu(sc,username);
+                        createCharacterMenu.enter();
+                        break;
+                    case 2:
+                        character = printChars();
+                        printCharacter(character,username);
+                        break;
+                    case 3:
+                        character = printChars();
+                        deleteCharacter(character);
+                        break;
+                    case 4:
+                        character = printChars();
+                        removeFromParty(character);
+                        break;
+                    case 5:
+                        System.out.println("\nGoing back...\n");
+                        break;
+                    default:
+                        System.out.println("\nInvalid input...\n");
+                }
             }
+            catch (InputMismatchException e) {
+                continue;
+            }
+
+
 
         } while (input != exit);
     }

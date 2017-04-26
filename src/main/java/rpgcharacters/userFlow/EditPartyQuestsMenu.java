@@ -2,6 +2,7 @@ package rpgcharacters.userflow;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class EditPartyQuestsMenu implements Menu {
 
@@ -66,12 +67,12 @@ public class EditPartyQuestsMenu implements Menu {
         questString += "-------------------------------------------------------";
 
         System.out.println(questString);
-        System.out.print("Please enter the number of the desired party here: ");
+        System.out.print("Please enter the number of the desired quest here: ");
         int input = sc.nextInt();
 
         while (input < 1 || input > available.size() + active.size() + completed.size()) {
             System.out.println("\nInvalid input!\n");
-            System.out.print("Please enter the number of the desired party here: ");
+            System.out.print("Please enter the number of the desired quest here: ");
             input = sc.nextInt();
         }
 
@@ -203,27 +204,33 @@ public class EditPartyQuestsMenu implements Menu {
         do {
 
             printOptions();
-            input = sc.nextInt();
-            questName = printQuests();
-            switch (input) {
-                case 1:
-                    printQuest(questName);
-                    break;
-                case 2:
-                    activateQuest(questName);
-                    break;
-                case 3:
-                    completeQuest(questName);
-                    break;
-                case 4:
-                    cancelQuest(questName);
-                    break;
-                case 5:
-                    System.out.println("\nGoing back...\n");
-                    break;
-                default:
-                    System.out.println("\nInvalid input...\n");
+            try {
+                input = sc.nextInt();
+                questName = printQuests();
+                switch (input) {
+                    case 1:
+                        printQuest(questName);
+                        break;
+                    case 2:
+                        activateQuest(questName);
+                        break;
+                    case 3:
+                        completeQuest(questName);
+                        break;
+                    case 4:
+                        cancelQuest(questName);
+                        break;
+                    case 5:
+                        System.out.println("\nGoing back...\n");
+                        break;
+                    default:
+                        System.out.println("\nInvalid input...\n");
+                }
             }
+            catch (InputMismatchException e) {
+                continue;
+            }
+
 
         } while (input != exit);
     }

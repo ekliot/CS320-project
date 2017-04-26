@@ -1,5 +1,6 @@
 package rpgcharacters.userflow;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class MainMenu implements Menu {
 
@@ -48,32 +49,37 @@ public class MainMenu implements Menu {
         do {
 
             printOptions();
-            input = sc.nextInt();
+            try {
+                input = sc.nextInt();
 
-            switch (input) {
-                case 1:
-                    Menu characterMenu = new CharacterMenu(sc,username);
-                    characterMenu.enter();
-                    break;
-                case 2:
-                    Menu partyMenu = new PartyMenu(sc,username);
-                    partyMenu.enter();
-                    break;
-                case 3:
-                    if (isAdmin) {
-                        System.out.println("\nAdmin Menu\n");
-                    }
-                    else {
-                        System.out.println("\nLogging out...\n");
-                    }
-                    break;
-                case 4:
-                    if (isAdmin) { //pass through to default if not admin.
-                        System.out.println("\nLogging out...\n");
+                switch (input) {
+                    case 1:
+                        Menu characterMenu = new CharacterMenu(sc,username);
+                        characterMenu.enter();
                         break;
-                    }
-                default:
-                    System.out.println("\nInvalid input...\n");
+                    case 2:
+                        Menu partyMenu = new PartyMenu(sc,username);
+                        partyMenu.enter();
+                        break;
+                    case 3:
+                        if (isAdmin) {
+                            System.out.println("\nAdmin Menu\n");
+                        }
+                        else {
+                            System.out.println("\nLogging out...\n");
+                        }
+                        break;
+                    case 4:
+                        if (isAdmin) { //pass through to default if not admin.
+                            System.out.println("\nLogging out...\n");
+                            break;
+                        }
+                    default:
+                        System.out.println("\nInvalid input...\n");
+                }
+            }
+            catch (InputMismatchException e) {
+                continue;
             }
 
         } while (input != exit);
