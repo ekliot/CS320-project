@@ -151,7 +151,7 @@ public class CharacterMenu implements Menu {
     */
     public void enter () {
         printMenuTitle();
-        int input;
+        int input = 0;
         int exit = 5;
         String character;
         do {
@@ -185,6 +185,7 @@ public class CharacterMenu implements Menu {
                 }
             }
             catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...\n");
                 continue;
             }
 

@@ -35,7 +35,7 @@ public class InitMenu implements Menu {
     */
     public void enter () {
         printMenuTitle();
-        int input;
+        int input = 0;
         do {
 
             printOptions();
@@ -59,6 +59,7 @@ public class InitMenu implements Menu {
                 }
             }
             catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...\n");
                 continue;
             }
 

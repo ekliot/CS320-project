@@ -43,7 +43,7 @@ public class MainMenu implements Menu {
     */
     public void enter () {
         printMenuTitle();
-        int input;
+        int input = 0;
         int exit = 3;
         if (isAdmin) exit = 4;
         do {
@@ -79,6 +79,7 @@ public class MainMenu implements Menu {
                 }
             }
             catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...\n");
                 continue;
             }
 

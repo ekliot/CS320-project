@@ -52,9 +52,14 @@ public class RpgCharacters {
         jc.parse(args);
 
         // Output usage if no args or help option input
-        if (args.length == 0 || rpg.help) {
+        if (args.length == 0) {
             Menu initMenu = new InitMenu();
             initMenu.enter();
+            return;
+        }
+
+        if (rpg.help) {
+            jc.usage();
             return;
         }
 

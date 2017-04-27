@@ -198,7 +198,7 @@ public class EditPartyQuestsMenu implements Menu {
     */
     public void enter () {
         printMenuTitle();
-        int input;
+        int input = 0;
         int exit = 5;
         String questName;
         do {
@@ -228,6 +228,7 @@ public class EditPartyQuestsMenu implements Menu {
                 }
             }
             catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...\n");
                 continue;
             }
 

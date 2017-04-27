@@ -2,6 +2,7 @@ package rpgcharacters.userflow;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class PartyMenu implements Menu {
 
@@ -118,47 +119,53 @@ public class PartyMenu implements Menu {
     */
     public void enter () {
         printMenuTitle();
-        int input;
+        int input = 0;
         String party;
         int exit = 6;
         do {
 
             printOptions();
-            input = sc.nextInt();
+            try {
+                input = sc.nextInt();
 
-            switch (input) {
-                case 1:
-                    Menu createPartyMenu = new CreatePartyMenu(sc,username);
-                    createPartyMenu.enter();
-                    break;
-                case 2:
-                    party = printParties();
-                    printParty(party);
-                    break;
-                case 3:
-                    party = printParties();
-                    deleteParty(party);
-                    break;
-                case 4:
-                    party = printParties();
-                    Menu partyRemCharMenu = new PartyRemCharMenu(sc,username,party);
-                    partyRemCharMenu.enter();
-                    break;
-                case 5:
-                    party = printParties();
-                    Menu partyAddCharMenu = new PartyAddCharMenu(sc,username,party);
-                    partyAddCharMenu.enter();
-                    break;
-                case 6:
-                    party = printParties();
-                    Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc,username,party);
-                    editPartyQuestsMenu.enter();
-                    break;
-                case 7:
-                    System.out.println("\nGoing back...\n");
-                    break;
-                default:
-                    System.out.println("\nInvalid input...\n");
+                switch (input) {
+                    case 1:
+                        Menu createPartyMenu = new CreatePartyMenu(sc,username);
+                        createPartyMenu.enter();
+                        break;
+                    case 2:
+                        party = printParties();
+                        printParty(party);
+                        break;
+                    case 3:
+                        party = printParties();
+                        deleteParty(party);
+                        break;
+                    case 4:
+                        party = printParties();
+                        Menu partyRemCharMenu = new PartyRemCharMenu(sc,username,party);
+                        partyRemCharMenu.enter();
+                        break;
+                    case 5:
+                        party = printParties();
+                        Menu partyAddCharMenu = new PartyAddCharMenu(sc,username,party);
+                        partyAddCharMenu.enter();
+                        break;
+                    case 6:
+                        party = printParties();
+                        Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc,username,party);
+                        editPartyQuestsMenu.enter();
+                        break;
+                    case 7:
+                        System.out.println("\nGoing back...\n");
+                        break;
+                    default:
+                        System.out.println("\nInvalid input...\n");
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...\n");
+                continue;
             }
 
         } while (input != exit);
