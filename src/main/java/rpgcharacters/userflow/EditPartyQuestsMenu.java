@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
+import java.sql.Connection;
+
 public class EditPartyQuestsMenu implements Menu {
 
     private Scanner sc;
@@ -196,7 +198,7 @@ public class EditPartyQuestsMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         printMenuTitle();
         int input = 0;
         int exit = 5;

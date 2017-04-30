@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
+import java.sql.Connection;
+
 public class CharacterMenu implements Menu {
 
     private Scanner sc;
@@ -149,7 +151,7 @@ public class CharacterMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         printMenuTitle();
         int input = 0;
         int exit = 5;
@@ -163,7 +165,7 @@ public class CharacterMenu implements Menu {
                 switch (input) {
                     case 1:
                         Menu createCharacterMenu = new CreateCharacterMenu(sc,username);
-                        createCharacterMenu.enter();
+                        createCharacterMenu.enter( conn );
                         break;
                     case 2:
                         character = printChars();
