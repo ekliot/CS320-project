@@ -7,38 +7,27 @@ import java.util.Scanner;
 
 import java.sql.Connection;
 
-public class MainMenu implements Menu {
+public class AdminMenu implements Menu {
 
     private Scanner sc;
 
-    private String username;
-    private boolean isAdmin;
-
     private List<String> options;
 
-    private final String MENU_CHAR  = "Character Menu";
-    private final String MENU_PARTY = "Party Menu";
-    private final String MENU_ADMIN = "Admin Menu";
-    private final String LOG_OUT    = "Log Out";
+    private final String MENU_ITEM  = "Item Options";
+    private final String MENU_QUEST = "Quest Options";
+    private final String MENU_RACE  = "Race Options";
+    private final String MENU_ARCH  = "Archetype Options";
+    private final String MENU_GRANT = "Admin-ify a user";
+    private final String EXIT       = "Back to Main Menu";
 
-    /**
-    * Constructor Method
-    */
-    public MainMenu (Scanner sc, String username, boolean isAdmin) {
+    public AdminMenu( Scanner sc ) {
         this.sc = sc;
-        this.username = username;
-        this.isAdmin = isAdmin;
-
-        if ( isAdmin ) {
-            this.options = Arrays.asList( MENU_CHAR, MENU_PARTY, MENU_ADMIN, LOG_OUT );
-        } else {
-            this.options = Arrays.asList( MENU_CHAR, MENU_PARTY, LOG_OUT );
-        }
+        this.options = Arrays.asList( MENU_ITEM, MENU_QUEST, MENU_RACE, MENU_ARCH, MENU_GRANT, EXIT );
     }
 
-    private void printMenuTitle() {
+    public void printMenuTitle() {
         System.out.println("\n-------------------------------------------------------");
-        System.out.println("Main Menu");
+        System.out.println("Admin Menu");
         System.out.println("-------------------------------------------------------");
     }
 
@@ -57,15 +46,12 @@ public class MainMenu implements Menu {
         System.out.print( "Please enter the number of the desired option here: " );
     }
 
-    /**
-    * Defines the loop for this menu
-    */
-    public void enter ( Connection conn ) {
+    public void enter( Connection conn ) {
         printMenuTitle();
 
         String option = "";
         int input = -1;
-        String exit = LOG_OUT;
+        String exit = EXIT;
 
         do {
 
@@ -81,20 +67,28 @@ public class MainMenu implements Menu {
                 }
 
                 switch ( option ) {
-                    case MENU_CHAR:
-                        Menu characterMenu = new CharacterMenu( sc, username );
-                        characterMenu.enter( conn );
+                    case MENU_ITEM:
+                        // Menu itemMenu = new ItemMenu( sc );
+                        // itemMenu.enter( conn );
                         break;
-                    case MENU_PARTY:
-                        Menu partyMenu = new PartyMenu( sc, username );
-                        partyMenu.enter( conn );
+                    case MENU_QUEST:
+                        // Menu questMenu = new QuestMenu( sc );
+                        // questMenu.enter( conn );
                         break;
-                    case MENU_ADMIN:
-                        Menu adminMenu = new AdminMenu( sc );
-                        adminMenu.enter( conn );
+                    case MENU_RACE:
+                        // Menu raceMenu = new RaceMenu( sc );
+                        // raceMenu.enter( conn );
                         break;
-                    case LOG_OUT:
-                        System.out.println( "\nLogging out...\n" );
+                    case MENU_ARCH:
+                        // Menu archetypeMenu = new ArchetypeMenu( sc );
+                        // archetypeMenu.enter( conn );
+                        break;
+                    case MENU_GRANT:
+                        // Menu grantAdminMenu = new GrantAdminMenu( sc );
+                        // grantAdminMenu.enter( conn );
+                        break;
+                    case EXIT:
+                        System.out.println( "\nGoing back...\n" );
                         break;
                     default:
                         System.out.println( "\nInvalid input...\n" );
@@ -104,7 +98,7 @@ public class MainMenu implements Menu {
                 continue;
             }
 
-        } while ( !option.equals( LOG_OUT ) );
+        } while ( !option.equals( EXIT ) );
     }
 
 }
