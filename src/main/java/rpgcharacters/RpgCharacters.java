@@ -9,6 +9,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import rpgcharacters.commands.*;
+import rpgcharacters.userflow.*;
 
 public class RpgCharacters {
     @Parameter(names = { "--help", "-h" },
@@ -26,11 +27,11 @@ public class RpgCharacters {
         Hashtable<String, Command> commands = new Hashtable<String, Command>();
 
         commands.put("create-tables", new CommandCreateTables());
-  
+
         commands.put("login", new CommandLogin());
-      
+
         commands.put("create-user", new CommandCreateUser());
-        commands.put("create-character", new CommandCreateCharacter());        
+        commands.put("create-character", new CommandCreateCharacter());
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
         commands.put("add-party", new CommandAddParty());
@@ -43,8 +44,6 @@ public class RpgCharacters {
         commands.put("list-items", new CommandListItems());
         commands.put("list-characters", new CommandListCharacters());
 
-
-
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));
         }
@@ -53,7 +52,13 @@ public class RpgCharacters {
         jc.parse(args);
 
         // Output usage if no args or help option input
-        if (args.length == 0 || rpg.help) {
+        if (args.length == 0) {
+            Menu initMenu = new InitMenu();
+            initMenu.enter();
+            return;
+        }
+
+        if (rpg.help) {
             jc.usage();
             return;
         }
