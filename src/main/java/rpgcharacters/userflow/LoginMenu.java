@@ -29,6 +29,14 @@ public class LoginMenu implements Menu {
         boolean valid = false;
         isAdmin = false;
 
+        // TODO remove this hack
+        // this is just here to account for a potentially empty db w/o user data
+        if ( user.equals("admin") && pass.equals("admin") ) {
+            isAdmin = true;
+            valid = true;
+            return valid;
+        }
+
         try {
 
             String query = "SELECT COUNT(*) AS usercount "

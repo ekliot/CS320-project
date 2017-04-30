@@ -1,6 +1,9 @@
 package rpgcharacters.userflow;
-import java.util.Scanner;
+
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
 
 import java.sql.Connection;
 
@@ -11,6 +14,13 @@ public class MainMenu implements Menu {
     private String username;
     private boolean isAdmin;
 
+    private List<String> options;
+
+    private final String MENU_CHAR  = "Character Menu";
+    private final String MENU_PARTY = "Party Menu";
+    private final String MENU_ADMIN = "Admin Menu";
+    private final String LOG_OUT    = "Log Out";
+
     /**
     * Constructor Method
     */
@@ -18,6 +28,12 @@ public class MainMenu implements Menu {
         this.sc = sc;
         this.username = username;
         this.isAdmin = isAdmin;
+
+        if ( isAdmin ) {
+            this.options = Arrays.asList( MENU_CHAR, MENU_PARTY, MENU_ADMIN, LOG_OUT );
+        } else {
+            this.options = Arrays.asList( MENU_CHAR, MENU_PARTY, LOG_OUT );
+        }
     }
 
     private void printMenuTitle() {
@@ -27,17 +43,18 @@ public class MainMenu implements Menu {
     }
 
     private void printOptions () {
-        String optionsString = "Available options:\n" +
-            "\t1: Character Menu\n" +
-            "\t2: Party Menu\n";
+        String optionsString = "Available options:\n";
+        String optionFormat = "\t%d: %s\n";
 
-        if (isAdmin) optionsString += "\t3: Admin Menu\n" +
-                                    "\t4: Log Out\n";
-        else optionsString += "\t3: Log Out\n";
+        for ( int i = 0; i < options.size(); i++ ) {
+            optionsString += String.format( optionFormat, (i+1), options.get( i ) );
+        }
 
         optionsString += "-------------------------------------------------------"; // 50 chars;
-        System.out.println(optionsString);
-        System.out.print("Please enter the number of the desired option here: ");
+
+        System.out.println( optionsString );
+
+        System.out.print( "Please enter the number of the desired option here: " );
     }
 
     /**
@@ -45,47 +62,49 @@ public class MainMenu implements Menu {
     */
     public void enter ( Connection conn ) {
         printMenuTitle();
-        int input = 0;
-        int exit = 3;
-        if (isAdmin) exit = 4;
+
+        String option = "";
+        int input = -1;
+        String exit = LOG_OUT;
+
         do {
 
             printOptions();
+
             try {
                 input = sc.nextInt();
 
-                switch (input) {
-                    case 1:
-                        Menu characterMenu = new CharacterMenu(sc,username);
+                if ( input <= 0 || input > options.size() ) {
+                    option = "";
+                } else {
+                    option = options.get( input - 1 );
+                }
+
+                switch ( option ) {
+                    case MENU_CHAR:
+                        Menu characterMenu = new CharacterMenu( sc, username );
                         characterMenu.enter( conn );
                         break;
-                    case 2:
-                        Menu partyMenu = new PartyMenu(sc,username);
+                    case MENU_PARTY:
+                        Menu partyMenu = new PartyMenu( sc, username );
                         partyMenu.enter( conn );
                         break;
-                    case 3:
-                        if (isAdmin) {
-                            System.out.println("\nAdmin Menu\n");
-                        }
-                        else {
-                            System.out.println("\nLogging out...\n");
-                        }
+                    case MENU_ADMIN:
+                        // Menu adminMenu = new AdminMenu( sc, username );
+                        // adminMenu.enter( conn );
                         break;
-                    case 4:
-                        if (isAdmin) { //pass through to default if not admin.
-                            System.out.println("\nLogging out...\n");
-                            break;
-                        }
+                    case LOG_OUT:
+                        System.out.println( "\nLogging out...\n" );
+                        break;
                     default:
-                        System.out.println("\nInvalid input...\n");
+                        System.out.println( "\nInvalid input...\n" );
                 }
-            }
-            catch (InputMismatchException e) {
-                System.out.println("\nInvalid input...\n");
+            } catch ( InputMismatchException e ) {
+                System.out.println( "\nInvalid input...\n" );
                 continue;
             }
 
-        } while (input != exit);
+        } while ( !option.equals( LOG_OUT ) );
     }
 
 }
