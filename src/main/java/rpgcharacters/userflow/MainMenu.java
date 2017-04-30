@@ -90,7 +90,7 @@ public class MainMenu implements Menu {
                         partyMenu.enter( conn );
                         break;
                     case MENU_ADMIN:
-                        // Menu adminMenu = new AdminMenu( sc, username );
+                        // Menu adminMenu = new AdminMenu( sc );
                         // adminMenu.enter( conn );
                         break;
                     case LOG_OUT:
