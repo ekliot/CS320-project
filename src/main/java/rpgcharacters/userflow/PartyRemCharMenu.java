@@ -1,11 +1,13 @@
-
 package rpgcharacters.userflow;
+
 import java.util.Scanner;
 import java.lang.Boolean;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-public class PartyAddCharMenu implements Menu {
+import java.sql.Connection;
+
+public class PartyRemCharMenu implements Menu {
 
     private Scanner sc;
 
@@ -18,7 +20,7 @@ public class PartyAddCharMenu implements Menu {
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public PartyAddCharMenu (Scanner sc,String username, String partyName) {
+    public PartyRemCharMenu (Scanner sc,String username, String partyName) {
         this.sc = sc;
         this.username = username;
         this.partyName = partyName;
@@ -26,7 +28,7 @@ public class PartyAddCharMenu implements Menu {
 
     private void printMenuTitle() {
         System.out.println("\n-------------------------------------------------------");
-        System.out.println("Add character to " + this.partyName);
+        System.out.println("Remove Character From " + this.partyName);
         System.out.println("-------------------------------------------------------");
     }
 
@@ -35,7 +37,7 @@ public class PartyAddCharMenu implements Menu {
         ArrayList<String> userNames = new ArrayList<String>();
 
 
-        // TODO: Get the names of the characters NOT in the party and add them
+        // TODO: Get the names of the characters in the party and add them
         //       to the charNames ArrayList and the corresponding userNames
         //       to the userNames ArrayList.
 
@@ -73,13 +75,16 @@ public class PartyAddCharMenu implements Menu {
 
 
         System.out.println("-------------------------------------------------------");
-        System.out.print("Enter corresponding number of the character to add: ");
+        System.out.print("Enter corresponding number of the character to remove: ");
+        //sc.nextInt(); // clear buffer
         int input = sc.nextInt();
+
         while (input < 1 || input > charNames.size()) {
             System.out.println("\nInvalid input...\n");
-            System.out.print("Enter corresponding number of the character to add: ");
+            System.out.print("Enter corresponding number of the character to remove: ");
             input = sc.nextInt();
         }
+
         return charNames.get(input-1);
     }
 
@@ -89,7 +94,7 @@ public class PartyAddCharMenu implements Menu {
         // make an appropriate print statement if something goes wrong.
         // return true if it worked; otherwise false.
 
-        System.out.println(charName + " has been added to " + partyName);
+        System.out.println(charName + " has been removed from " + partyName);
 
         return true;
     }
@@ -97,7 +102,7 @@ public class PartyAddCharMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         printMenuTitle();
         sc.nextLine();
         boolean success = false;
@@ -105,10 +110,10 @@ public class PartyAddCharMenu implements Menu {
 
         do {
 
-            String charToAdd = selectCharacter();
+            String charToRem = selectCharacter();
 
-            if (!charToAdd.equals("error")) {
-                success = remChararacter(charToAdd);
+            if (!charToRem.equals("error")) {
+                success = remChararacter(charToRem);
             }
 
             wrongCount++;

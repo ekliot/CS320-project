@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
+import java.sql.Connection;
+
 public class PartyMenu implements Menu {
 
     private Scanner sc;
@@ -117,7 +119,7 @@ public class PartyMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         printMenuTitle();
         int input = 0;
         String party;
@@ -131,7 +133,7 @@ public class PartyMenu implements Menu {
                 switch (input) {
                     case 1:
                         Menu createPartyMenu = new CreatePartyMenu(sc,username);
-                        createPartyMenu.enter();
+                        createPartyMenu.enter( conn );
                         break;
                     case 2:
                         party = printParties();
@@ -144,17 +146,17 @@ public class PartyMenu implements Menu {
                     case 4:
                         party = printParties();
                         Menu partyRemCharMenu = new PartyRemCharMenu(sc,username,party);
-                        partyRemCharMenu.enter();
+                        partyRemCharMenu.enter( conn );
                         break;
                     case 5:
                         party = printParties();
                         Menu partyAddCharMenu = new PartyAddCharMenu(sc,username,party);
-                        partyAddCharMenu.enter();
+                        partyAddCharMenu.enter( conn );
                         break;
                     case 6:
                         party = printParties();
                         Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc,username,party);
-                        editPartyQuestsMenu.enter();
+                        editPartyQuestsMenu.enter( conn );
                         break;
                     case 7:
                         System.out.println("\nGoing back...\n");

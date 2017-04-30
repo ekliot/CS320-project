@@ -4,6 +4,8 @@ import java.lang.Boolean;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import java.sql.Connection;
+
 public class CreateCharacterMenu implements Menu {
 
     private Scanner sc;
@@ -99,7 +101,7 @@ public class CreateCharacterMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         printMenuTitle();
         sc.nextLine();
         boolean validCharInfo = false;

@@ -1,7 +1,10 @@
 package rpgcharacters.userflow;
-import java.util.Scanner;
+
 import java.lang.Boolean;
 import java.util.HashMap;
+import java.util.Scanner;
+
+import java.sql.Connection;
 
 public class CreateUserMenu implements Menu {
 
@@ -29,7 +32,7 @@ public class CreateUserMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         sc.nextLine();
         boolean validUserInfo = false;
         int wrongCount = 0;

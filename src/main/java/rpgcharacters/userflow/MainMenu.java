@@ -2,6 +2,8 @@ package rpgcharacters.userflow;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
+import java.sql.Connection;
+
 public class MainMenu implements Menu {
 
     private Scanner sc;
@@ -41,7 +43,7 @@ public class MainMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter () {
+    public void enter ( Connection conn ) {
         printMenuTitle();
         int input = 0;
         int exit = 3;
@@ -55,11 +57,11 @@ public class MainMenu implements Menu {
                 switch (input) {
                     case 1:
                         Menu characterMenu = new CharacterMenu(sc,username);
-                        characterMenu.enter();
+                        characterMenu.enter( conn );
                         break;
                     case 2:
                         Menu partyMenu = new PartyMenu(sc,username);
-                        partyMenu.enter();
+                        partyMenu.enter( conn );
                         break;
                     case 3:
                         if (isAdmin) {
