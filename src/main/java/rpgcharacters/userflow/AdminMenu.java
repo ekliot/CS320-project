@@ -68,8 +68,8 @@ public class AdminMenu implements Menu {
 
                 switch ( option ) {
                     case MENU_ITEM:
-                        // Menu itemMenu = new ItemMenu( sc );
-                        // itemMenu.enter( conn );
+                        Menu itemMenu = new ItemMenu( sc );
+                        itemMenu.enter( conn );
                         break;
                     case MENU_QUEST:
                         // Menu questMenu = new QuestMenu( sc );
