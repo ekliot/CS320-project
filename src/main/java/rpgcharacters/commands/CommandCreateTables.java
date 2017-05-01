@@ -238,16 +238,16 @@ public class CommandCreateTables implements Command {
         HashMap<String, int[]> archSeeds = new HashMap<String, int[]>();
 
         //             archetype               pow prof pers perc
-        archSeeds.put( "Warrior",   new int[]{  10,   0,   5,  10 } ); // 10 +  0 +  5 + 10 = 25
-        archSeeds.put( "Monk",      new int[]{   5,   5,   5,  10 } ); //  5 +  5 +  5 + 10 = 25
-        archSeeds.put( "Scoundrel", new int[]{   0,   5,   5,  15 } ); //  0 +  5 +  5 + 15 = 25
-        archSeeds.put( "Druid",     new int[]{  10,  10,   0,   5 } ); // 10 + 10 +  0 +  5 = 25
-        archSeeds.put( "Bard",      new int[]{   0,  15,   5,   5 } ); //  0 + 15 +  5 +  5 = 25
-        archSeeds.put( "Cleric",    new int[]{  10,  15,   0,   0 } ); // 10 + 15 +  0 +  0 = 25
-        archSeeds.put( "Sorceror",  new int[]{  20,   5,   0,   0 } ); // 20 +  5 +  0 +  0 = 25
-        archSeeds.put( "Magus",     new int[]{  15,   0,   0,  10 } ); // 15 +  0 +  0 + 10 = 25
-        archSeeds.put( "Shaman",    new int[]{  15,   5,   5,   0 } ); // 15 +  5 +  5 +  0 = 25
-        archSeeds.put( "Ranger",    new int[]{   0,   0,  10,  15 } ); //  0 +  0 + 10 + 15 = 25
+        archSeeds.put( "Warrior",   new int[]{  10,  10,   0,   5 } ); // 10 + 10 +  0 +  5 = 25
+        archSeeds.put( "Monk",      new int[]{   5,  10,   5,   5 } ); //  5 + 10 +  5 +  5 = 25
+        archSeeds.put( "Scoundrel", new int[]{   0,  15,   5,   5 } ); //  0 + 15 +  5 +  5 = 25
+        archSeeds.put( "Druid",     new int[]{  10,   5,  10,   0 } ); // 10 +  5 + 10 +  0 = 25
+        archSeeds.put( "Bard",      new int[]{   0,   5,  15,   5 } ); //  0 +  5 + 15 +  5 = 25
+        archSeeds.put( "Cleric",    new int[]{  10,   0,  15,   0 } ); // 10 +  0 + 15 +  0 = 25
+        archSeeds.put( "Sorceror",  new int[]{  20,   0,   5,   0 } ); // 20 +  0 +  5 +  0 = 25
+        archSeeds.put( "Magus",     new int[]{  15,  10,   0,   0 } ); // 15 + 10 +  0 +  0 = 25
+        archSeeds.put( "Shaman",    new int[]{  15,   0,   5,   5 } ); // 15 +  0 +  5 +  5 = 25
+        archSeeds.put( "Ranger",    new int[]{   0,  15,   0,  10 } ); //  0 + 15 +  0 + 10 = 25
 
         String insertArch = "INSERT INTO archetype VALUES ( '%s', %d, %d, %d, %d );";
         try {
