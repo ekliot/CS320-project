@@ -96,8 +96,6 @@ public class ItemMenu implements Menu {
             System.out.print( "Enter item name: " );
             name = sc.nextLine();
 
-            // TODO check for quotation marks and/or SQL-dangerous code?
-
             if ( name.isEmpty() ) {
                 if ( cancelling ) {
                     quit = true;
@@ -120,8 +118,6 @@ public class ItemMenu implements Menu {
 
         System.out.print( "Enter item description: " );
         description = sc.nextLine();
-
-        // TODO check for quotation marks and/or SQL-dangerous code?
 
         // try to create the item
 

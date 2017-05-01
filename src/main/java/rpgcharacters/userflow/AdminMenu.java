@@ -80,8 +80,8 @@ public class AdminMenu implements Menu {
                         raceMenu.enter( conn );
                         break;
                     case MENU_ARCH:
-                        // Menu archetypeMenu = new ArchetypeMenu( sc );
-                        // archetypeMenu.enter( conn );
+                        Menu archetypeMenu = new ArchetypeMenu( sc );
+                        archetypeMenu.enter( conn );
                         break;
                     case MENU_GRANT:
                         // Menu grantAdminMenu = new GrantAdminMenu( sc );
