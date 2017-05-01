@@ -76,8 +76,8 @@ public class AdminMenu implements Menu {
                         // questMenu.enter( conn );
                         break;
                     case MENU_RACE:
-                        // Menu raceMenu = new RaceMenu( sc );
-                        // raceMenu.enter( conn );
+                        Menu raceMenu = new RaceMenu( sc );
+                        raceMenu.enter( conn );
                         break;
                     case MENU_ARCH:
                         // Menu archetypeMenu = new ArchetypeMenu( sc );

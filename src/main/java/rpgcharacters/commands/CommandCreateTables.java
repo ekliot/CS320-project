@@ -21,11 +21,11 @@ public class CommandCreateTables implements Command {
         createQuestTable(conn);
         createCharacterItemTable(conn);
         createPartyQuestTable(conn);
-      
+
         seedRace( conn );
         seedArchetype( conn );
     }
-    
+
     private void createUserTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS user("
@@ -40,7 +40,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createRaceTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS race("
@@ -58,16 +58,16 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createArchetypeTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS archetype("
-                    + "name VARCHAR(255) PRIMARY KEY,"
-                    + "power_mod INT NOT NULL,"
-                    + "proficiency_mod INT NOT NULL,"
-                    + "personality_mod INT NOT NULL,"
-                    + "perception_mod INT NOT NULL"
-                    + ");";
+                         + "name VARCHAR(255) PRIMARY KEY,"
+                         + "power_mod INT NOT NULL,"
+                         + "proficiency_mod INT NOT NULL,"
+                         + "personality_mod INT NOT NULL,"
+                         + "perception_mod INT NOT NULL"
+                         + ");";
 
             Statement stmt = conn.createStatement();
             stmt.execute(query);
@@ -76,7 +76,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createItemTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS item("
@@ -91,7 +91,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createPartyTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS party("
@@ -108,7 +108,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createCharacterTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS character("
@@ -137,7 +137,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createQuestTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS quest("
@@ -155,7 +155,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createCharacterItemTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS character_item("
@@ -175,7 +175,7 @@ public class CommandCreateTables implements Command {
             e.printStackTrace();
         }
     }
-    
+
     private void createPartyQuestTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS party_quest("
@@ -202,22 +202,22 @@ public class CommandCreateTables implements Command {
     private void seedRace( Connection conn ) {
         HashMap<String, int[]> raceSeeds = new HashMap<String, int[]>();
 
-        //             race          pow  pers perc prof
-        raceSeeds.put( "Human",    new int[]{   5,  10,   0,  10 } ); //  5 + 10 +  0 + 10 = 25
-        raceSeeds.put( "Elf",      new int[]{   5,  15,  -5,  10 } ); //  5 + 15 -  5 + 15 = 25
-        raceSeeds.put( "Half-Elf", new int[]{   0,  10,   0,  15 } ); //  0 + 10 +  0 + 15 = 25
-        raceSeeds.put( "Half-Ork", new int[]{  20, -10,   5,  10 } ); // 20 - 10 +  5 + 10 = 25
-        raceSeeds.put( "Ork",      new int[]{  30, -20,   5,  10 } ); // 30 - 20 +  5 + 10 = 25
-        raceSeeds.put( "Halfling", new int[]{   0,   0,   5,  20 } ); //  0 +  0 +  5 + 20 = 25
-        raceSeeds.put( "Dwarf",    new int[]{  15,  -5,  15,   0 } ); // 15 -  5 + 15 +  0 = 25
-        raceSeeds.put( "Gnome",    new int[]{  15, -10,  10,  10 } ); // 15 - 10 + 10 + 10 = 25
-        raceSeeds.put( "Goblin",   new int[]{   5, -15,  10,  25 } ); //  5 - 15 + 10 + 25 = 25
-        raceSeeds.put( "Fey",      new int[]{   5,  10, -15,  25 } ); //  5 + 10 - 15 + 25 = 25
+        //             race                   pow prof pers perc
+        raceSeeds.put( "Human",    new int[]{   5,  10,  10,   0 } ); //  5 + 10 + 10 +  0 = 25
+        raceSeeds.put( "Elf",      new int[]{   5,  10,  15,  -5 } ); //  5 + 10 + 15 -  5 = 25
+        raceSeeds.put( "Half-Elf", new int[]{   0,  15,  10,   0 } ); //  0 + 15 + 10 +  0 = 25
+        raceSeeds.put( "Half-Ork", new int[]{  20,  10, -10,   5 } ); // 20 + 10 - 10 +  5 = 25
+        raceSeeds.put( "Ork",      new int[]{  30,  10, -20,   5 } ); // 30 + 10 - 20 +  5 = 25
+        raceSeeds.put( "Halfling", new int[]{   0,  20,   0,   5 } ); //  0 +  0 +  5 + 20 = 25
+        raceSeeds.put( "Dwarf",    new int[]{  15,   0,  -5,  15 } ); // 15 +  0 -  5 + 15 = 25
+        raceSeeds.put( "Gnome",    new int[]{  15,  10, -10,  10 } ); // 15 + 10 - 10 + 10 = 25
+        raceSeeds.put( "Goblin",   new int[]{   5,  25, -15,  10 } ); //  5 + 25 - 15 + 10 = 25
+        raceSeeds.put( "Fey",      new int[]{   5,  25,  10, -15 } ); //  5 + 25 + 10 - 15 = 25
 
         String insertRace = "INSERT INTO race VALUES ( '%s', %d, %d, %d, %d );";
         try {
             Statement stmt = conn.createStatement();
-    
+
             for ( String race : raceSeeds.keySet() ) {
                 int[] statMods = raceSeeds.get(race);
                 stmt.execute( String.format(
@@ -237,7 +237,7 @@ public class CommandCreateTables implements Command {
     private void seedArchetype( Connection conn ) {
         HashMap<String, int[]> archSeeds = new HashMap<String, int[]>();
 
-        //             archetype      pow pers perc prof
+        //             archetype               pow prof pers perc
         archSeeds.put( "Warrior",   new int[]{  10,   0,   5,  10 } ); // 10 +  0 +  5 + 10 = 25
         archSeeds.put( "Monk",      new int[]{   5,   5,   5,  10 } ); //  5 +  5 +  5 + 10 = 25
         archSeeds.put( "Scoundrel", new int[]{   0,   5,   5,  15 } ); //  0 +  5 +  5 + 15 = 25
@@ -252,7 +252,7 @@ public class CommandCreateTables implements Command {
         String insertArch = "INSERT INTO archetype VALUES ( '%s', %d, %d, %d, %d );";
         try {
             Statement stmt = conn.createStatement();
-    
+
             for ( String arch : archSeeds.keySet() ) {
                 int[] statMods = archSeeds.get(arch);
                 stmt.execute( String.format(
