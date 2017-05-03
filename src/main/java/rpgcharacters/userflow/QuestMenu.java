@@ -29,35 +29,37 @@ public class QuestMenu implements Menu {
     }
 
     private void listQuests() {
-        // try {
-        //     // get every item, and the name of the quest that rewards it
-        //     String query = "SELECT I.name AS item, I.description AS description, Q.name AS quest "
-        //                  + "FROM item AS I LEFT OUTER JOIN quest AS Q on I.name=Q.item_name";
-        //
-        //     Statement stmt = conn.createStatement();
-        //     ResultSet results = stmt.executeQuery(query);
-        //
-        //     System.out.println( "\nCurrent Items:" );
-        //     System.out.println( "==============" );
-        //
-        //     results.beforeFirst();
-        //
-        //     while ( results.next() ) {
-        //         String item  = results.getString("item");
-        //         String quest = results.getString("quest");
-        //         String desc  = results.getString("description");
-        //         printItem( item, quest, desc );
-        //     }
-        //
-        //     System.out.println( "" );
-        // } catch ( SQLException e ) {
-        //     e.printStackTrace();
-        // }
+        try {
+            // get every item, and the name of the quest that rewards it
+            String query = "SELECT * "
+                         + "FROM quest;";
+
+            Statement stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery( query );
+
+            System.out.println( "\nQuests:" );
+            System.out.println( "==============" );
+
+            results.beforeFirst();
+
+            while ( results.next() ) {
+                String quest = results.getString( "name"        );
+                String desc  = results.getString( "description" );
+                int    exp   = results.getInt(    "experience"  );
+                String item  = results.getString( "item_name"   );
+                printQuest( quest, desc, exp, item );
+            }
+
+            System.out.println( "" );
+        } catch ( SQLException e ) {
+            e.printStackTrace();
+        }
     }
 
-    private void printQuest ( String name, String quest, String desc ) {
-        System.out.println( "Name: " + name);
-        // System.out.println( "Rewarded for: " + ( quest.equals( "null" ) ? "Not rewarded" : quest ) );
+    private void printQuest ( String name, String desc, int exp, String item ) {
+        System.out.println( "Name: " + name );
+        System.out.println( "Experience reward: " + exp );
+        System.out.println( "Item reward: " + item );
         System.out.println( "Description:" );
 
         if ( !desc.isEmpty() ) {
