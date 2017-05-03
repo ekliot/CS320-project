@@ -30,6 +30,19 @@ public class CommandCreateUser implements Command {
 
             Statement stmt = conn.createStatement();
             stmt.execute(query);
+
+            query = "GRANT dbUser "
+                  + "TO (SELECT username "
+                  +     "FROM user "
+                  +     "WHERE username = '" + this.username + "');";
+            stmt.executeQuery(query);
+
+            query = "GRANT dbAdmin "
+                  + "TO (SELECT admin "
+                  +     "FROM user "
+                  +     "WHERE admin = TRUE);";
+            stmt.executeQuery(query);
+
             System.out.println("Welcome, " + username + "!");
         } catch (SQLException e) {
             e.printStackTrace();
