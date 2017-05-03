@@ -18,7 +18,7 @@ public class InitMenu implements Menu {
 
     private void printMenuTitle() {
         System.out.println("\n-------------------------------------------------------");
-        System.out.println("Init Menu");
+        System.out.println("RPG Characters Application");
     }
 
     private void printOptions () {

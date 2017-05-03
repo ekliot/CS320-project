@@ -16,6 +16,9 @@ public class LoginMenu implements Menu {
 
     private boolean isAdmin = false;
 
+    final String ANSI_CLS = "\u001b[2J";
+    final String ANSI_HOME = "\u001b[H";
+
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
@@ -24,7 +27,7 @@ public class LoginMenu implements Menu {
         this.sc = sc;
     }
 
-    public boolean checkLogin( String user, String pass ) {
+    private boolean checkLogin( String user, String pass ) {
 
         boolean valid = false;
         isAdmin = false;
@@ -66,6 +69,12 @@ public class LoginMenu implements Menu {
 
     }
 
+    private void printMenuTitle() {
+        System.out.println("\n-------------------------------------------------------");
+        System.out.println("Login Menu");
+        System.out.println("-------------------------------------------------------");
+    }
+
     /**
      * Defines the loop for this menu
      *
@@ -74,6 +83,12 @@ public class LoginMenu implements Menu {
     public void enter ( Connection conn ) {
 
         this.conn = conn;
+
+        // clear the screen
+        System.out.print( ANSI_CLS + ANSI_HOME );
+        System.out.flush();
+
+        printMenuTitle();
 
         System.out.println( "\nEnter your username and password (enter nothing to cancel)" );
 
@@ -117,9 +132,7 @@ public class LoginMenu implements Menu {
             System.out.println( "\nWelcome " + user + "!\n" );
 
             // clear the screen
-            final String ANSI_CLS = "\u001b[2J";
-            final String ANSI_HOME = "\u001b[H";
-            System.out.print(ANSI_CLS + ANSI_HOME);
+            System.out.print( ANSI_CLS + ANSI_HOME );
             System.out.flush();
 
             Menu mainMenu = new MainMenu( sc, user, isAdmin );
