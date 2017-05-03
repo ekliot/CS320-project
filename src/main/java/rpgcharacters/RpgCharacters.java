@@ -51,28 +51,31 @@ public class RpgCharacters {
         // Parse args
         jc.parse(args);
 
-        // Output usage if no args or help option input
-        if (args.length == 0) {
-            Menu initMenu = new InitMenu();
-            initMenu.enter();
-            return;
-        }
-
-        if (rpg.help) {
-            jc.usage();
-            return;
-        }
-
         // Create db connection
         Connection conn;
+
         try {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:~/h2db",
                                                "foreignkeys",
                                                "password");
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch ( SQLException | ClassNotFoundException e ) {
             // TODO: Do something better here
             e.printStackTrace();
+            return;
+        }
+
+        // Output usage if no args or help option input
+        if (args.length == 0) {
+
+            Menu initMenu = new InitMenu();
+            initMenu.enter( conn );
+            return;
+
+        }
+
+        if (rpg.help) {
+            jc.usage();
             return;
         }
 
