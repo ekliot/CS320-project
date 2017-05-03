@@ -28,10 +28,13 @@ public class ItemMenu implements Menu {
     }
 
     private void listItems() {
+
+        String item, quest, desc;
+
         try {
             // get every item, and the name of the quest that rewards it
             String query = "SELECT I.name AS item, I.description AS description, Q.name AS quest "
-                         + "FROM item AS I LEFT OUTER JOIN quest AS Q on I.name=Q.item_name";
+                         + "FROM item AS I LEFT OUTER JOIN quest AS Q on I.name=Q.item_name;";
 
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
@@ -42,9 +45,9 @@ public class ItemMenu implements Menu {
             results.beforeFirst();
 
             while ( results.next() ) {
-                String item  = results.getString("item");
-                String quest = results.getString("quest");
-                String desc  = results.getString("description");
+                item  = results.getString("item");
+                quest = results.getString("quest");
+                desc  = results.getString("description");
                 printItem( item, quest, desc );
             }
 
@@ -83,7 +86,7 @@ public class ItemMenu implements Menu {
         System.out.println( "-------------------------------------------------------" ); // length 50
     }
 
-    public void newItem() {
+    private void newItem() {
 
         boolean success = false;
         String name, description;
@@ -142,7 +145,7 @@ public class ItemMenu implements Menu {
 
     }
 
-    public void printMenuTitle() {
+    private void printMenuTitle() {
         System.out.println( "\n-------------------------------------------------------" );
         System.out.println( "Item Menu" );
         System.out.println( "-------------------------------------------------------" );

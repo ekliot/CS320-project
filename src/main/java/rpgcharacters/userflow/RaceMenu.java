@@ -196,7 +196,7 @@ public class RaceMenu implements Menu {
 
     }
 
-    public void printMenuTitle() {
+    private void printMenuTitle() {
         System.out.println( "\n-------------------------------------------------------" );
         System.out.println( "Race Menu" );
         System.out.println( "-------------------------------------------------------" );

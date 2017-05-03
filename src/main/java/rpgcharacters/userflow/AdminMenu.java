@@ -25,7 +25,7 @@ public class AdminMenu implements Menu {
         this.options = Arrays.asList( MENU_ITEM, MENU_QUEST, MENU_RACE, MENU_ARCH, MENU_GRANT, EXIT );
     }
 
-    public void printMenuTitle() {
+    private void printMenuTitle() {
         System.out.println("\n-------------------------------------------------------");
         System.out.println("Admin Menu");
         System.out.println("-------------------------------------------------------");
@@ -72,8 +72,8 @@ public class AdminMenu implements Menu {
                         itemMenu.enter( conn );
                         break;
                     case MENU_QUEST:
-                        // Menu questMenu = new QuestMenu( sc );
-                        // questMenu.enter( conn );
+                        Menu questMenu = new QuestMenu( sc );
+                        questMenu.enter( conn );
                         break;
                     case MENU_RACE:
                         Menu raceMenu = new RaceMenu( sc );

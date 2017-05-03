@@ -196,7 +196,7 @@ public class ArchetypeMenu implements Menu {
 
     }
 
-    public void printMenuTitle() {
+    private void printMenuTitle() {
         System.out.println( "\n-------------------------------------------------------" );
         System.out.println( "Archetype Menu" );
         System.out.println( "-------------------------------------------------------" );
