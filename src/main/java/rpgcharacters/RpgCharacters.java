@@ -1,15 +1,13 @@
 package rpgcharacters;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Hashtable;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import rpgcharacters.commands.*;
-import rpgcharacters.userflow.*;
+import rpgcharacters.userFlow.*;
 
 public class RpgCharacters {
     @Parameter(names = { "--help", "-h" },
@@ -78,7 +76,40 @@ public class RpgCharacters {
             jc.usage();
             return;
         }
+        //Create Roles
+        try {
+            Statement s = conn.createStatement();
 
+            String userView = "CREATE VIEW userView AS "
+                            + "SELECT * "
+                            + "FROM party, character;";
+            s.executeQuery(userView);
+
+            //Change later
+            String adminView = "CREATE VIEW adminView AS "
+                             + "SELECT * "
+                             + "FROM *;";
+            s.executeQuery(adminView);
+
+            String adminRole = "CREATE ROLE dbAdmin;";
+            s.executeQuery(adminRole);
+
+            String userRole = "CREATE ROLE dbUser;";
+            s.executeQuery(userRole);
+
+            String userPrivileges = "GRANT READ, INSERT, UPDATE, DELETE "
+                                  + "ON userView "
+                                  + "TO dbUser, dbAdmin;";
+            s.executeQuery(userPrivileges);
+
+            String adminPrivileges = "GRANT INDEX, RESOURCES, ALTER, DROP "
+                                   + "ON adminView "
+                                   + "TO dbAdmin;";
+            s.executeQuery(adminPrivileges);
+
+        } catch( SQLException e ) {
+            e.printStackTrace();
+        }
         // Run desired command
         for (String command : commands.keySet()) {
             if (jc.getParsedCommand() == command) {
