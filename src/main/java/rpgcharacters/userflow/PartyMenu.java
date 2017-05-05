@@ -9,6 +9,7 @@ import java.sql.Connection;
 public class PartyMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
 
@@ -96,7 +97,7 @@ public class PartyMenu implements Menu {
                 if (userPr.equals(this.username)) {
                     userPr = "You";
                 }
-                CharacterMenu.printCharacter(charNames.get(i),userNames.get(i));
+                CharacterMenu.printCharacter(conn, charNames.get(i),userNames.get(i));
             }
         }
     }
@@ -120,6 +121,7 @@ public class PartyMenu implements Menu {
     * Defines the loop for this menu
     */
     public void enter ( Connection conn ) {
+        this.conn = conn;
         printMenuTitle();
         int input = 0;
         String party;
