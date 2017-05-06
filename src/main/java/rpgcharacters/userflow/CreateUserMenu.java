@@ -1,14 +1,12 @@
 package rpgcharacters.userflow;
 
-import java.lang.Boolean;
-import java.util.HashMap;
+import java.sql.*;
 import java.util.Scanner;
-
-import java.sql.Connection;
 
 public class CreateUserMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     /**
      * Constructor Method
@@ -19,20 +17,28 @@ public class CreateUserMenu implements Menu {
     }
 
     public boolean createUser (String user, String pass) {
-
-        // TODO: Modify to use SQL and have specific printouts for cases:
-        // - Username already in use
-        // - Other error occured
-        //
-        // Return true if no errors and use is created; False otherwise.
-
-        return true;
+        try {
+            String query = "INSERT INTO user VALUES ("
+                         + "'" + user.replaceAll("'", "''") + "',"
+                         + "'" + pass.replaceAll("'", "''") + "');";
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+            return true;
+        } catch (SQLException e) {
+            if (e.getMessage().startsWith("Unique index or primary key violation")) {
+                System.out.println("\nUser already exists!\n");
+            } else {
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 
     /**
-    * Defines the loop for this menu
-    */
+     * Defines the loop for this menu
+     */
     public void enter ( Connection conn ) {
+        this.conn = conn;
         sc.nextLine();
         boolean validUserInfo = false;
         int wrongCount = 0;
