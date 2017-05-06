@@ -225,7 +225,7 @@ public class CommandCreateTables implements Command {
     /**
      * TODO
     **/
-    private void seedRace(Connection conn ) {
+    private void seedRace(Connection conn) {
         HashMap<String, int[]> raceSeeds = new HashMap<String, int[]>();
         Scanner in = new Scanner(System.in);
         System.out.print("Races seed file: ");
@@ -265,7 +265,7 @@ public class CommandCreateTables implements Command {
         HashMap<String, int[]> archSeeds = new HashMap<String, int[]>();
 
         Scanner in = new Scanner(System.in);
-        System.out.print("Races seed file: ");
+        System.out.print("Archetypes seed file: ");
         String filename = in.nextLine();
         String[][] lines = readParams(filename);
 
