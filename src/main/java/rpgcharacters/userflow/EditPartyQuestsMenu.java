@@ -208,18 +208,21 @@ public class EditPartyQuestsMenu implements Menu {
             printOptions();
             try {
                 input = sc.nextInt();
-                questName = printQuests();
                 switch (input) {
                     case 1:
+                        questName = printQuests();
                         printQuest(questName);
                         break;
                     case 2:
+                        questName = printQuests();
                         activateQuest(questName);
                         break;
                     case 3:
+                        questName = printQuests();
                         completeQuest(questName);
                         break;
                     case 4:
+                        questName = printQuests();
                         cancelQuest(questName);
                         break;
                     case 5:
