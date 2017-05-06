@@ -91,7 +91,6 @@ public class QuestMenu implements Menu {
         String name, description;
         int exp = 0;
 
-        boolean success = false;
         boolean cancelling = false;
         boolean quit = false;
 
@@ -159,13 +158,9 @@ public class QuestMenu implements Menu {
             stmt.execute( query );
 
             System.out.println( "Quest \"" + name + "\" has been created!\n" );
-            success = true;
         } catch ( SQLException e ) {
-            e.printStackTrace();
-        }
-
-        if ( !success ) {
             System.out.println( "Could not create quest, \"" + name + "\"\n" );
+            e.printStackTrace();
         }
 
     }

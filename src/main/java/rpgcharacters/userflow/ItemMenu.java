@@ -89,7 +89,6 @@ public class ItemMenu implements Menu {
 
     private void newItem() {
 
-        boolean success = false;
         String name, description;
         boolean cancelling = false;
         boolean quit = false;
@@ -135,13 +134,9 @@ public class ItemMenu implements Menu {
             stmt.execute( query );
 
             System.out.println( "Item " + name + " has been created!\n" );
-            success = true;
         } catch ( SQLException e ) {
-            e.printStackTrace();
-        }
-
-        if ( !success ) {
             System.out.println( "Could not create item, " + name + "\n" );
+            e.printStackTrace();
         }
 
     }
