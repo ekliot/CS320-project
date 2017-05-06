@@ -233,7 +233,7 @@ public class CommandCreateTables implements Command {
         String[][] lines = readParams(filename);
 
         for (int i = 0; i < lines.length; i++) {
-            System.out.println(lines[i][0] + ", " + lines[i][1] + ", " + lines[i][2] + ", " + lines[i][3] + ", " + lines[i][4]);
+            // System.out.println(lines[i][0] + ", " + lines[i][1] + ", " + lines[i][2] + ", " + lines[i][3] + ", " + lines[i][4]);
             raceSeeds.put( lines[i][0], new int[]{Integer.parseInt(lines[i][1]),
                                                   Integer.parseInt(lines[i][2]),
                                                   Integer.parseInt(lines[i][3]),
