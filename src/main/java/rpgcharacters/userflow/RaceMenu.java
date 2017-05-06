@@ -72,12 +72,7 @@ public class RaceMenu implements Menu {
 
     public void newRace() {
 
-        boolean success = false;
         String name;
-        int power_mod       = 0;
-        int proficiency_mod = 0;
-        int personality_mod = 0;
-        int perception_mod  = 0;
         boolean cancelling = false;
         boolean quit = false;
 
@@ -103,72 +98,59 @@ public class RaceMenu implements Menu {
             return;
         }
 
-        cancelling = false;
+        // parse race stats input
 
-        // take input for power modifier
+        boolean stats_valid = false;
+        String stat_input;
+        String stat_input_regex = "-?\\d+ -?\\d+ -?\\d+ -?\\d+";
+        String[] stats;
 
-        boolean loop = true;
+        int power_mod       = 0;
+        int proficiency_mod = 0;
+        int personality_mod = 0;
+        int perception_mod  = 0;
 
-        do {
-            try {
-                System.out.print( "Enter archetype's power modifier: " );
-                power_mod = sc.nextInt();
-                loop = false;
-            } catch ( InputMismatchException e ) {
-                System.out.println( "Invalid input..." );
-                // scrub the Scanner
-                sc.nextLine();
-            }
-        } while ( loop );
+        int stat_sum        = 0;
+        int stat_balance    = 25;
 
-
-        // take input for proficiency modifier
-
-        loop = true;
+        System.out.println( "Enter race's stat modifiers" );
+        System.out.println( "Must format as four integers with a sum of 25 (e.g. `15 0 20 -10`)" );
+        System.out.println( "Order: Power Proficiency Personality Perception" );
+        System.out.println( "Enter nothing to cancel" );
 
         do {
-            try {
-                System.out.print( "Enter archetype's proficiency modifier: " );
-                proficiency_mod = sc.nextInt();
-                loop = false;
-            } catch ( InputMismatchException e ) {
-                System.out.println( "Invalid input..." );
-                // scrub the Scanner
-                sc.nextLine();
+            stat_input = sc.nextLine();
+
+            if ( stat_input.isEmpty() ) {
+                quit = true;
+                break;
             }
-        } while ( loop );
 
-        // take input for power modifier
+            if ( java.util.regex.Pattern.matches( stat_input_regex, stat_input ) ) {
 
-        loop = true;
+                stats = stat_input.split( " " );
 
-        do {
-            try {
-                System.out.print( "Enter archetype's personality modifier: " );
-                personality_mod = sc.nextInt();
-                loop = false;
-            } catch ( InputMismatchException e ) {
-                System.out.println( "Invalid input..." );
-                // scrub the Scanner
-                sc.nextLine();
+                power_mod       = Integer.parseInt( stats[0] );
+                proficiency_mod = Integer.parseInt( stats[1] );
+                personality_mod = Integer.parseInt( stats[2] );
+                perception_mod  = Integer.parseInt( stats[3] );
+
+                stat_sum = power_mod + proficiency_mod + personality_mod + perception_mod;
+
+                if ( stat_sum == stat_balance ) {
+                    stats_valid = true;
+                } else {
+                    System.out.println( "Stats add up to invalid sum (got " + stat_sum + ", need " + stat_balance + "), try again" );
+                }
+            } else {
+                System.out.println( "Input in invalid format, try again" );
             }
-        } while ( loop );
+        } while ( !stats_valid );
 
-        // take input for power modifier
-
-        loop = true;
-
-        do {
-            try {
-                System.out.print( "Enter archetype's perception modifier: " );
-                perception_mod = sc.nextInt();
-                loop = false;
-            } catch ( InputMismatchException e ) {
-                System.out.println( "Invalid input..." );
-                // scrub the Scanner
-                sc.nextLine();
-            }
-        } while ( loop );
+        if ( quit ) {
+            System.out.println( "Cancelled archetype creation...\n" );
+            return;
+        }
 
         // try to create the race
 
@@ -185,13 +167,9 @@ public class RaceMenu implements Menu {
             printRace( name, new int[]{
                 power_mod, proficiency_mod, personality_mod, perception_mod
             } );
-            success = true;
         } catch ( SQLException e ) {
-            e.printStackTrace();
-        }
-
-        if ( !success ) {
             System.out.println( "Could not create race, " + name + "\n" );
+            e.printStackTrace();
         }
 
     }

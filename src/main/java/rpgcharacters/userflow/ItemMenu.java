@@ -60,7 +60,7 @@ public class ItemMenu implements Menu {
     private void printItem ( String name, String quest, String desc ) {
         System.out.println( "Name: " + name );
         // TODO this line is being finicky
-        // System.out.println( "Rewarded for: " + ( quest.equals( "null" ) ? "Not rewarded" : quest ) );
+        System.out.println( "Rewarded for: " + ( quest == null ? "Not rewarded" : quest ) );
         System.out.println( "Description:" );
 
         if ( !desc.isEmpty() ) {
