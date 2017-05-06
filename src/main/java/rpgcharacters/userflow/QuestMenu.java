@@ -243,7 +243,6 @@ public class QuestMenu implements Menu {
 
     private String createItem() {
 
-        boolean success = false;
         String name, description;
         boolean cancelling = false;
         boolean quit = false;
@@ -289,13 +288,9 @@ public class QuestMenu implements Menu {
             stmt.execute( query );
 
             System.out.println( "Item " + name + " has been created!\n" );
-            success = true;
         } catch ( SQLException e ) {
-            e.printStackTrace();
-        }
-
-        if ( !success ) {
             System.out.println( "Could not create item, " + name + "\n" );
+            e.printStackTrace();
             name = ""; // make empty string for error checking on receiving end of this method
         }
 

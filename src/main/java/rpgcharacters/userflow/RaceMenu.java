@@ -30,7 +30,7 @@ public class RaceMenu implements Menu {
     private void listRaces() {
         try {
             // get every race, and the name of the quest that rewards it
-            String query = "SELECT *"
+            String query = "SELECT * "
                          + "FROM race";
 
             Statement stmt = conn.createStatement();
