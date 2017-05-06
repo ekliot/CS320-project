@@ -92,9 +92,7 @@ public class CharacterMenu implements Menu {
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
 
-            results.last();
-            int total = results.getRow();
-            if (total == 0) {
+            if (!results.last()) {
                 System.out.println(charName + " is not in a party!");
             } else {
                 String updateQuery = "UPDATE character "
