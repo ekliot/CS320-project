@@ -44,7 +44,8 @@ public class LoginMenu implements Menu {
 
             String query = "SELECT COUNT(*) AS usercount "
                          + "FROM user "
-                         + "WHERE username='" + user + "' AND password='" + pass + "';";
+                         + "WHERE username='" + user.replaceAll("'", "''") + "' "
+                         + "AND password='" + pass.replaceAll("'", "''") + "';";
 
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery( query );

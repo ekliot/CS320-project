@@ -28,8 +28,6 @@ public class RpgCharacters {
 
         commands.put("create-tables", new CommandCreateTables());
 
-        commands.put("login", new CommandLogin());
-
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
         commands.put("add-party", new CommandAddParty());
@@ -39,7 +37,6 @@ public class RpgCharacters {
         commands.put("delete-item", new CommandDeleteItem());
         commands.put("list-quests", new CommandListQuests());
         commands.put("list-items", new CommandListItems());
-        commands.put("list-characters", new CommandListCharacters());
 
         for (String command : commands.keySet()) {
             jc.addCommand(command, commands.get(command));
