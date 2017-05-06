@@ -1,15 +1,13 @@
 package rpgcharacters.userflow;
 
+import java.sql.*;
 import java.util.Scanner;
-import java.lang.Boolean;
-import java.util.HashMap;
 import java.util.ArrayList;
-
-import java.sql.Connection;
 
 public class PartyRemCharMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
     private String partyName;
@@ -20,10 +18,11 @@ public class PartyRemCharMenu implements Menu {
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public PartyRemCharMenu (Scanner sc,String username, String partyName) {
+    public PartyRemCharMenu(Scanner sc, String username, String partyName, Connection conn) {
         this.sc = sc;
         this.username = username;
         this.partyName = partyName;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -88,7 +87,7 @@ public class PartyRemCharMenu implements Menu {
         return charNames.get(input-1);
     }
 
-    private boolean remChararacter (String charName) {
+    private boolean remChararacter(String charName) {
 
         // TODO: Remove character from the party.
         // make an appropriate print statement if something goes wrong.
@@ -102,7 +101,7 @@ public class PartyRemCharMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         printMenuTitle();
         sc.nextLine();
         boolean success = false;

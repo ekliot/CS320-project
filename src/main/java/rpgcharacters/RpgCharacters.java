@@ -31,8 +31,6 @@ public class RpgCharacters {
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
         commands.put("add-party", new CommandAddParty());
-        commands.put("create-party", new CommandCreateParty());
-        commands.put("list-party", new CommandListParties());
         commands.put("delete-quest", new CommandDeleteQuest());
         commands.put("delete-item", new CommandDeleteItem());
         commands.put("list-quests", new CommandListQuests());
@@ -53,19 +51,16 @@ public class RpgCharacters {
             conn = DriverManager.getConnection("jdbc:h2:~/h2db",
                                                "foreignkeys",
                                                "password");
-        } catch ( SQLException | ClassNotFoundException e ) {
-            // TODO: Do something better here
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
 
         // Output usage if no args or help option input
         if (args.length == 0) {
-
-            Menu initMenu = new InitMenu();
-            initMenu.enter( conn );
+            Menu initMenu = new InitMenu(conn);
+            initMenu.enter();
             return;
-
         }
 
         if (rpg.help) {
@@ -85,7 +80,6 @@ public class RpgCharacters {
         try {
             conn.close();
         } catch (SQLException e) {
-            // TODO: Do something better here
             e.printStackTrace();
         }
     }

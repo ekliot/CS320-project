@@ -1,14 +1,14 @@
 package rpgcharacters.userflow;
 
+import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
-import java.sql.Connection;
-
 public class EditPartyQuestsMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
     private String partyName;
@@ -16,10 +16,11 @@ public class EditPartyQuestsMenu implements Menu {
     /**
      * Constructor Method
      */
-    public EditPartyQuestsMenu (Scanner sc, String username, String partyName) {
+    public EditPartyQuestsMenu(Scanner sc, String username, String partyName, Connection conn) {
         this.sc = sc;
         this.username = username;
         this.partyName = partyName;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -29,7 +30,6 @@ public class EditPartyQuestsMenu implements Menu {
     }
 
     private String printQuests() {
-
 
         ArrayList<String> available = new ArrayList<String>();
         // TODO: replace with real data from sql db
@@ -87,7 +87,7 @@ public class EditPartyQuestsMenu implements Menu {
         return available.get(input-1);
     }
 
-    private void cancelQuest (String questName) {
+    private void cancelQuest(String questName) {
 
         // TODO:
         // 1. Check if the quest is in the current party's active quests.
@@ -98,7 +98,7 @@ public class EditPartyQuestsMenu implements Menu {
         System.out.println(questName + " has been canceled!");
     }
 
-    private void completeQuest (String questName) {
+    private void completeQuest(String questName) {
 
         // TODO:
         // 1. Check if the quest is in the current party's active quests.
@@ -109,7 +109,7 @@ public class EditPartyQuestsMenu implements Menu {
         System.out.println(questName + " has been completed!");
     }
 
-    private void activateQuest (String questName) {
+    private void activateQuest(String questName) {
 
         // TODO:
         // 1. Check if the quest is not in the current party's quests.
@@ -120,7 +120,7 @@ public class EditPartyQuestsMenu implements Menu {
         System.out.println(questName + " has been activated!");
     }
 
-    private void printQuest (String questName) {
+    private void printQuest(String questName) {
         String description;
         int experience;
         String rewardItemName;
@@ -182,7 +182,7 @@ public class EditPartyQuestsMenu implements Menu {
         System.out.println(pString);
     }
 
-    private void printOptions () {
+    private void printOptions() {
         String optionsString =
             "Available options:\n" +
             "\t1: Print quest\n" +
@@ -198,7 +198,7 @@ public class EditPartyQuestsMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         printMenuTitle();
         int input = 0;
         int exit = 5;
@@ -233,7 +233,6 @@ public class EditPartyQuestsMenu implements Menu {
                 System.out.println("\nInvalid input...\n");
                 continue;
             }
-
 
         } while (input != exit);
     }

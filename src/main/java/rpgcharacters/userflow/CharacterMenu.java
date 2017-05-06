@@ -15,9 +15,10 @@ public class CharacterMenu implements Menu {
     /**
     * Constructor Method
     */
-    public CharacterMenu (Scanner sc, String username) {
+    public CharacterMenu(Scanner sc, String username, Connection conn) {
         this.sc = sc;
         this.username = username;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -26,7 +27,7 @@ public class CharacterMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private String printChars () {
+    private String printChars() {
         ArrayList<String> characters = new ArrayList<String>();
 
         try {
@@ -69,7 +70,7 @@ public class CharacterMenu implements Menu {
         return characters.get(input-1);
     }
 
-    private void deleteCharacter (String charName) {
+    private void deleteCharacter(String charName) {
         try {
             String query = "DELETE FROM character "
                          + "WHERE user_username = '" + username.replaceAll("'", "''") + "' "
@@ -82,7 +83,7 @@ public class CharacterMenu implements Menu {
         }
     }
 
-    private void removeFromParty (String charName) {
+    private void removeFromParty(String charName) {
         try {
             String query = "SELECT * FROM character "
                          + "WHERE user_username = '" + username.replaceAll("'", "''") + "' "
@@ -109,7 +110,7 @@ public class CharacterMenu implements Menu {
         }
     }
 
-    public static void printCharacter (Connection conn, String charName, String username) {
+    public static void printCharacter(Connection conn, String charName, String username) {
         try {
             String query = "SELECT * FROM character AS c "
                          + "LEFT OUTER JOIN race as r on c.race_name = r.name "
@@ -155,6 +156,7 @@ public class CharacterMenu implements Menu {
                     }
                 }
             }
+
             String pString =
                 "\n-------------------------------------------------------\n" + // 50 chars
                 charName + "\n" +
@@ -177,7 +179,7 @@ public class CharacterMenu implements Menu {
         }
     }
 
-    private void printOptions () {
+    private void printOptions() {
         String optionsString =
             "Available options:\n" +
             "\t1: Create a new character\n" +
@@ -194,8 +196,7 @@ public class CharacterMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
-        this.conn = conn;
+    public void enter() {
         printMenuTitle();
         int input = 0;
         int exit = 5;
@@ -208,13 +209,13 @@ public class CharacterMenu implements Menu {
 
                 switch (input) {
                     case 1:
-                        Menu createCharacterMenu = new CreateCharacterMenu(sc,username);
-                        createCharacterMenu.enter( conn );
+                        Menu createCharacterMenu = new CreateCharacterMenu(sc, username, conn);
+                        createCharacterMenu.enter();
                         break;
                     case 2:
                         character = printChars();
                         if (character == null) break;
-                        printCharacter(this.conn, character, username);
+                        printCharacter(conn, character, username);
                         break;
                     case 3:
                         character = printChars();
@@ -237,8 +238,6 @@ public class CharacterMenu implements Menu {
                 System.out.println("\nInvalid input...\n");
                 continue;
             }
-
-
 
         } while (input != exit);
     }

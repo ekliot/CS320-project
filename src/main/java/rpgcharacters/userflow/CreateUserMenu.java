@@ -1,24 +1,23 @@
 package rpgcharacters.userflow;
 
-import java.lang.Boolean;
-import java.util.HashMap;
+import java.sql.*;
 import java.util.Scanner;
-
-import java.sql.Connection;
 
 public class CreateUserMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public CreateUserMenu (Scanner sc) {
+    public CreateUserMenu(Scanner sc, Connection conn) {
         this.sc = sc;
+        this.conn = conn;
     }
 
-    public boolean createUser (String user, String pass) {
+    public boolean createUser(String user, String pass) {
 
         // TODO: Modify to use SQL and have specific printouts for cases:
         // - Username already in use
@@ -32,7 +31,7 @@ public class CreateUserMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         sc.nextLine();
         boolean validUserInfo = false;
         int wrongCount = 0;
@@ -49,7 +48,7 @@ public class CreateUserMenu implements Menu {
             String confPass = sc.nextLine();
 
             if (pass.equals(confPass)) {
-                validUserInfo = createUser(user,pass);
+                validUserInfo = createUser(user, pass);
             }
             else {
                 System.out.println("\nPasswords do not match. Please try again...\n");

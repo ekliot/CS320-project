@@ -16,9 +16,10 @@ public class CreateCharacterMenu implements Menu {
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public CreateCharacterMenu (Scanner sc,String username) {
+    public CreateCharacterMenu(Scanner sc, String username, Connection conn) {
         this.sc = sc;
         this.username = username;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -27,7 +28,7 @@ public class CreateCharacterMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private boolean saveToDB (String name, String story, String race, String archetype, int[] stats) {
+    private boolean saveToDB(String name, String story, String race, String archetype, int[] stats) {
         try {
             String query = "INSERT INTO character VALUES ("
                          + "'" + username.replaceAll("'", "''") + "',"
@@ -55,8 +56,7 @@ public class CreateCharacterMenu implements Menu {
         }
     }
 
-    private int[] getCurStats (ResultSet raceResults, ResultSet archResults) throws SQLException {
-
+    private int[] getCurStats(ResultSet raceResults, ResultSet archResults) throws SQLException {
         int[] raceMods = {
             raceResults.getInt("power_mod"),
             raceResults.getInt("proficiency_mod"),
@@ -106,7 +106,7 @@ public class CreateCharacterMenu implements Menu {
         return results;
     }
 
-    private boolean createCharacter () {
+    private boolean createCharacter() {
 
         System.out.print("Character Name: ");
         String charName = sc.nextLine();
@@ -144,8 +144,7 @@ public class CreateCharacterMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
-        this.conn = conn;
+    public void enter() {
         printMenuTitle();
         sc.nextLine();
         boolean validCharInfo = false;
