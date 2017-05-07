@@ -38,9 +38,9 @@ public class CommandCreateUser implements Command {
             stmt.executeQuery(query);
 
             query = "GRANT dbAdmin "
-                  + "TO (SELECT admin "
+                  + "TO (SELECT COUNT( * ) AS userCount "
                   +     "FROM user "
-                  +     "WHERE admin = TRUE);";
+                  +     "WHERE userCount = 1);";
             stmt.executeQuery(query);
 
             System.out.println("Welcome, " + username + "!");
