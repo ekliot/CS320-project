@@ -85,11 +85,10 @@ public class PartyMenu implements Menu {
 
     private void printParty(String partyName) {
         System.out.println(
-            "--------------------------------------------------\n" + // 50 chars
+            "-------------------------------------------------------\n" + // 50 chars
             partyName + "\n" +
-            "--------------------------------------------------\n" + // 50 chars
-            "Game master: " + username + "\n" +
-            "Characters:"
+            "  Game master: " + username + "\n" +
+            "  Characters:"
         );
 
         try {
@@ -101,7 +100,8 @@ public class PartyMenu implements Menu {
 
             results.beforeFirst();
             while (results.next()) {
-                CharacterMenu.printCharacter(conn, results.getString("name"), results.getString("user_username"));
+                System.out.println("\tName: " + results.getString("name"));
+                System.out.println("\tUser: " + results.getString("user_username") + "\n");
             }
         } catch (SQLException e) {
             e.printStackTrace();

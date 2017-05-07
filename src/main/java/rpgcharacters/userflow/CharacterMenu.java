@@ -108,7 +108,7 @@ public class CharacterMenu implements Menu {
         }
     }
 
-    public static void printCharacter(Connection conn, String charName, String username) {
+    public void printCharacter(String charName, String username) {
         try {
             String query = "SELECT * FROM character AS c "
                          + "LEFT OUTER JOIN race as r on c.race_name = r.name "
@@ -158,17 +158,16 @@ public class CharacterMenu implements Menu {
             String pString =
                 "\n-------------------------------------------------------\n" + // 50 chars
                 charName + "\n" +
-                "-------------------------------------------------------\n" + // 50 chars
-                "User:        " + username + "\n" +
-                "Story:       " + story + "\n" +
-                "Race:        " + race + "\n" +
-                "Archetype:   " + arch + "\n" +
-                (party != null? "Party:       " + party + "\n" : "") +
-                "Power:       " + power + "\n" +
-                "Proficiency: " + proficiency + "\n" +
-                "Personality: " + personality + "\n" +
-                "Perception:  " + perception + "\n" +
-                "Experience:  " + experience + "\n" +
+                "  User:        " + username + "\n" +
+                "  Story:       " + story + "\n" +
+                "  Race:        " + race + "\n" +
+                "  Archetype:   " + arch + "\n" +
+                (party != null? "  Party:       " + party + "\n" : "") +
+                "  Power:       " + power + "\n" +
+                "  Proficiency: " + proficiency + "\n" +
+                "  Personality: " + personality + "\n" +
+                "  Perception:  " + perception + "\n" +
+                "  Experience:  " + experience + "\n" +
                 "-------------------------------------------------------\n";
 
             System.out.println(pString);
@@ -213,7 +212,7 @@ public class CharacterMenu implements Menu {
                     case 2:
                         character = printChars();
                         if (character == null) break;
-                        printCharacter(conn, character, username);
+                        printCharacter(character, username);
                         break;
                     case 3:
                         character = printChars();
