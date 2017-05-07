@@ -32,7 +32,7 @@ public class CharacterMenu implements Menu {
 
         try {
             String query = "SELECT name FROM character "
-                        + " WHERE user_username='" + username.replaceAll("'", "''") + "';";
+                        + " WHERE user_username='" + this.username.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
 
@@ -73,7 +73,7 @@ public class CharacterMenu implements Menu {
     private void deleteCharacter(String charName) {
         try {
             String query = "DELETE FROM character "
-                         + "WHERE user_username = '" + username.replaceAll("'", "''") + "' "
+                         + "WHERE user_username = '" + this.username.replaceAll("'", "''") + "' "
                          + "AND name = '" + charName.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
@@ -86,7 +86,7 @@ public class CharacterMenu implements Menu {
     private void removeFromParty(String charName) {
         try {
             String query = "SELECT * FROM character "
-                         + "WHERE user_username = '" + username.replaceAll("'", "''") + "' "
+                         + "WHERE user_username = '" + this.username.replaceAll("'", "''") + "' "
                          + "AND name = '" + charName.replaceAll("'", "''") + "' "
                          + "AND party_id IS NOT NULL;";
             Statement stmt = conn.createStatement();
@@ -97,7 +97,7 @@ public class CharacterMenu implements Menu {
             } else {
                 String updateQuery = "UPDATE character "
                                    + "SET party_id = NULL "
-                                   + "WHERE user_username = '" + username.replaceAll("'", "''") + "' "
+                                   + "WHERE user_username = '" + this.username.replaceAll("'", "''") + "' "
                                    + "AND name = '" + charName.replaceAll("'", "''") + "';";
                 Statement updateStmt = conn.createStatement();
                 updateStmt.executeUpdate(updateQuery);
@@ -108,13 +108,13 @@ public class CharacterMenu implements Menu {
         }
     }
 
-    public void printCharacter(String charName, String username) {
+    public void printCharacter(String charName) {
         try {
             String query = "SELECT * FROM character AS c "
                          + "LEFT OUTER JOIN race as r on c.race_name = r.name "
                          + "LEFT OUTER JOIN archetype as a on c.archetype_name = a.name "
                          + "LEFT OUTER JOIN party as p on c.party_id = p.id "
-                         + "WHERE c.user_username = '" + username.replaceAll("'", "''") + "' "
+                         + "WHERE c.user_username = '" + this.username.replaceAll("'", "''") + "' "
                          + "AND c.name = '" + charName.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
@@ -158,7 +158,7 @@ public class CharacterMenu implements Menu {
             String pString =
                 "\n-------------------------------------------------------\n" + // 50 chars
                 charName + "\n" +
-                "  User:        " + username + "\n" +
+                "  User:        " + this.username + "\n" +
                 "  Story:       " + story + "\n" +
                 "  Race:        " + race + "\n" +
                 "  Archetype:   " + arch + "\n" +
@@ -168,6 +168,7 @@ public class CharacterMenu implements Menu {
                 "  Personality: " + personality + "\n" +
                 "  Perception:  " + perception + "\n" +
                 "  Experience:  " + experience + "\n" +
+                // output items here
                 "-------------------------------------------------------\n";
 
             System.out.println(pString);
@@ -206,13 +207,13 @@ public class CharacterMenu implements Menu {
 
                 switch (input) {
                     case 1:
-                        Menu createCharacterMenu = new CreateCharacterMenu(sc, username, conn);
+                        Menu createCharacterMenu = new CreateCharacterMenu(sc, this.username, conn);
                         createCharacterMenu.enter();
                         break;
                     case 2:
                         character = printChars();
                         if (character == null) break;
-                        printCharacter(character, username);
+                        printCharacter(character);
                         break;
                     case 3:
                         character = printChars();

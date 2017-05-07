@@ -82,11 +82,11 @@ public class MainMenu implements Menu {
 
                 switch (option) {
                     case MENU_CHAR:
-                        Menu characterMenu = new CharacterMenu(sc, username, conn);
+                        Menu characterMenu = new CharacterMenu(sc, this.username, conn);
                         characterMenu.enter();
                         break;
                     case MENU_PARTY:
-                        Menu partyMenu = new PartyMenu(sc, username, conn);
+                        Menu partyMenu = new PartyMenu(sc, this.username, conn);
                         partyMenu.enter();
                         break;
                     case MENU_ADMIN:

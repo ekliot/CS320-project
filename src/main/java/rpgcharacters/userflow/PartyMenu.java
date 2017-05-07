@@ -32,7 +32,7 @@ public class PartyMenu implements Menu {
         
         try {
             String query = "SELECT name FROM party "
-                         + "WHERE gm_username='" + username.replaceAll("'", "''") + "';";
+                         + "WHERE gm_username='" + this.username.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
 
@@ -73,7 +73,7 @@ public class PartyMenu implements Menu {
     private void deleteParty(String partyName) {
         try {
             String query = "DELETE FROM party "
-                         + "WHERE gm_username = '" + username.replaceAll("'", "''") + "' "
+                         + "WHERE gm_username = '" + this.username.replaceAll("'", "''") + "' "
                          + "AND name = '" + partyName.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
@@ -87,7 +87,7 @@ public class PartyMenu implements Menu {
         System.out.println(
             "-------------------------------------------------------\n" + // 50 chars
             partyName + "\n" +
-            "  Game master: " + username + "\n" +
+            "  Game master: " + this.username + "\n" +
             "  Characters:"
         );
 
@@ -139,7 +139,7 @@ public class PartyMenu implements Menu {
 
                 switch (input) {
                     case 1:
-                        Menu createPartyMenu = new CreatePartyMenu(sc, username, conn);
+                        Menu createPartyMenu = new CreatePartyMenu(sc, this.username, conn);
                         createPartyMenu.enter();
                         break;
                     case 2:
@@ -161,13 +161,13 @@ public class PartyMenu implements Menu {
                     case 5:
                         party = printParties();
                         if (party == null) break;
-                        Menu partyAddCharMenu = new PartyAddCharMenu(sc, username, party, conn);
+                        Menu partyAddCharMenu = new PartyAddCharMenu(sc, this.username, party, conn);
                         partyAddCharMenu.enter();
                         break;
                     case 6:
                         party = printParties();
                         if (party == null) break;
-                        Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc, username, party, conn);
+                        Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc, this.username, party, conn);
                         editPartyQuestsMenu.enter();
                         break;
                     case 7:

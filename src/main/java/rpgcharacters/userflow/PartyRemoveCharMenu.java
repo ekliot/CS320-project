@@ -34,7 +34,7 @@ public class PartyRemoveCharMenu implements Menu {
         try {
             String query = "SELECT * FROM character as c "
                          + "LEFT OUTER JOIN party as p on c.party_id = p.id "
-                         + "WHERE p.name = '" + partyName.replaceAll("'", "''") + "'";
+                         + "WHERE p.name = '" + this.partyName.replaceAll("'", "''") + "'";
             Statement stmt = conn.createStatement();
             ResultSet results = stmt.executeQuery(query);
 
@@ -93,7 +93,7 @@ public class PartyRemoveCharMenu implements Menu {
                          + "AND name = '" + charName.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
-            System.out.println(charName + " has been removed from " + partyName);
+            System.out.println(charName + " has been removed from " + this.partyName);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

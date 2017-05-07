@@ -31,7 +31,7 @@ public class CreateCharacterMenu implements Menu {
     private boolean saveToDB(String name, String story, String race, String archetype, int[] stats) {
         try {
             String query = "INSERT INTO character VALUES ("
-                         + "'" + username.replaceAll("'", "''") + "',"
+                         + "'" + this.username.replaceAll("'", "''") + "',"
                          + "'" + name.replaceAll("'", "''") + "',"
                          + "NULL, " // party_id = NULL
                          + "'" + race.replaceAll("'", "''") + "',"
