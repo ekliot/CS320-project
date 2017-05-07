@@ -18,19 +18,26 @@ public class CreateUserMenu implements Menu {
     }
 
     public boolean createUser(String user, String pass) {
-
-        // TODO: Modify to use SQL and have specific printouts for cases:
-        // - Username already in use
-        // - Other error occured
-        //
-        // Return true if no errors and use is created; False otherwise.
-
-        return true;
+        try {
+            String query = "INSERT INTO user VALUES ("
+                         + "'" + user.replaceAll("'", "''") + "',"
+                         + "'" + pass.replaceAll("'", "''") + "');";
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+            return true;
+        } catch (SQLException e) {
+            if (e.getMessage().startsWith("Unique index or primary key violation")) {
+                System.out.println("\nUser already exists!\n");
+            } else {
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 
     /**
-    * Defines the loop for this menu
-    */
+     * Defines the loop for this menu
+     */
     public void enter() {
         sc.nextLine();
         boolean validUserInfo = false;
