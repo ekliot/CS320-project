@@ -155,7 +155,7 @@ public class PartyMenu implements Menu {
                     case 4:
                         party = printParties();
                         if (party == null) break;
-                        Menu partyRemoveCharMenu = new PartyRemoveCharMenu(sc, username, party, conn);
+                        Menu partyRemoveCharMenu = new PartyRemoveCharMenu(sc, party, conn);
                         partyRemoveCharMenu.enter();
                         break;
                     case 5:

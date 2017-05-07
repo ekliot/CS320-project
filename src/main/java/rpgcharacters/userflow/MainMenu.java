@@ -66,7 +66,6 @@ public class MainMenu implements Menu {
 
         String option = "";
         int input = -1;
-        String exit = LOG_OUT;
 
         do {
 

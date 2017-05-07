@@ -222,9 +222,6 @@ public class CommandCreateTables implements Command {
         return null;
     }
 
-    /**
-     * TODO
-    **/
     private void seedRace(Connection conn) {
         HashMap<String, int[]> raceSeeds = new HashMap<String, int[]>();
         Scanner in = new Scanner(System.in);
@@ -256,11 +253,9 @@ public class CommandCreateTables implements Command {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        in.close();
     }
 
-    /**
-     * TODO
-    **/
     private void seedArchetype( Connection conn ) {
         HashMap<String, int[]> archSeeds = new HashMap<String, int[]>();
 
@@ -293,5 +288,6 @@ public class CommandCreateTables implements Command {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        in.close();
     }
 }

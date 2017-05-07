@@ -10,8 +10,6 @@ public class CreatePartyMenu implements Menu {
 
     private String username;
 
-    private int curMaxAdd;
-
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.

@@ -9,16 +9,14 @@ public class PartyRemoveCharMenu implements Menu {
     private Scanner sc;
     private Connection conn;
 
-    private String username;
     private String partyName;
 
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public PartyRemoveCharMenu(Scanner sc, String username, String partyName, Connection conn) {
+    public PartyRemoveCharMenu(Scanner sc, String partyName, Connection conn) {
         this.sc = sc;
-        this.username = username;
         this.partyName = partyName;
         this.conn = conn;
     }
