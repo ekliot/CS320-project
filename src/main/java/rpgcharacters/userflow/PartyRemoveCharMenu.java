@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public class PartyRemCharMenu implements Menu {
+public class PartyRemoveCharMenu implements Menu {
 
     private Scanner sc;
     private Connection conn;
@@ -12,13 +12,11 @@ public class PartyRemCharMenu implements Menu {
     private String username;
     private String partyName;
 
-    private int curMaxAdd;
-
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public PartyRemCharMenu(Scanner sc, String username, String partyName, Connection conn) {
+    public PartyRemoveCharMenu(Scanner sc, String username, String partyName, Connection conn) {
         this.sc = sc;
         this.username = username;
         this.partyName = partyName;
@@ -31,27 +29,27 @@ public class PartyRemCharMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private String selectCharacter() {
+    private String[] selectCharacter() {
         ArrayList<String> charNames = new ArrayList<String>();
         ArrayList<String> userNames = new ArrayList<String>();
 
+        try {
+            String query = "SELECT * FROM character as c "
+                         + "LEFT OUTER JOIN party as p on c.party_id = p.id "
+                         + "WHERE p.name = '" + partyName.replaceAll("'", "''") + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery(query);
 
-        // TODO: Get the names of the characters in the party and add them
-        //       to the charNames ArrayList and the corresponding userNames
-        //       to the userNames ArrayList.
-
-        charNames.add("Bilbo Baggins");
-        charNames.add("John Cena");
-        charNames.add("Rick C137");
-        userNames.add("idkmanthings");
-        userNames.add("username");
-        userNames.add("souperPerson8");
-
-        if (charNames.size() != userNames.size()) {
-            System.out.println("Something bad happened.");
-            System.out.println("charNames.size() != userNames.size()");
-            return "error";
+            results.beforeFirst();
+            while (results.next()) {
+                charNames.add(results.getString("name"));
+                userNames.add(results.getString("user_username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        if (charNames.size() == 0) return null;
 
         System.out.println("Characters:\n");
         String pString = "";
@@ -72,7 +70,6 @@ public class PartyRemCharMenu implements Menu {
         }
         System.out.print(pString);
 
-
         System.out.println("-------------------------------------------------------");
         System.out.print("Enter corresponding number of the character to remove: ");
         //sc.nextInt(); // clear buffer
@@ -84,18 +81,26 @@ public class PartyRemCharMenu implements Menu {
             input = sc.nextInt();
         }
 
-        return charNames.get(input-1);
+        return new String[]{
+            charNames.get(input-1),
+            userNames.get(input-1)
+        };
     }
 
-    private boolean remChararacter(String charName) {
-
-        // TODO: Remove character from the party.
-        // make an appropriate print statement if something goes wrong.
-        // return true if it worked; otherwise false.
-
-        System.out.println(charName + " has been removed from " + partyName);
-
-        return true;
+    private boolean removeChararacter(String charName, String charUsername) {
+        try {
+            String query = "UPDATE character "
+                         + "SET party_id = NULL "
+                         + "WHERE user_username = '" + charUsername.replaceAll("'", "''") + "' "
+                         + "AND name = '" + charName.replaceAll("'", "''") + "';";
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+            System.out.println(charName + " has been removed from " + partyName);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -109,10 +114,13 @@ public class PartyRemCharMenu implements Menu {
 
         do {
 
-            String charToRem = selectCharacter();
+            String[] character = selectCharacter();
 
-            if (!charToRem.equals("error")) {
-                success = remChararacter(charToRem);
+            if (character == null) {
+                System.out.println("\nThere are no characters in this party!\n");
+                success = true;
+            } else {
+                success = removeChararacter(character[0], character[1]);
             }
 
             wrongCount++;

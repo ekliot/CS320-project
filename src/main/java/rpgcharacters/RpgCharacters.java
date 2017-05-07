@@ -30,7 +30,6 @@ public class RpgCharacters {
 
         commands.put("create-item", new CommandCreateItem());
         commands.put("create-quest", new CommandCreateQuest());
-        commands.put("add-party", new CommandAddParty());
         commands.put("delete-quest", new CommandDeleteQuest());
         commands.put("delete-item", new CommandDeleteItem());
         commands.put("list-quests", new CommandListQuests());
