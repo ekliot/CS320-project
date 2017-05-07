@@ -66,12 +66,12 @@ public class CommandCreateTables implements Command {
     private void createArchetypeTable(Connection conn) {
         try {
             String query = "CREATE TABLE IF NOT EXISTS archetype("
-                    + "name VARCHAR(255) PRIMARY KEY,"
-                    + "power_mod INT NOT NULL,"
-                    + "proficiency_mod INT NOT NULL,"
-                    + "personality_mod INT NOT NULL,"
-                    + "perception_mod INT NOT NULL"
-                    + ");";
+                         + "name VARCHAR(255) PRIMARY KEY,"
+                         + "power_mod INT NOT NULL,"
+                         + "proficiency_mod INT NOT NULL,"
+                         + "personality_mod INT NOT NULL,"
+                         + "perception_mod INT NOT NULL"
+                         + ");";
 
             Statement stmt = conn.createStatement();
             stmt.execute(query);
