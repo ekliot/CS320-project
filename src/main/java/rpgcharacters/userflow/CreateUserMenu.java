@@ -23,6 +23,24 @@ public class CreateUserMenu implements Menu {
                          + "'" + pass.replaceAll("'", "''") + "');";
             Statement stmt = conn.createStatement();
             stmt.execute(query);
+            
+            query = "SELECT COUNT( * ) AS userCount;";
+            ResultSet result = stmt.executeQuery(query);
+
+            if (result.getInt("userCount") == 1) {
+                query = "GRANT dbAdmin "
+                      + "TO (SELECT username "
+                      +     "FROM user "
+                      +     "WHERE username = '" + user.replaceAll("'", "''") + "');";
+            } else {
+                query = "GRANT dbUser "
+                      + "TO (SELECT username "
+                      +     "FROM user "
+                      +     "WHERE username = '" + user.replaceAll("'", "''") + "');";
+            }
+
+            stmt.executeQuery(query);
+            
             return true;
         } catch (SQLException e) {
             if (e.getMessage().startsWith("Unique index or primary key violation")) {
