@@ -1,26 +1,23 @@
 package rpgcharacters.userflow;
-import java.util.Scanner;
-import java.lang.Boolean;
-import java.util.HashMap;
-import java.util.ArrayList;
 
-import java.sql.Connection;
+import java.sql.*;
+import java.util.Scanner;
 
 public class CreatePartyMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
-
-    private int curMaxAdd;
 
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public CreatePartyMenu (Scanner sc, String username) {
+    public CreatePartyMenu(Scanner sc, String username, Connection conn) {
         this.sc = sc;
         this.username = username;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -29,18 +26,26 @@ public class CreatePartyMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private boolean saveToDB (String partyName) {
-
-        // TODO: Modify to use SQL and have specific printouts for cases:
-        // - Party name already in use
-        // - Other error occured
-        //
-        // Return true if no errors and use is created; False otherwise.
-
-        return true;
+    private boolean saveToDB(String partyName) {
+        try {
+            String query = "INSERT INTO party (name, gm_username) VALUES ("
+                         + "'" + partyName.replaceAll("'", "''") + "',"
+                         + "'" + username.replaceAll("'", "''") + "');";
+            Statement stmt = conn.createStatement();
+            stmt.execute(query);
+            return true;
+        } catch (SQLException e) {
+            if (e.getMessage().startsWith("Unique index or primary key violation")) {
+                System.out.println("\nParty already exists!\n");
+            } else {
+                System.out.println("\nAn error has occured while saving to the database.");
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 
-    private boolean createParty () {
+    private boolean createParty() {
 
         System.out.print("Party Name: ");
         String partyName = sc.nextLine();
@@ -51,7 +56,7 @@ public class CreatePartyMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         printMenuTitle();
         sc.nextLine();
         boolean validCharInfo = false;

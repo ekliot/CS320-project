@@ -1,23 +1,24 @@
 package rpgcharacters.userflow;
 
+import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
-import java.sql.Connection;
-
 public class PartyMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
 
     /**
      * Constructor Method
      */
-    public PartyMenu (Scanner sc, String username) {
+    public PartyMenu(Scanner sc, String username, Connection conn) {
         this.sc = sc;
         this.username = username;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -26,14 +27,30 @@ public class PartyMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private String printParties () {
-        String partyString = "Your parties:\n";
-
+    private String printParties() {
         ArrayList<String> parties = new ArrayList<String>();
-        // TODO: replace with real data from sql db
-        parties.add("Bob's Builders");
-        parties.add("The Fellowship of the Rings");
-        parties.add("Squad o' Fish");
+        
+        try {
+            String query = "SELECT name FROM party "
+                         + "WHERE gm_username='" + username.replaceAll("'", "''") + "';";
+            Statement stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery(query);
+
+            results.beforeFirst();
+            while (results.next()) {
+                parties.add(results.getString("name"));
+            }
+
+            if (parties.size() == 0) {
+                System.out.println("\n You do not have any parties!");
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        String partyString = "Your parties:\n";
 
         for (int i = 0; i < parties.size(); i++) {
             partyString += "\t" + (i+1) + ". " + parties.get(i) + "\n";
@@ -53,55 +70,45 @@ public class PartyMenu implements Menu {
         return parties.get(input-1);
     }
 
-    private void deleteParty (String partyName) {
-
-        // TODO: Delete the character from the database.
-        // Make appropriate print statements if something bad happens.
-
-        System.out.println(partyName + " has been deleted!");
+    private void deleteParty(String partyName) {
+        try {
+            String query = "DELETE FROM party "
+                         + "WHERE gm_username = '" + username.replaceAll("'", "''") + "' "
+                         + "AND name = '" + partyName.replaceAll("'", "''") + "';";
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+            System.out.println(partyName + " has been deleted!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void printParty (String partyName) {
-        String gameMaster;
-        ArrayList<String> charNames = new ArrayList<String>();
-        ArrayList<String> userNames = new ArrayList<String>();
-
-        // TODO: Add all character names to the charNames arraylist and the
-        //       corresponding usernames to the userNames arraylist.
-        // Make appropriate print statements if something bad happens.
-
-        gameMaster = "master dood";
-        charNames.add("Bilbo Baggins");
-        charNames.add("John Cena");
-        charNames.add("Rick C137");
-        userNames.add("idkmanthings");
-        userNames.add("username");
-        userNames.add("souperPerson8");
-
+    private void printParty(String partyName) {
         System.out.println(
-            "--------------------------------------------------\n" + // 50 chars
+            "-------------------------------------------------------\n" + // 50 chars
             partyName + "\n" +
-            "--------------------------------------------------\n" + // 50 chars
-            "Game master: " + gameMaster + "\n" +
-            "Characters:"
+            "  Game master: " + username + "\n" +
+            "  Characters:"
         );
 
-        if (charNames.size() != userNames.size()) {
-            System.out.println("Something bad happened.");
-            System.out.println("charNames.size() != userNames.size()");
-        }
-        else {
-            for (int i = 0; i < charNames.size(); i++) {
-                String userPr = userNames.get(i);
-                if (userPr.equals(this.username)) {
-                    userPr = "You";
-                }
-                CharacterMenu.printCharacter(charNames.get(i),userNames.get(i));
+        try {
+            String query = "SELECT * FROM character as c "
+                         + "LEFT OUTER JOIN party as p on c.party_id = p.id "
+                         + "WHERE p.name = '" + partyName.replaceAll("'", "''") + "'";
+            Statement stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery(query);
+
+            results.beforeFirst();
+            while (results.next()) {
+                System.out.println("\tName: " + results.getString("name"));
+                System.out.println("\tUser: " + results.getString("user_username") + "\n");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    private void printOptions () {
+    private void printOptions() {
         String optionsString =
             "Available options:\n" +
             "\t1: Create a new party\n" +
@@ -119,7 +126,7 @@ public class PartyMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         printMenuTitle();
         int input = 0;
         String party;
@@ -132,31 +139,36 @@ public class PartyMenu implements Menu {
 
                 switch (input) {
                     case 1:
-                        Menu createPartyMenu = new CreatePartyMenu(sc,username);
-                        createPartyMenu.enter( conn );
+                        Menu createPartyMenu = new CreatePartyMenu(sc, username, conn);
+                        createPartyMenu.enter();
                         break;
                     case 2:
                         party = printParties();
+                        if (party == null) break;
                         printParty(party);
                         break;
                     case 3:
                         party = printParties();
+                        if (party == null) break;
                         deleteParty(party);
                         break;
                     case 4:
                         party = printParties();
-                        Menu partyRemCharMenu = new PartyRemCharMenu(sc,username,party);
-                        partyRemCharMenu.enter( conn );
+                        if (party == null) break;
+                        Menu partyRemoveCharMenu = new PartyRemoveCharMenu(sc, party, conn);
+                        partyRemoveCharMenu.enter();
                         break;
                     case 5:
                         party = printParties();
-                        Menu partyAddCharMenu = new PartyAddCharMenu(sc,username,party);
-                        partyAddCharMenu.enter( conn );
+                        if (party == null) break;
+                        Menu partyAddCharMenu = new PartyAddCharMenu(sc, username, party, conn);
+                        partyAddCharMenu.enter();
                         break;
                     case 6:
                         party = printParties();
-                        Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc,username,party);
-                        editPartyQuestsMenu.enter( conn );
+                        if (party == null) break;
+                        Menu editPartyQuestsMenu = new EditPartyQuestsMenu(sc, username, party, conn);
+                        editPartyQuestsMenu.enter();
                         break;
                     case 7:
                         System.out.println("\nGoing back...\n");

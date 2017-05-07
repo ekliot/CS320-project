@@ -1,19 +1,20 @@
 package rpgcharacters.userflow;
 
+import java.sql.Connection;
 import java.util.Scanner;
 import java.util.InputMismatchException;
-
-import java.sql.Connection;
 
 public class InitMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     /**
     * Constructor Method
     */
-    public InitMenu () {
+    public InitMenu(Connection conn) {
         this.sc = new Scanner(System.in);
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -21,7 +22,7 @@ public class InitMenu implements Menu {
         System.out.println("RPG Characters Application");
     }
 
-    private void printOptions () {
+    private void printOptions() {
         System.out.println("-------------------------------------------------------");
         System.out.println(
             "Available options:\n" +
@@ -36,8 +37,7 @@ public class InitMenu implements Menu {
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
-
+    public void enter() {
         // clear the screen
         final String ANSI_CLS = "\u001b[2J";
         final String ANSI_HOME = "\u001b[H";
@@ -54,27 +54,27 @@ public class InitMenu implements Menu {
             try {
                 input = sc.nextInt();
 
-                switch ( input ) {
+                switch (input) {
                     case 1:
-                        Menu loginMenu = new LoginMenu( sc );
-                        loginMenu.enter( conn );
+                        Menu loginMenu = new LoginMenu(sc, conn);
+                        loginMenu.enter();
                         break;
                     case 2:
-                        Menu createUserMenu = new CreateUserMenu( sc );
-                        createUserMenu.enter( conn );
+                        Menu createUserMenu = new CreateUserMenu(sc, conn);
+                        createUserMenu.enter();
                         break;
                     case 3:
-                        System.out.println( "\nExiting..." );
+                        System.out.println("\nExiting...");
                         break;
                     default:
-                        System.out.println( "\nInvalid input..." );
+                        System.out.println("\nInvalid input...");
                 }
-            } catch ( InputMismatchException e ) {
-                System.out.println( "\nInvalid input..." );
+            } catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...");
                 continue;
             }
 
-        } while ( input != 3 );
+        } while (input != 3);
 
     }
 

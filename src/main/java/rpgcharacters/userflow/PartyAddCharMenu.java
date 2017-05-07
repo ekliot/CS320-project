@@ -1,29 +1,26 @@
 package rpgcharacters.userflow;
 
+import java.sql.*;
 import java.util.Scanner;
-import java.lang.Boolean;
-import java.util.HashMap;
 import java.util.ArrayList;
-
-import java.sql.Connection;
 
 public class PartyAddCharMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
     private String partyName;
-
-    private int curMaxAdd;
 
     /**
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public PartyAddCharMenu (Scanner sc,String username, String partyName) {
+    public PartyAddCharMenu(Scanner sc,String username, String partyName, Connection conn) {
         this.sc = sc;
         this.username = username;
         this.partyName = partyName;
+        this.conn = conn;
     }
 
     private void printMenuTitle() {
@@ -32,27 +29,26 @@ public class PartyAddCharMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private String selectCharacter() {
+    private String[] selectCharacter() {
         ArrayList<String> charNames = new ArrayList<String>();
         ArrayList<String> userNames = new ArrayList<String>();
 
+        try {
+            String query = "SELECT * FROM character "
+                         + "WHERE party_id IS NULL;";
+            Statement stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery(query);
 
-        // TODO: Get the names of the characters NOT in the party and add them
-        //       to the charNames ArrayList and the corresponding userNames
-        //       to the userNames ArrayList.
-
-        charNames.add("Bilbo Baggins");
-        charNames.add("John Cena");
-        charNames.add("Rick C137");
-        userNames.add("idkmanthings");
-        userNames.add("username");
-        userNames.add("souperPerson8");
-
-        if (charNames.size() != userNames.size()) {
-            System.out.println("Something bad happened.");
-            System.out.println("charNames.size() != userNames.size()");
-            return "error";
+            results.beforeFirst();
+            while (results.next()) {
+                charNames.add(results.getString("name"));
+                userNames.add(results.getString("user_username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        if (charNames.size() == 0) return null;
 
         System.out.println("Characters:\n");
         String pString = "";
@@ -73,7 +69,6 @@ public class PartyAddCharMenu implements Menu {
         }
         System.out.print(pString);
 
-
         System.out.println("-------------------------------------------------------");
         System.out.print("Enter corresponding number of the character to add: ");
         int input = sc.nextInt();
@@ -82,24 +77,35 @@ public class PartyAddCharMenu implements Menu {
             System.out.print("Enter corresponding number of the character to add: ");
             input = sc.nextInt();
         }
-        return charNames.get(input-1);
+        return new String[]{
+            charNames.get(input-1),
+            userNames.get(input-1)
+        };
     }
 
-    private boolean remChararacter (String charName) {
-
-        // TODO: Remove character from the party.
-        // make an appropriate print statement if something goes wrong.
-        // return true if it worked; otherwise false.
-
-        System.out.println(charName + " has been added to " + partyName);
-
-        return true;
+    private boolean addChararacter(String charName, String charUsername) {
+        try {
+            String query = "UPDATE character "
+                         + "SET party_id=(SELECT id FROM party "
+                         + "WHERE name = '" + partyName.replaceAll("'", "''") + "' "
+                         + "AND gm_username = '" + username.replaceAll("'", "''") + "') "
+                         + "WHERE user_username = '" + charUsername.replaceAll("'", "''") + "' "
+                         + "AND name = '" + charName.replaceAll("'", "''") + "';";
+            System.out.println(query);
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+            System.out.println(charName + " has been added to " + partyName);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         printMenuTitle();
         sc.nextLine();
         boolean success = false;
@@ -107,10 +113,13 @@ public class PartyAddCharMenu implements Menu {
 
         do {
 
-            String charToAdd = selectCharacter();
+            String[] character = selectCharacter();
 
-            if (!charToAdd.equals("error")) {
-                success = remChararacter(charToAdd);
+            if (character == null) {
+                System.out.println("\nThere are no characters that can be added to this party!\n");
+                success = true;
+            } else {
+                success = addChararacter(character[0], character[1]);
             }
 
             wrongCount++;

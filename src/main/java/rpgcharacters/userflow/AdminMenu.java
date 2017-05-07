@@ -1,15 +1,15 @@
 package rpgcharacters.userflow;
 
+import java.sql.Connection;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import java.sql.Connection;
-
 public class AdminMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private List<String> options;
 
@@ -20,8 +20,9 @@ public class AdminMenu implements Menu {
     private final String MENU_GRANT = "Admin-ify a user";
     private final String EXIT       = "Back to Main Menu";
 
-    public AdminMenu( Scanner sc ) {
+    public AdminMenu(Scanner sc, Connection conn) {
         this.sc = sc;
+        this.conn = conn;
         this.options = Arrays.asList( MENU_ITEM, MENU_QUEST, MENU_RACE, MENU_ARCH, MENU_GRANT, EXIT );
     }
 
@@ -46,12 +47,11 @@ public class AdminMenu implements Menu {
         System.out.print( "Please enter the number of the desired option here: " );
     }
 
-    public void enter( Connection conn ) {
+    public void enter() {
         printMenuTitle();
 
         String option = "";
         int input = -1;
-        String exit = EXIT;
 
         do {
 
@@ -68,24 +68,24 @@ public class AdminMenu implements Menu {
 
                 switch ( option ) {
                     case MENU_ITEM:
-                        Menu itemMenu = new ItemMenu( sc );
-                        itemMenu.enter( conn );
+                        Menu itemMenu = new ItemMenu(sc, conn);
+                        itemMenu.enter();
                         break;
                     case MENU_QUEST:
-                        Menu questMenu = new QuestMenu( sc );
-                        questMenu.enter( conn );
+                        Menu questMenu = new QuestMenu(sc, conn);
+                        questMenu.enter();
                         break;
                     case MENU_RACE:
-                        Menu raceMenu = new RaceMenu( sc );
-                        raceMenu.enter( conn );
+                        Menu raceMenu = new RaceMenu(sc, conn);
+                        raceMenu.enter();
                         break;
                     case MENU_ARCH:
-                        Menu archetypeMenu = new ArchetypeMenu( sc );
-                        archetypeMenu.enter( conn );
+                        Menu archetypeMenu = new ArchetypeMenu(sc, conn);
+                        archetypeMenu.enter();
                         break;
                     case MENU_GRANT:
-                        // Menu grantAdminMenu = new GrantAdminMenu( sc );
-                        // grantAdminMenu.enter( conn );
+                        // Menu grantAdminMenu = new GrantAdminMenu(sc, conn);
+                        // grantAdminMenu.enter();
                         break;
                     case EXIT:
                         System.out.println( "\nGoing back...\n" );

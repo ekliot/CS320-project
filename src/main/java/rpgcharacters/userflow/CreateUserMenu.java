@@ -12,11 +12,12 @@ public class CreateUserMenu implements Menu {
      * Constructor Method
      * @param  Scanner sc    scanner inherited from the parent menu.
      */
-    public CreateUserMenu (Scanner sc) {
+    public CreateUserMenu(Scanner sc, Connection conn) {
         this.sc = sc;
+        this.conn = conn;
     }
 
-    public boolean createUser (String user, String pass) {
+    public boolean createUser(String user, String pass) {
         try {
             String query = "INSERT INTO user VALUES ("
                          + "'" + user.replaceAll("'", "''") + "',"
@@ -37,8 +38,7 @@ public class CreateUserMenu implements Menu {
     /**
      * Defines the loop for this menu
      */
-    public void enter ( Connection conn ) {
-        this.conn = conn;
+    public void enter() {
         sc.nextLine();
         boolean validUserInfo = false;
         int wrongCount = 0;
@@ -55,7 +55,7 @@ public class CreateUserMenu implements Menu {
             String confPass = sc.nextLine();
 
             if (pass.equals(confPass)) {
-                validUserInfo = createUser(user,pass);
+                validUserInfo = createUser(user, pass);
             }
             else {
                 System.out.println("\nPasswords do not match. Please try again...\n");

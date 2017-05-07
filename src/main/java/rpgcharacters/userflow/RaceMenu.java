@@ -1,20 +1,15 @@
 package rpgcharacters.userflow;
 
+import java.sql.*;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 public class RaceMenu implements Menu {
 
-    private Connection conn;
-
     private Scanner sc;
+    private Connection conn;
 
     private List<String> options;
 
@@ -22,8 +17,9 @@ public class RaceMenu implements Menu {
     private final String RACE_NEW  = "Create a new Race";
     private final String EXIT      = "Back to Admin Menu";
 
-    public RaceMenu( Scanner sc ) {
+    public RaceMenu(Scanner sc, Connection conn) {
         this.sc = sc;
+        this.conn = conn;
         this.options = Arrays.asList( RACE_LIST, RACE_NEW, EXIT );
     }
 
@@ -195,14 +191,11 @@ public class RaceMenu implements Menu {
         System.out.print( "Please enter the number of the desired option here: " );
     }
 
-    public void enter( Connection conn ) {
-        this.conn = conn;
-
+    public void enter() {
         printMenuTitle();
 
         String option = "";
         int input = -1;
-        String exit = EXIT;
 
         do {
 

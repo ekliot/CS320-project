@@ -1,15 +1,15 @@
 package rpgcharacters.userflow;
 
+import java.sql.Connection;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import java.sql.Connection;
-
 public class MainMenu implements Menu {
 
     private Scanner sc;
+    private Connection conn;
 
     private String username;
     private boolean isAdmin;
@@ -24,15 +24,16 @@ public class MainMenu implements Menu {
     /**
     * Constructor Method
     */
-    public MainMenu (Scanner sc, String username, boolean isAdmin) {
+    public MainMenu(Scanner sc, String username, boolean isAdmin, Connection conn) {
         this.sc = sc;
         this.username = username;
         this.isAdmin = isAdmin;
+        this.conn = conn;
 
-        if ( isAdmin ) {
-            this.options = Arrays.asList( MENU_CHAR, MENU_PARTY, MENU_ADMIN, LOG_OUT );
+        if (isAdmin) {
+            this.options = Arrays.asList(MENU_CHAR, MENU_PARTY, MENU_ADMIN, LOG_OUT);
         } else {
-            this.options = Arrays.asList( MENU_CHAR, MENU_PARTY, LOG_OUT );
+            this.options = Arrays.asList(MENU_CHAR, MENU_PARTY, LOG_OUT);
         }
     }
 
@@ -42,30 +43,29 @@ public class MainMenu implements Menu {
         System.out.println("-------------------------------------------------------");
     }
 
-    private void printOptions () {
+    private void printOptions() {
         String optionsString = "Available options:\n";
         String optionFormat = "\t%d: %s\n";
 
-        for ( int i = 0; i < options.size(); i++ ) {
-            optionsString += String.format( optionFormat, (i+1), options.get( i ) );
+        for (int i = 0; i < options.size(); i++) {
+            optionsString += String.format(optionFormat, (i+1), options.get(i));
         }
 
         optionsString += "-------------------------------------------------------"; // 50 chars;
 
-        System.out.println( optionsString );
+        System.out.println(optionsString);
 
-        System.out.print( "Please enter the number of the desired option here: " );
+        System.out.print("Please enter the number of the desired option here: ");
     }
 
     /**
     * Defines the loop for this menu
     */
-    public void enter ( Connection conn ) {
+    public void enter() {
         printMenuTitle();
 
         String option = "";
         int input = -1;
-        String exit = LOG_OUT;
 
         do {
 
@@ -74,37 +74,37 @@ public class MainMenu implements Menu {
             try {
                 input = sc.nextInt();
 
-                if ( input <= 0 || input > options.size() ) {
+                if (input <= 0 || input > options.size()) {
                     option = "";
                 } else {
-                    option = options.get( input - 1 );
+                    option = options.get(input - 1);
                 }
 
-                switch ( option ) {
+                switch (option) {
                     case MENU_CHAR:
-                        Menu characterMenu = new CharacterMenu( sc, username );
-                        characterMenu.enter( conn );
+                        Menu characterMenu = new CharacterMenu(sc, username, conn);
+                        characterMenu.enter();
                         break;
                     case MENU_PARTY:
-                        Menu partyMenu = new PartyMenu( sc, username );
-                        partyMenu.enter( conn );
+                        Menu partyMenu = new PartyMenu(sc, username, conn);
+                        partyMenu.enter();
                         break;
                     case MENU_ADMIN:
-                        Menu adminMenu = new AdminMenu( sc );
-                        adminMenu.enter( conn );
+                        Menu adminMenu = new AdminMenu(sc, conn);
+                        adminMenu.enter();
                         break;
                     case LOG_OUT:
-                        System.out.println( "\nLogging out...\n" );
+                        System.out.println("\nLogging out...\n");
                         break;
                     default:
-                        System.out.println( "\nInvalid input...\n" );
+                        System.out.println("\nInvalid input...\n");
                 }
-            } catch ( InputMismatchException e ) {
-                System.out.println( "\nInvalid input...\n" );
+            } catch (InputMismatchException e) {
+                System.out.println("\nInvalid input...\n");
                 continue;
             }
 
-        } while ( !option.equals( LOG_OUT ) );
+        } while (!option.equals(LOG_OUT));
     }
 
 }
