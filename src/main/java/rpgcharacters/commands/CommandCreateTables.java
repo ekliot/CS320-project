@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import com.beust.jcommander.Parameters;
 
@@ -196,23 +200,46 @@ public class CommandCreateTables implements Command {
         }
     }
 
+    private String[][] readParams(String filename) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try {
+            File inFile = new File (filename);
+            Scanner in = new Scanner (inFile);
+            while (in.hasNext()) {
+                lines.add(in.nextLine());
+            }
+            String[][] lineToks = new String[lines.size()][lines.get(0).split(",").length];
+
+            for (int i = 0; i < lines.size(); i++) {
+                lineToks[i] = lines.get(i).split(",");
+            }
+            in.close();
+            return lineToks;
+        }
+        catch (FileNotFoundException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
     /**
      * TODO
     **/
-    private void seedRace( Connection conn ) {
+    private void seedRace(Connection conn) {
         HashMap<String, int[]> raceSeeds = new HashMap<String, int[]>();
+        Scanner in = new Scanner(System.in);
+        System.out.print("Races seed file: ");
+        String filename = in.nextLine();
+        String[][] lines = readParams(filename);
 
-        //             race                   pow prof pers perc
-        raceSeeds.put( "Human",    new int[]{   5,  10,  10,   0 } ); //  5 + 10 + 10 +  0 = 25
-        raceSeeds.put( "Elf",      new int[]{   5,  10,  15,  -5 } ); //  5 + 10 + 15 -  5 = 25
-        raceSeeds.put( "Half-Elf", new int[]{   0,  15,  10,   0 } ); //  0 + 15 + 10 +  0 = 25
-        raceSeeds.put( "Half-Ork", new int[]{  20,  10, -10,   5 } ); // 20 + 10 - 10 +  5 = 25
-        raceSeeds.put( "Ork",      new int[]{  30,  10, -20,   5 } ); // 30 + 10 - 20 +  5 = 25
-        raceSeeds.put( "Halfling", new int[]{   0,  20,   0,   5 } ); //  0 +  0 +  5 + 20 = 25
-        raceSeeds.put( "Dwarf",    new int[]{  15,   0,  -5,  15 } ); // 15 +  0 -  5 + 15 = 25
-        raceSeeds.put( "Gnome",    new int[]{  15,  10, -10,  10 } ); // 15 + 10 - 10 + 10 = 25
-        raceSeeds.put( "Goblin",   new int[]{   5,  25, -15,  10 } ); //  5 + 25 - 15 + 10 = 25
-        raceSeeds.put( "Fey",      new int[]{   5,  25,  10, -15 } ); //  5 + 25 + 10 - 15 = 25
+        for (int i = 0; i < lines.length; i++) {
+            // System.out.println(lines[i][0] + ", " + lines[i][1] + ", " + lines[i][2] + ", " + lines[i][3] + ", " + lines[i][4]);
+            raceSeeds.put( lines[i][0], new int[]{Integer.parseInt(lines[i][1]),
+                                                  Integer.parseInt(lines[i][2]),
+                                                  Integer.parseInt(lines[i][3]),
+                                                  Integer.parseInt(lines[i][4])
+                                                 });
+        }
 
         String insertRace = "INSERT INTO race VALUES ( '%s', %d, %d, %d, %d );";
         try {
@@ -237,17 +264,19 @@ public class CommandCreateTables implements Command {
     private void seedArchetype( Connection conn ) {
         HashMap<String, int[]> archSeeds = new HashMap<String, int[]>();
 
-        //             archetype               pow prof pers perc
-        archSeeds.put( "Warrior",   new int[]{  10,  10,   0,   5 } ); // 10 + 10 +  0 +  5 = 25
-        archSeeds.put( "Monk",      new int[]{   5,  10,   5,   5 } ); //  5 + 10 +  5 +  5 = 25
-        archSeeds.put( "Scoundrel", new int[]{   0,  15,   5,   5 } ); //  0 + 15 +  5 +  5 = 25
-        archSeeds.put( "Druid",     new int[]{  10,   5,  10,   0 } ); // 10 +  5 + 10 +  0 = 25
-        archSeeds.put( "Bard",      new int[]{   0,   5,  15,   5 } ); //  0 +  5 + 15 +  5 = 25
-        archSeeds.put( "Cleric",    new int[]{  10,   0,  15,   0 } ); // 10 +  0 + 15 +  0 = 25
-        archSeeds.put( "Sorceror",  new int[]{  20,   0,   5,   0 } ); // 20 +  0 +  5 +  0 = 25
-        archSeeds.put( "Magus",     new int[]{  15,  10,   0,   0 } ); // 15 + 10 +  0 +  0 = 25
-        archSeeds.put( "Shaman",    new int[]{  15,   0,   5,   5 } ); // 15 +  0 +  5 +  5 = 25
-        archSeeds.put( "Ranger",    new int[]{   0,  15,   0,  10 } ); //  0 + 15 +  0 + 10 = 25
+        Scanner in = new Scanner(System.in);
+        System.out.print("Archetypes seed file: ");
+        String filename = in.nextLine();
+        String[][] lines = readParams(filename);
+
+        for (int i = 0; i < lines.length; i++) {
+            // System.out.println(lines[i][0] + ", " + lines[i][1] + ", " + lines[i][2] + ", " + lines[i][3] + ", " + lines[i][4]);
+            archSeeds.put( lines[i][0], new int[]{Integer.parseInt(lines[i][1]),
+                                                  Integer.parseInt(lines[i][2]),
+                                                  Integer.parseInt(lines[i][3]),
+                                                  Integer.parseInt(lines[i][4])
+                                                 });
+        }
 
         String insertArch = "INSERT INTO archetype VALUES ( '%s', %d, %d, %d, %d );";
         try {

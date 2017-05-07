@@ -123,7 +123,7 @@ public class PartyMenu implements Menu {
         printMenuTitle();
         int input = 0;
         String party;
-        int exit = 6;
+        int exit = 7;
         do {
 
             printOptions();
