@@ -290,4 +290,49 @@ public class CommandCreateTables implements Command {
         }
         in.close();
     }
+    private void createAdminRole( Connection conn ) {
+        try {
+            Statement s = conn.createStatement();
+
+            //Change later
+            String adminView = "CREATE VIEW adminView AS "
+                    + "SELECT * "
+                    + "FROM *;";
+            s.executeQuery(adminView);
+
+            String adminRole = "CREATE ROLE dbAdmin;";
+            s.executeQuery(adminRole);
+
+
+            String adminPrivileges = "GRANT INDEX, RESOURCES, ALTER, DROP "
+                    + "ON adminView "
+                    + "TO dbAdmin;";
+            s.executeQuery(adminPrivileges);
+
+        } catch( SQLException e ) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createUserRole( Connection conn ) {
+        try {
+            Statement s = conn.createStatement();
+
+            String userView = "CREATE VIEW userView AS "
+                    + "SELECT * "
+                    + "FROM party, character, character_item, party_quest;";
+            s.executeQuery(userView);
+
+            String userRole = "CREATE ROLE dbUser;";
+            s.executeQuery(userRole);
+
+            String userPrivileges = "GRANT READ, INSERT, UPDATE, DELETE "
+                    + "ON userView "
+                    + "TO dbUser, dbAdmin;";
+            s.executeQuery(userPrivileges);
+
+        } catch( SQLException e ) {
+            e.printStackTrace();
+        }
+    }
 }

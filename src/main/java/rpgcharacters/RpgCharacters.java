@@ -1,8 +1,6 @@
 package rpgcharacters;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Hashtable;
 
 import com.beust.jcommander.JCommander;
@@ -59,7 +57,7 @@ public class RpgCharacters {
             jc.usage();
             return;
         }
-
+        
         // Run desired command
         for (String command : commands.keySet()) {
             if (jc.getParsedCommand() == command) {
