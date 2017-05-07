@@ -91,8 +91,8 @@ public class MainMenu implements Menu {
                         partyMenu.enter();
                         break;
                     case MENU_ADMIN:
-                        // Menu adminMenu = new AdminMenu(sc, conn);
-                        // adminMenu.enter();
+                        Menu adminMenu = new AdminMenu(sc, conn);
+                        adminMenu.enter();
                         break;
                     case LOG_OUT:
                         System.out.println("\nLogging out...\n");

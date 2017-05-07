@@ -77,7 +77,7 @@ public class LoginMenu implements Menu {
     public void enter() {
 
         // clear the screen
-        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.print( ANSI_CLS + ANSI_HOME );
         System.out.flush();
 
         printMenuTitle();
@@ -103,6 +103,10 @@ public class LoginMenu implements Menu {
             System.out.print("Password: ");
             pass = sc.nextLine();
 
+            if ( pass.isEmpty() ) {
+                break;
+            }
+
             validLogin = checkLogin(user, pass);
 
             if (!validLogin) {
@@ -120,7 +124,7 @@ public class LoginMenu implements Menu {
             System.out.println("\nWelcome " + user + "!\n");
 
             // clear the screen
-            System.out.print(ANSI_CLS + ANSI_HOME);
+            System.out.print( ANSI_CLS + ANSI_HOME );
             System.out.flush();
 
             Menu mainMenu = new MainMenu(sc, user, isAdmin, conn);

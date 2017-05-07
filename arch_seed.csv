@@ -1,0 +1,10 @@
+Warrior,10,0,5,10
+Monk,5,5,5,10
+Scoundrel,0,5,5,15
+Druid,10,10,0,5
+Bard,0,15,5,5
+Cleric,10,15,0,0
+Sorceror,20,5,0,0
+Magus,15,0,0,10
+Shaman,15,5,5,0
+Ranger,0,0,10,15
