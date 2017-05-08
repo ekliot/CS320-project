@@ -30,7 +30,7 @@ public class CreatePartyMenu implements Menu {
         try {
             String query = "INSERT INTO party (name, gm_username) VALUES ("
                          + "'" + partyName.replaceAll("'", "''") + "',"
-                         + "'" + username.replaceAll("'", "''") + "');";
+                         + "'" + this.username.replaceAll("'", "''") + "');";
             Statement stmt = conn.createStatement();
             stmt.execute(query);
             return true;

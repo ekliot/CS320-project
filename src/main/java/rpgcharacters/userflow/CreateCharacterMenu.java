@@ -2,8 +2,18 @@ package rpgcharacters.userflow;
 
 import java.sql.*;
 import java.util.Scanner;
+import java.util.LinkedHashMap;
 
 public class CreateCharacterMenu implements Menu {
+
+    private class Tuple<X, Y> {
+        public final X x;
+        public final Y y;
+        public Tuple(X x, Y y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
 
     private Scanner sc;
     private Connection conn;
@@ -31,7 +41,7 @@ public class CreateCharacterMenu implements Menu {
     private boolean saveToDB(String name, String story, String race, String archetype, int[] stats) {
         try {
             String query = "INSERT INTO character VALUES ("
-                         + "'" + username.replaceAll("'", "''") + "',"
+                         + "'" + this.username.replaceAll("'", "''") + "',"
                          + "'" + name.replaceAll("'", "''") + "',"
                          + "NULL, " // party_id = NULL
                          + "'" + race.replaceAll("'", "''") + "',"
@@ -56,27 +66,6 @@ public class CreateCharacterMenu implements Menu {
         }
     }
 
-    private int[] getCurStats(ResultSet raceResults, ResultSet archResults) throws SQLException {
-        int[] raceMods = {
-            raceResults.getInt("power_mod"),
-            raceResults.getInt("proficiency_mod"),
-            raceResults.getInt("personality_mod"),
-            raceResults.getInt("perception_mod")
-        };
-        int[] archMods = {
-            archResults.getInt("power_mod"),
-            archResults.getInt("proficiency_mod"),
-            archResults.getInt("personality_mod"),
-            archResults.getInt("perception_mod")
-        };
-
-        int[] totalMods = new int[4];
-        for (int i = 0; i < 4; i++) {
-            totalMods[i] = raceMods[i] + archMods[i];
-        }
-        return totalMods;
-    }
-
     private int getStat(String statName, int curStatVal) {
         int maxMod = Math.min(curMaxAdd,100 - curStatVal);
         if (maxMod == 0) return curStatVal;
@@ -94,16 +83,51 @@ public class CreateCharacterMenu implements Menu {
         return statMod;
     }
 
-    private ResultSet getStatRow(String table, String name) throws SQLException {
-        String query = "SELECT * FROM " + table
-                     + " WHERE name='" + name.replaceAll("'", "''") + "';";
-        Statement stmt = conn.createStatement();
-        ResultSet results = stmt.executeQuery(query);
-        if (!results.last()) {
-            System.out.println("\n" + name + " does not exist.");
-            return null;
+    private Tuple<String, int[]> selectStat(String table) {
+        LinkedHashMap<String, int[]> rows = new LinkedHashMap<String, int[]>();
+
+        try {
+            String query = "SELECT * FROM " + table + ";";
+            Statement stmt = conn.createStatement();
+            ResultSet results = stmt.executeQuery(query);
+
+            results.beforeFirst();
+            while (results.next()) {
+                rows.put(results.getString("name"), new int[]{
+                    results.getInt("power_mod"),
+                    results.getInt("proficiency_mod"),
+                    results.getInt("personality_mod"),
+                    results.getInt("perception_mod")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return results;
+
+        System.out.println(table.substring(0, 1).toUpperCase() + table.substring(1) + "s:");
+        String pString = "";
+        int indLen = (rows.size() + "").length() + 2;
+        for (int i = 0; i < rows.size(); i++) {
+            String lineString1 = "";
+            lineString1 += (i+1) + ".";
+            while (lineString1.length() < indLen) {
+                lineString1 += " ";
+            }
+            lineString1 += rows.keySet().toArray()[i].toString() + "\n";
+            pString += lineString1;
+        }
+        System.out.print(pString);
+
+        System.out.println("-------------------------------------------------------");
+        System.out.print("Enter corresponding number of the " + table + " to add: ");
+        int input = sc.nextInt();
+        while (input < 1 || input > rows.size()) {
+            System.out.println("\nInvalid input...\n");
+            System.out.print("Enter corresponding number of the " + table + " to add: ");
+            input = sc.nextInt();
+        }
+        String selectedName = rows.keySet().toArray()[input-1].toString();
+        return new Tuple<String, int[]>(selectedName, rows.get(selectedName));
     }
 
     private boolean createCharacter() {
@@ -114,31 +138,26 @@ public class CreateCharacterMenu implements Menu {
         System.out.print("Character Backstory: ");
         String charStory = sc.nextLine();
 
-        try {
-            System.out.print("Character Race: ");
-            String charRace = sc.nextLine();
-            ResultSet raceResults = getStatRow("race", charRace);
-            if (raceResults == null) return false;
+        Tuple<String, int[]> race = selectStat("race");
+        String raceName = race.x;
+        int[] raceMods = race.y;
 
-            System.out.print("Character Archetype: ");
-            String charArch = sc.nextLine();
-            ResultSet archResults = getStatRow("archetype", charArch);
-            if (archResults == null) return false;
+        Tuple<String, int[]> archetype = selectStat("archetype");
+        String archName = archetype.x;
+        int[] archMods = archetype.y;
 
-            int[] curStats = getCurStats(raceResults,archResults);
-
-            curMaxAdd = 20;
-            curStats[0] = getStat("power",curStats[0]);
-            curStats[1] = getStat("proficiency",curStats[1]);
-            curStats[2] = getStat("personality",curStats[2]);
-            curStats[3] = getStat("perception",curStats[3]);
-
-            return saveToDB(charName,charStory,charRace,charArch,curStats);
-        } catch (SQLException e) {
-            System.out.println("\nAn error has occured while saving to the database.");
-            e.printStackTrace();
-            return false;
+        int[] curStats = new int[4];
+        for (int i = 0; i < 4; i++) {
+            curStats[i] = raceMods[i] + archMods[i];
         }
+
+        curMaxAdd = 20;
+        curStats[0] = getStat("power", curStats[0]);
+        curStats[1] = getStat("proficiency", curStats[1]);
+        curStats[2] = getStat("personality", curStats[2]);
+        curStats[3] = getStat("perception", curStats[3]);
+
+        return saveToDB(charName, charStory, raceName, archName, curStats);
     }
 
     /**
