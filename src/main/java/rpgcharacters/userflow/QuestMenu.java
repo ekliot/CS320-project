@@ -144,10 +144,10 @@ public class QuestMenu implements Menu {
 
         try {
             String query = "INSERT INTO quest VALUES ("
-                         + "'" + name        + "', "
-                         + "'" + description + "', "
-                         + ""  + exp         + ", "
-                         + "'" + item_name   + "' "
+                         + "'" + name.replaceAll("'", "''")        + "', "
+                         + "'" + description.replaceAll("'", "''") + "', "
+                         + ""  + exp                               + ", "
+                         + "'" + item_name.replaceAll("'", "''")   + "' "
                          + ");";
 
             Statement stmt = conn.createStatement();
@@ -276,8 +276,8 @@ public class QuestMenu implements Menu {
 
         try {
             String query = "INSERT INTO item VALUES ("
-                         + "'" + name + "', "
-                         + "'" + description + "'"
+                         + "'" + name.replaceAll("'", "''") + "', "
+                         + "'" + description.replaceAll("'", "''") + "'"
                          + ");";
 
             Statement stmt = conn.createStatement();

@@ -121,8 +121,8 @@ public class ItemMenu implements Menu {
 
         try {
             String query = "INSERT INTO item VALUES ("
-                         + "'" + name + "', "
-                         + "'" + description + "'"
+                         + "'" + name.replaceAll("'", "''") + "', "
+                         + "'" + description.replaceAll("'", "''") + "'"
                          + ");";
 
             Statement stmt = conn.createStatement();

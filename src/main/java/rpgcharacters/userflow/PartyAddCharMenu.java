@@ -87,14 +87,14 @@ public class PartyAddCharMenu implements Menu {
         try {
             String query = "UPDATE character "
                          + "SET party_id=(SELECT id FROM party "
-                         + "WHERE name = '" + partyName.replaceAll("'", "''") + "' "
-                         + "AND gm_username = '" + username.replaceAll("'", "''") + "') "
+                         + "WHERE name = '" + this.partyName.replaceAll("'", "''") + "' "
+                         + "AND gm_username = '" + this.username.replaceAll("'", "''") + "') "
                          + "WHERE user_username = '" + charUsername.replaceAll("'", "''") + "' "
                          + "AND name = '" + charName.replaceAll("'", "''") + "';";
             System.out.println(query);
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
-            System.out.println(charName + " has been added to " + partyName);
+            System.out.println(charName + " has been added to " + this.partyName);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
