@@ -153,7 +153,7 @@ public class ArchetypeMenu implements Menu {
         try {
             String query = String.format(
                 "INSERT INTO archetype VALUES ( '%s', %d, %d, %d, %d );",
-                name, power_mod, proficiency_mod, personality_mod, perception_mod
+                name.replaceAll("'", "''"), power_mod, proficiency_mod, personality_mod, perception_mod
             );
 
             Statement stmt = conn.createStatement();

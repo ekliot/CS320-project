@@ -167,10 +167,26 @@ public class CharacterMenu implements Menu {
                 "  Proficiency: " + proficiency + "\n" +
                 "  Personality: " + personality + "\n" +
                 "  Perception:  " + perception + "\n" +
-                "  Experience:  " + experience + "\n" +
-                // output items here
-                "-------------------------------------------------------\n";
+                "  Experience:  " + experience + "\n";
 
+            ArrayList<String> itemNames = new ArrayList<String>();
+            String itemQuery = "SELECT * FROM character_item "
+                             + "WHERE user_username = '" + this.username.replaceAll("'", "''") + "' "
+                             + "AND character_name = '" + charName.replaceAll("'", "''") + "';";
+            Statement itemStmt = conn.createStatement();
+            ResultSet items = itemStmt.executeQuery(itemQuery);
+
+            items.beforeFirst();
+            while (items.next()) {
+                itemNames.add(items.getString("item_name"));
+            }
+
+            if (itemNames.size() > 0) pString += "  Items:\n";
+            for (String name : itemNames) {
+                pString += "    " + name + "\n";
+            }
+
+            pString += "-------------------------------------------------------\n";
             System.out.println(pString);
         } catch (SQLException e) {
             e.printStackTrace();
