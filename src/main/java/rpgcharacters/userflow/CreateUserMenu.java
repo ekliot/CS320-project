@@ -24,9 +24,11 @@ public class CreateUserMenu implements Menu {
                          + "'" + pass.replaceAll("'", "''") + "');";
             Statement stmt = conn.createStatement();
             stmt.execute(query);
-            
+
             query = "SELECT COUNT( * ) AS userCount;";
             ResultSet result = stmt.executeQuery(query);
+
+            result.first();
 
             if (result.getInt("userCount") == 1) {
                 query = "GRANT dbAdmin "
@@ -41,7 +43,7 @@ public class CreateUserMenu implements Menu {
             }
 
             stmt.executeQuery(query);
-            
+
             return true;
         } catch (SQLException e) {
             if (e.getMessage().startsWith("Unique index or primary key violation")) {
