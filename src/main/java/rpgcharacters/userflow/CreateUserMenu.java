@@ -30,16 +30,6 @@ public class CreateUserMenu implements Menu {
 
             result.first();
 
-            if (result.getInt("userCount") == 1) {
-                query = "GRANT dbAdmin "
-                      + "TO public;";
-            } else {
-                query = "GRANT dbUser "
-                      + "TO (SELECT * "
-                      +     "FROM user "
-                      +     "WHERE username = '" + user.replaceAll("'", "''") + "');";
-            }
-
             stmt.executeUpdate(query);
 
             return true;
