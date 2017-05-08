@@ -97,7 +97,7 @@ public class GrantAdminMenu implements Menu {
 
         try {
             String query = "GRANT dbAdmin "
-                         + "TO (SELECT username "
+                         + "TO (SELECT * "
                          +     "FROM user "
                          +     "WHERE username = '" + name.replaceAll("'", "''") + "');";
             Statement stmt = conn.createStatement();
