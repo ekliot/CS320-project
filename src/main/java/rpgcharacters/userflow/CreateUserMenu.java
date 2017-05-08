@@ -25,13 +25,6 @@ public class CreateUserMenu implements Menu {
             Statement stmt = conn.createStatement();
             stmt.execute(query);
 
-            query = "SELECT COUNT( * ) AS userCount;";
-            ResultSet result = stmt.executeQuery(query);
-
-            result.first();
-
-            stmt.executeUpdate(query);
-
             return true;
         } catch (SQLException e) {
             if (e.getMessage().startsWith("Unique index or primary key violation")) {
