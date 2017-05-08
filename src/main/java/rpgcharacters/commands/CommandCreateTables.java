@@ -25,7 +25,8 @@ public class CommandCreateTables implements Command {
         createQuestTable(conn);
         createCharacterItemTable(conn);
         createPartyQuestTable(conn);
-
+        createAdminRole(conn);
+        createUserRole(conn);
         seedRace( conn );
         seedArchetype( conn );
     }
