@@ -27,8 +27,10 @@ public class CommandCreateTables implements Command {
         createPartyQuestTable(conn);
         createAdminRole(conn);
         createUserRole(conn);
-        seedRace( conn );
-        seedArchetype( conn );
+        Scanner in = new Scanner(System.in);
+        seedRace( conn, in );
+        seedArchetype( conn, in );
+        in.close();
     }
 
     private void createUserTable(Connection conn) {
@@ -223,9 +225,8 @@ public class CommandCreateTables implements Command {
         return null;
     }
 
-    private void seedRace(Connection conn) {
+    private void seedRace(Connection conn, Scanner in) {
         HashMap<String, int[]> raceSeeds = new HashMap<String, int[]>();
-        Scanner in = new Scanner(System.in);
         System.out.print("Races seed file: ");
         String filename = in.nextLine();
         String[][] lines = readParams(filename);
@@ -254,13 +255,10 @@ public class CommandCreateTables implements Command {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        in.close();
     }
 
-    private void seedArchetype( Connection conn ) {
+    private void seedArchetype( Connection conn, Scanner in) {
         HashMap<String, int[]> archSeeds = new HashMap<String, int[]>();
-
-        Scanner in = new Scanner(System.in);
         System.out.print("Archetypes seed file: ");
         String filename = in.nextLine();
         String[][] lines = readParams(filename);
