@@ -84,8 +84,8 @@ public class AdminMenu implements Menu {
                         archetypeMenu.enter();
                         break;
                     case MENU_GRANT:
-                        // Menu grantAdminMenu = new GrantAdminMenu(sc, conn);
-                        // grantAdminMenu.enter();
+                        Menu grantAdminMenu = new GrantAdminMenu(sc, conn);
+                        grantAdminMenu.enter();
                         break;
                     case EXIT:
                         System.out.println( "\nGoing back...\n" );
