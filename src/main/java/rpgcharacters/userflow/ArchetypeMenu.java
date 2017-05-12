@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -57,13 +59,9 @@ public class ArchetypeMenu implements Menu {
     private void printArchetype( String name, int[] mods ) {
         System.out.println( "Archetype: " + name );
         System.out.println( "Stat Modifiers:" );
-        System.out.println( "  POWER : PROFICIENCY : PERSONALITY : PERCEPTION" );
-        String modFormat =  "   %3d  :     %3d     :     %3d     :    %3d    ";
-        System.out.println( String.format( modFormat,
-                              mods[0],   mods[1],      mods[2],     mods[3] )
-        );
+        UI.printStats( mods );
 
-        System.out.println( "-------------------------------------------------------" ); // length 50
+        UI.printDiv2();
     }
 
     public void newArchetype() {
@@ -170,66 +168,35 @@ public class ArchetypeMenu implements Menu {
 
     }
 
-    private void printMenuTitle() {
-        System.out.println( "\n-------------------------------------------------------" );
-        System.out.println( "Archetype Menu" );
-        System.out.println( "-------------------------------------------------------" );
-    }
-
-    private void printOptions () {
-        String optionsString = "Available options:\n";
-        String optionFormat = "\t%d: %s\n";
-
-        for ( int i = 0; i < options.size(); i++ ) {
-            optionsString += String.format( optionFormat, (i+1), options.get( i ) );
-        }
-
-        optionsString += "-------------------------------------------------------"; // 50 chars;
-
-        System.out.println( optionsString );
-
-        System.out.print( "Please enter the number of the desired option here: " );
-    }
-
     public void enter() {
-        printMenuTitle();
+
+        UI.clearScreen();
+
+        UI.printMenuTitle( "Archetypes Menu" );
 
         String option = "";
         int input = -1;
 
         do {
 
-            printOptions();
+            UI.printOptions( options );
 
-            try {
-                input = sc.nextInt();
+            input = UI.promptInt( sc, "Select an option: ",
+                                  0, options.size() );
+            option = options.get( input - 1 );
 
-                if ( input <= 0 || input > options.size() ) {
-                    option = "";
-                } else {
-                    option = options.get( input - 1 );
-                }
-
-                // swallow the next line, as it would auto complete on entering newArchetype()
-                // ref: http://stackoverflow.com/questions/7877529/java-string-scanner-input-does-not-wait-for-info-moves-directly-to-next-stateme
-                sc.nextLine();
-
-                switch ( option ) {
-                    case ARCH_LIST:
-                        listArchetype();
-                        break;
-                    case ARCH_NEW:
-                        newArchetype();
-                        break;
-                    case EXIT:
-                        System.out.println( "\nGoing back...\n" );
-                        break;
-                    default:
-                        System.out.println( "\nInvalid input...\n" );
-                }
-            } catch ( InputMismatchException e ) {
-                System.out.println( "\nInvalid input...\n" );
-                continue;
+            switch ( option ) {
+                case ARCH_LIST:
+                    listArchetype();
+                    break;
+                case ARCH_NEW:
+                    newArchetype();
+                    break;
+                case EXIT:
+                    UI.printOutput( "Going back..." );
+                    break;
+                default:
+                    UI.printOutput( "Invalid input..." );
             }
 
         } while ( !option.equals( EXIT ) );

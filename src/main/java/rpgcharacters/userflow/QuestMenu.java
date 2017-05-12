@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,11 +32,19 @@ public class QuestMenu implements Menu {
             String query = "SELECT * "
                          + "FROM quest;";
 
-            Statement stmt = conn.createStatement();
+            // these options to createStatement let us use beforeFirst() after using last()
+            Statement stmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY );
             ResultSet results = stmt.executeQuery( query );
 
+            if ( !results.last() ) {
+                System.out.println( "There are no quests in the database!\n" );
+                return;
+            }
+
             System.out.println( "\nQuests:" );
-            System.out.println( "==============" );
+            UI.printDiv1();
 
             results.beforeFirst();
 
@@ -59,27 +69,10 @@ public class QuestMenu implements Menu {
         System.out.println( "Description:" );
 
         if ( !desc.isEmpty() ) {
-            String[] descTokens = desc.split(" ");
-            String indent = "  ";
-            int curLen = indent.length();
-
-            System.out.print( indent );
-
-            for ( String tok : descTokens ) {
-                if ( curLen + tok.length() > 46 ) {
-                    System.out.print( "\n" + indent + tok );
-                    curLen = indent.length() + tok.length();
-                }
-                else {
-                    System.out.print( tok + " " );
-                    curLen += tok.length() + 1;
-                }
-            }
-
-            System.out.println( "" );
+            UI.printParagraph( desc, 46 );
         }
 
-        System.out.println( "-------------------------------------------------------" ); // length 50
+        UI.printDiv2();
     }
 
     public void newQuest() {

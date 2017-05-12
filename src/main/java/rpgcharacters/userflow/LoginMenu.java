@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Scanner;
 
@@ -9,9 +11,6 @@ public class LoginMenu implements Menu {
     private Connection conn;
 
     private boolean isAdmin = false;
-
-    final String ANSI_CLS = "\u001b[2J";
-    final String ANSI_HOME = "\u001b[H";
 
     /**
      * Constructor Method
@@ -65,26 +64,16 @@ public class LoginMenu implements Menu {
 
     }
 
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Login Menu");
-        System.out.println("-------------------------------------------------------");
-    }
-
     /**
      * Defines the loop for this menu
     **/
     public void enter() {
 
-        // clear the screen
-        System.out.print( ANSI_CLS + ANSI_HOME );
-        System.out.flush();
+        UI.clearScreen();
 
-        printMenuTitle();
+        UI.printMenuTitle( "Login Menu" );
 
         System.out.println("\nEnter your username and password (enter nothing to cancel)");
-
-        sc.nextLine();
 
         String user, pass;
         int wrongCount = 0;
@@ -119,20 +108,16 @@ public class LoginMenu implements Menu {
 
         } while (!validLogin && wrongCount < wrongMax);
 
-        if (validLogin) {
+        if ( validLogin ) {
 
-            System.out.println("\nWelcome " + user + "!\n");
-
-            // clear the screen
-            System.out.print( ANSI_CLS + ANSI_HOME );
-            System.out.flush();
+            UI.clearScreen();
 
             Menu mainMenu = new MainMenu(sc, user, isAdmin, conn);
             mainMenu.enter();
 
         } else if (wrongCount >= wrongMax) {
 
-            System.out.println("Too many attempts... Returning...\n");
+            System.out.println("Too many attempts! Returning...\n");
 
         } else {
 

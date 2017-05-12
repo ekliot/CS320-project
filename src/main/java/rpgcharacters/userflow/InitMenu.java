@@ -1,13 +1,22 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 public class InitMenu implements Menu {
 
     private Scanner sc;
     private Connection conn;
+
+    private List<String> options;
+
+    private final String LOGIN = "Login";
+    private final String REGISTER = "Register";
+    private final String EXIT = "Exit";
 
     /**
     * Constructor Method
@@ -15,66 +24,52 @@ public class InitMenu implements Menu {
     public InitMenu(Connection conn) {
         this.sc = new Scanner(System.in);
         this.conn = conn;
-    }
-
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("RPG Characters Application");
-    }
-
-    private void printOptions() {
-        System.out.println("-------------------------------------------------------");
-        System.out.println(
-            "Available options:\n" +
-            "\t1: Login\n" +
-            "\t2: Create User\n" +
-            "\t3: Exit\n" +
-            "-------------------------------------------------------" // 50 chars
-        );
-        System.out.print("Please enter the number of the desired option here: ");
+        this.options = Arrays.asList( LOGIN, REGISTER, EXIT );
     }
 
     /**
     * Defines the loop for this menu
     */
     public void enter() {
-        // clear the screen
-        final String ANSI_CLS = "\u001b[2J";
-        final String ANSI_HOME = "\u001b[H";
-        System.out.print(ANSI_CLS + ANSI_HOME);
-        System.out.flush();
 
-        printMenuTitle();
-        int input = 0;
+        UI.clearScreen();
+
+        UI.printMenuTitle( "arpeegee.io" );
+
+        String option = "";
+        int input = -1;
 
         do {
 
-            printOptions();
+            UI.printOptions( options );
 
-            try {
-                input = sc.nextInt();
+            input = UI.promptInt( sc, "Select an option: ",
+                                  0, options.size() );
+            option = options.get( input - 1 );
 
-                switch (input) {
-                    case 1:
-                        Menu loginMenu = new LoginMenu(sc, conn);
-                        loginMenu.enter();
-                        break;
-                    case 2:
-                        Menu createUserMenu = new CreateUserMenu(sc, conn);
-                        createUserMenu.enter();
-                        break;
-                    case 3:
-                        System.out.println("\nExiting...");
-                        break;
-                    default:
-                        System.out.println("\nInvalid input...");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("\nInvalid input...");
-                continue;
+            switch ( option ) {
+                case LOGIN:
+                    Menu loginMenu = new LoginMenu(sc, conn);
+                    loginMenu.enter();
+
+                    UI.clearScreen();
+                    UI.printMenuTitle( "arpeegee.io" );
+                    break;
+                case REGISTER:
+                    Menu createUserMenu = new CreateUserMenu(sc, conn);
+                    createUserMenu.enter();
+
+                    UI.clearScreen();
+                    UI.printMenuTitle( "arpeegee.io" );
+                    break;
+                case EXIT:
+                    UI.printOutput("\nExiting...");
+                    break;
+                default:
+                    UI.printOutput("\nInvalid input...");
             }
 
-        } while (input != 3);
+        } while ( !option.equals( EXIT ) );
 
     }
 
