@@ -44,7 +44,7 @@ public class QuestMenu implements Menu {
             }
 
             System.out.println();
-            UI.printOutput( "Quests:" );
+            System.out.println( "Quests:" );
             UI.printDiv1();
 
             results.beforeFirst();

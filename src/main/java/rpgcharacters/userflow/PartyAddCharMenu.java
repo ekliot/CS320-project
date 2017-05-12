@@ -64,7 +64,7 @@ public class PartyAddCharMenu implements Menu {
         UI.printOptions( options, "Characters:" );
         UI.printDiv2();
 
-        int input = UI.promptInt( sc, "Enter number of character to remove: ",
+        int input = UI.promptInt( sc, "Enter number of character to add: ",
                                   1, charNames.size() );
 
         return new String[]{
@@ -108,7 +108,7 @@ public class PartyAddCharMenu implements Menu {
             String[] character = selectCharacter();
 
             if (character == null) {
-                UI.printOutput( "There are no characters that can be added to this party!\n" );
+                UI.printOutput( "There are no characters that can be added to this party!" );
                 success = true;
             } else {
                 success = addChararacter(character[0], character[1]);

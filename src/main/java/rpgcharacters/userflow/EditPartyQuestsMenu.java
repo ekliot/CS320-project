@@ -36,100 +36,115 @@ public class EditPartyQuestsMenu implements Menu {
         this.options = Arrays.asList( QUEST_PRINT, QUEST_ACCEPT, QUEST_COMPLETE, QUEST_CANCEL, EXIT );
     }
 
-    private String printQuests() {
+    private String printQuests( boolean ava, boolean act, boolean com ) {
+
+        String questString = "";
+        int num = 0;
 
         ArrayList<String> available = new ArrayList<String>();
-        try {
-            String query = "SELECT name FROM quest "
-                         + "WHERE name NOT IN ( "
-                         + "SELECT quest.name FROM party_quest "
-                         + "LEFT OUTER JOIN quest on party_quest.quest_name = quest.name "
-                         + "LEFT OUTER JOIN party on party_quest.party_id = party.id "
-                         + "WHERE party.name = '" + this.partyName.replaceAll("'", "''") + "');";
-            Statement stmt = conn.createStatement();
-            ResultSet results = stmt.executeQuery(query);
+        if ( ava ) {
+            try {
+                String query = "SELECT name FROM quest "
+                             + "WHERE name NOT IN ( "
+                             + "SELECT quest.name FROM party_quest "
+                             + "LEFT OUTER JOIN quest on party_quest.quest_name = quest.name "
+                             + "LEFT OUTER JOIN party on party_quest.party_id = party.id "
+                             + "WHERE party.name = '" + this.partyName.replaceAll("'", "''") + "');";
+                Statement stmt = conn.createStatement();
+                ResultSet results = stmt.executeQuery(query);
 
-            results.beforeFirst();
-            while (results.next()) {
-                available.add(results.getString("name"));
+                results.beforeFirst();
+                while (results.next()) {
+                    available.add(results.getString("name"));
+                }
+
+                questString += "\nAVAILABLE:\n";
+                for (int i = 0; i < available.size(); i++) {
+                    num++;
+                    questString += "\t" + num + ": " + available.get(i) + "\n";
+                }
+                if (available.size() == 0) questString += "\tThere are no available quests for this party\n";
+            } catch (SQLException e) {
+                // e.printStackTrace();
+                UI.printOutput( "There was an error querying the party's available quests" );
             }
-        } catch (SQLException e) {
-            // e.printStackTrace();
-            UI.printOutput( "There was an error querying the party's available quests" );
         }
 
         ArrayList<String> active = new ArrayList<String>();
-        try {
-            String query = "SELECT quest.name FROM quest "
-                         + "LEFT OUTER JOIN party_quest ON quest.name = party_quest.quest_name "
-                         + "LEFT OUTER JOIN party on party_quest.party_id = party.id "
-                         + "WHERE party.name = '" + this.partyName.replaceAll("'", "''") + "' "
-                         + "AND party_quest.status = 'Active';";
-            Statement stmt = conn.createStatement();
-            ResultSet results = stmt.executeQuery(query);
+        if ( act ) {
+            try {
+                String query = "SELECT quest.name FROM quest "
+                             + "LEFT OUTER JOIN party_quest ON quest.name = party_quest.quest_name "
+                             + "LEFT OUTER JOIN party on party_quest.party_id = party.id "
+                             + "WHERE party.name = '" + this.partyName.replaceAll("'", "''") + "' "
+                             + "AND party_quest.status = 'Active';";
+                Statement stmt = conn.createStatement();
+                ResultSet results = stmt.executeQuery(query);
 
-            results.beforeFirst();
-            while (results.next()) {
-                active.add(results.getString("name"));
+                results.beforeFirst();
+                while (results.next()) {
+                    active.add(results.getString("name"));
+                }
+
+                questString += "\nACTIVE:\n";
+                for (int i = 0; i < active.size(); i++) {
+                    num++;
+                    questString += "\t" + num + ": " + active.get(i) + "\n";
+                }
+                if (active.size() == 0) questString += "\tThere are no active quests for this party\n";
+            } catch (SQLException e) {
+                // e.printStackTrace();
+                UI.printOutput( "There was an error querying the party's active quests" );
             }
-        } catch (SQLException e) {
-            // e.printStackTrace();
-            UI.printOutput( "There was an error querying the party's active quests" );
         }
 
         ArrayList<String> completed = new ArrayList<String>();
-        try {
-            String query = "SELECT quest.name FROM quest "
-                         + "LEFT OUTER JOIN party_quest ON quest.name = party_quest.quest_name "
-                         + "LEFT OUTER JOIN party on party_quest.party_id = party.id "
-                         + "WHERE party.name = '" + this.partyName.replaceAll("'", "''") + "' "
-                         + "AND party_quest.status = 'Complete';";
-            Statement stmt = conn.createStatement();
-            ResultSet results = stmt.executeQuery(query);
+        if ( com ) {
+            try {
+                String query = "SELECT quest.name FROM quest "
+                             + "LEFT OUTER JOIN party_quest ON quest.name = party_quest.quest_name "
+                             + "LEFT OUTER JOIN party on party_quest.party_id = party.id "
+                             + "WHERE party.name = '" + this.partyName.replaceAll("'", "''") + "' "
+                             + "AND party_quest.status = 'Complete';";
+                Statement stmt = conn.createStatement();
+                ResultSet results = stmt.executeQuery(query);
 
-            results.beforeFirst();
-            while (results.next()) {
-                completed.add(results.getString("name"));
+                results.beforeFirst();
+                while (results.next()) {
+                    completed.add(results.getString("name"));
+                    num++;
+                }
+
+                questString += "\nCOMPLETED:\n";
+                for (int i = 0; i < completed.size(); i++) {
+                    num++;
+                    questString += "\t" + num + ": " + completed.get(i) + "\n";
+                }
+                if (completed.size() == 0) questString += "\tThere are no completed quests for this party\n";
+            } catch (SQLException e) {
+                // e.printStackTrace();
+                UI.printOutput( "There was an error querying the party's completed quests" );
             }
-        } catch (SQLException e) {
-            // e.printStackTrace();
-            UI.printOutput( "There was an error querying the party's completed quests" );
         }
-
-        String questString = "\nAVAILABLE:\n";
-        int num = 0;
-        for (int i = 0; i < available.size(); i++) {
-            num++;
-            questString += "\t" + num + ": " + available.get(i) + "\n";
-        }
-        if (available.size() == 0) questString += "\tThere are no available quests for this party\n";
-        questString += "\nACTIVE:\n";
-        for (int i = 0; i < active.size(); i++) {
-            num++;
-            questString += "\t" + num + ": " + active.get(i) + "\n";
-        }
-        if (active.size() == 0) questString += "\tThere are no active quests for this party\n";
-        questString += "\nCOMPLETED:\n";
-        for (int i = 0; i < completed.size(); i++) {
-            num++;
-            questString += "\t" + num + ": " + completed.get(i) + "\n";
-        }
-        if (completed.size() == 0) questString += "\tThere are no completed quests for this party\n";
 
         System.out.println(questString);
 
         UI.printDiv2();
 
-        int input = UI.promptInt( sc, "Select a quest: ",
-                                  1, num );
+        if ( num > 0 ) {
+            int input = UI.promptInt( sc, "Select a quest: ",
+            1, num );
 
-        if (input > available.size() + active.size()) {
-            return completed.get(input-1 - (available.size() + active.size()));
+            if (input > available.size() + active.size()) {
+                return completed.get(input-1 - (available.size() + active.size()));
+            }
+            else if (input > available.size()) {
+                return active.get(input-1 - available.size());
+            }
+            return available.get(input-1);
+        } else {
+            return "";
         }
-        else if (input > available.size()) {
-            return active.get(input-1 - available.size());
-        }
-        return available.get(input-1);
     }
 
     private void cancelQuest(String questName) {
@@ -293,19 +308,19 @@ public class EditPartyQuestsMenu implements Menu {
 
             switch ( option ) {
                 case QUEST_PRINT:
-                    questName = printQuests();
+                    questName = printQuests( true, true, true );
                     printQuest(questName);
                     break;
                 case QUEST_ACCEPT:
-                    questName = printQuests();
+                    questName = printQuests( true, false, false );
                     activateQuest(questName);
                     break;
                 case QUEST_COMPLETE:
-                    questName = printQuests();
+                    questName = printQuests( false, true, false );
                     completeQuest(questName);
                     break;
                 case QUEST_CANCEL:
-                    questName = printQuests();
+                    questName = printQuests( false, true, false );
                     cancelQuest(questName);
                     break;
                 case EXIT:

@@ -62,7 +62,6 @@ public class PartyRemoveCharMenu implements Menu {
         }
 
         UI.printOptions( options, "Characters:" );
-        UI.printDiv2();
 
         int input = UI.promptInt( sc, "Enter number of character to remove: ",
                                   1, charNames.size() );

@@ -57,7 +57,7 @@ public class LoginMenu implements Menu {
 
         } catch (SQLException e) {
             System.out.println("There was an error validating the login");
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         return valid;
