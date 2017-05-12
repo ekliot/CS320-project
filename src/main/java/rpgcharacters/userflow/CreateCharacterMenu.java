@@ -34,12 +34,6 @@ public class CreateCharacterMenu implements Menu {
         this.conn = conn;
     }
 
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Create Character");
-        System.out.println("-------------------------------------------------------");
-    }
-
     private boolean saveToDB(String name, String story, String race, String archetype, int[] stats) {
         try {
             String query = "INSERT INTO character VALUES ("
@@ -59,30 +53,13 @@ public class CreateCharacterMenu implements Menu {
             return true;
         } catch (SQLException e) {
             if (e.getMessage().startsWith("Unique index or primary key violation")) {
-                System.out.println("\nCharacter already exists!\n");
+                UI.printOutput("Character already exists!");
             } else {
-                System.out.println("\nAn error has occured while saving to the database.");
-                e.printStackTrace();
+                UI.printOutput("There was an error saving the character");
+                // e.printStackTrace();
             }
             return false;
         }
-    }
-
-    private int getStat(String statName, int curStatVal) {
-        int maxMod = Math.min(curMaxAdd,100 - curStatVal);
-        if (maxMod == 0) return curStatVal;
-
-        System.out.println("Character's current " + statName + " stat: " + curStatVal);
-        System.out.print("Additional " + statName + " modifier (0 - " + maxMod + "): ");
-        int statMod = sc.nextInt();
-        while (statMod < 0 || statMod > maxMod) {
-            System.out.println("\nInvalid input...\n");
-            System.out.println("Character's current " + statName + " stat: " + curStatVal);
-            System.out.print("Additional " + statName + " modifier (0 - " + maxMod + "): ");
-            statMod = sc.nextInt();
-        }
-        curMaxAdd -= statMod;
-        return statMod;
     }
 
     private Tuple<String, int[]> selectStat(String table) {
@@ -103,10 +80,12 @@ public class CreateCharacterMenu implements Menu {
                 });
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            UI.printOutput( "There was an error querying " + table + "s" );
         }
 
-        System.out.println(table.substring(0, 1).toUpperCase() + table.substring(1) + "s:");
+        System.out.println("\n" + table.substring(0, 1).toUpperCase() + table.substring(1) + "s:");
+        UI.printDiv2();
         String pString = "";
         int indLen = (rows.size() + "").length() + 2;
         for (int i = 0; i < rows.size(); i++) {
@@ -120,24 +99,22 @@ public class CreateCharacterMenu implements Menu {
         }
         System.out.print(pString);
 
-        System.out.println("-------------------------------------------------------");
-        System.out.print("Enter corresponding number of the " + table + " to add: ");
-        int input = sc.nextInt();
-        while (input < 1 || input > rows.size()) {
-            System.out.println("\nInvalid input...\n");
-            System.out.print("Enter corresponding number of the " + table + " to add: ");
-            input = sc.nextInt();
-        }
+        UI.printDiv2();
+
+        int input = UI.promptInt( sc, "Enter corresponding number of the " + table + " to add: ",
+                                  1, rows.size() );
+
         String selectedName = rows.keySet().toArray()[input-1].toString();
+
         return new Tuple<String, int[]>(selectedName, rows.get(selectedName));
     }
 
     private boolean createCharacter() {
 
-        System.out.print("Character Name: ");
+        UI.printOutput("Character Name: ", false);
         String charName = sc.nextLine();
 
-        System.out.print("Character Backstory: ");
+        UI.printOutput("Character Backstory: ", false);
         String charStory = sc.nextLine();
 
         Tuple<String, int[]> race = selectStat("race");
@@ -153,11 +130,53 @@ public class CreateCharacterMenu implements Menu {
             curStats[i] = raceMods[i] + archMods[i];
         }
 
-        curMaxAdd = 20;
-        curStats[0] = getStat("power", curStats[0]);
-        curStats[1] = getStat("proficiency", curStats[1]);
-        curStats[2] = getStat("personality", curStats[2]);
-        curStats[3] = getStat("perception", curStats[3]);
+        // select character stats
+
+        boolean stats_valid = false;
+        String stat_input;
+        String stat_input_regex = "-?\\d+ -?\\d+ -?\\d+ -?\\d+";
+        String[] stats;
+
+        int stat_sum        = 0;
+        int stat_balance    = 20;
+
+        int power_mod       = 0;
+        int proficiency_mod = 0;
+        int personality_mod = 0;
+        int perception_mod  = 0;
+
+        UI.printOutput( "Enter character's stat modifiers" );
+        UI.printOutput( "Must format as four integers with a sum of 20 (e.g. `10 0 15 -5`)" );
+        UI.printOutput( "Order:\n\tPower | Proficiency | Personality | Perception" );
+
+        do {
+            stat_input = sc.nextLine();
+
+            if ( java.util.regex.Pattern.matches( stat_input_regex, stat_input ) ) {
+
+                stats = stat_input.split( " " );
+
+                power_mod       = Integer.parseInt( stats[0] );
+                proficiency_mod = Integer.parseInt( stats[1] );
+                personality_mod = Integer.parseInt( stats[2] );
+                perception_mod  = Integer.parseInt( stats[3] );
+
+                stat_sum = power_mod + proficiency_mod + personality_mod + perception_mod;
+
+                if ( stat_sum == stat_balance ) {
+                    stats_valid = true;
+                } else {
+                    UI.printOutput( "Stats add up to invalid sum (got " + stat_sum + ", need " + stat_balance + "), try again" );
+                }
+            } else {
+                UI.printOutput( "Input in invalid format, try again" );
+            }
+        } while ( !stats_valid );
+
+        curStats[0] += power_mod;
+        curStats[1] += proficiency_mod;
+        curStats[2] += personality_mod;
+        curStats[3] += perception_mod;
 
         return saveToDB(charName, charStory, raceName, archName, curStats);
     }
@@ -166,8 +185,9 @@ public class CreateCharacterMenu implements Menu {
     * Defines the loop for this menu
     */
     public void enter() {
-        printMenuTitle();
-        sc.nextLine();
+        UI.printMenuTitle( "Create Character" );
+        UI.printDiv2();
+
         boolean validCharInfo = false;
         int wrongCount = 0;
 
@@ -176,7 +196,7 @@ public class CreateCharacterMenu implements Menu {
             validCharInfo = createCharacter();
 
             if (!validCharInfo) {
-                System.out.println("Please try again...\n");
+                UI.printOutput("Please try again...");
             }
 
             wrongCount++;
@@ -184,10 +204,10 @@ public class CreateCharacterMenu implements Menu {
         } while (!validCharInfo && wrongCount <= 3);
 
         if (validCharInfo) {
-            System.out.println("\nCharacter has been created!\n");
+            UI.printOutput("Character has been created!");
         }
         else {
-            System.out.println("\nToo many attempts... Returning...\n");
+            UI.printOutput("Too many attempts... Returning...");
         }
     }
 

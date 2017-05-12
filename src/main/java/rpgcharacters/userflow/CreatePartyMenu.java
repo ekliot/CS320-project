@@ -22,12 +22,6 @@ public class CreatePartyMenu implements Menu {
         this.conn = conn;
     }
 
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Create Party");
-        System.out.println("-------------------------------------------------------");
-    }
-
     private boolean saveToDB(String partyName) {
         try {
             String query = "INSERT INTO party (name, gm_username) VALUES ("
@@ -38,10 +32,10 @@ public class CreatePartyMenu implements Menu {
             return true;
         } catch (SQLException e) {
             if (e.getMessage().startsWith("Unique index or primary key violation")) {
-                System.out.println("\nParty already exists!\n");
+                UI.printOutput("Party already exists!\n");
             } else {
-                System.out.println("\nAn error has occured while saving to the database.");
-                e.printStackTrace();
+                UI.printOutput("An error has occured while saving to the database.");
+                // e.printStackTrace();
             }
             return false;
         }
@@ -49,18 +43,20 @@ public class CreatePartyMenu implements Menu {
 
     private boolean createParty() {
 
-        System.out.print("Party Name: ");
+        UI.printOutput( "Party Name: ", false );
         String partyName = sc.nextLine();
 
-        return saveToDB(partyName);
+        return saveToDB( partyName );
+
     }
 
     /**
     * Defines the loop for this menu
     */
     public void enter() {
-        printMenuTitle();
-        sc.nextLine();
+        UI.printMenuTitle( "Create Party" );
+        UI.printDiv2();
+
         boolean validCharInfo = false;
         int wrongCount = 0;
 
@@ -69,8 +65,8 @@ public class CreatePartyMenu implements Menu {
             validCharInfo = createParty();
 
             if (!validCharInfo) {
-                System.out.println("\nAn error has occured while saving to the database.");
-                System.out.println("Please try again...\n");
+                UI.printOutput("An error has occured while saving to the database.");
+                UI.printOutput("Please try again...\n");
             }
 
             wrongCount++;
@@ -78,10 +74,10 @@ public class CreatePartyMenu implements Menu {
         } while (!validCharInfo && wrongCount <= 3);
 
         if (validCharInfo) {
-            System.out.println("\nParty has been created!\n");
+            UI.printOutput("Party has been created!");
         }
         else {
-            System.out.println("\nToo many attempts... Returning...\n");
+            UI.printOutput("Too many attempts... Returning...");
         }
     }
 

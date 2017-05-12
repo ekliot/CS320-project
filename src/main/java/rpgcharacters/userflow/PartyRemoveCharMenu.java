@@ -52,8 +52,8 @@ public class PartyRemoveCharMenu implements Menu {
                 charNames.add( results.getString( "name" ) );
                 userNames.add( results.getString( "user_username" ) );
                 options.add( String.format( optionFormat,
-                               results.getString( "name" ),
-                               results.getString( "user_username" ) ) );
+                             results.getString( "name" ),
+                             results.getString( "user_username" ) ) );
             }
 
         } catch ( SQLException e ) {

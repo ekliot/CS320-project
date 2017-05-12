@@ -11,8 +11,8 @@ public class UI {
     private static String ANSI_CLS = "\u001b[2J";
     private static String ANSI_HOME = "\u001b[H";
 
-    private static String div1 = "==================================================";
-    private static String div2 = "--------------------------------------------------";
+    private static String div1 = "============================================================";
+    private static String div2 = "------------------------------------------------------------";
 
     private UI( Scanner sc ) {
     }
@@ -74,15 +74,11 @@ public class UI {
 
     }
 
-    public static String promptString( Scanner sc, boolean empty_ok ) {
-        return "";
-    }
-
     public static void printMenuTitle( String title ) {
 
         System.out.println();
         System.out.println( div1 );
-        System.out.println( title );
+        System.out.println( "  " + title );
 
     }
 
@@ -94,7 +90,7 @@ public class UI {
 
         printDiv2();
 
-        String optionsString = title;
+        String optionsString = "  " + title;
         String optionFormat  = "\n\t%d: %s";
 
         for ( int i = 0; i < options.size(); i++ ) {

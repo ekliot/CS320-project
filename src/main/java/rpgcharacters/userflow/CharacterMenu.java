@@ -49,30 +49,19 @@ public class CharacterMenu implements Menu {
             }
 
             if (characters.size() == 0) {
-                System.out.println("\n You do not have any characters!");
+                UI.printOutput("You do not have any characters!");
                 return null;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            UI.printOutput( "There was an error querying characters" );
+            // e.printStackTrace();
             return null;
         }
 
-        String charsString = "Your characters:\n";
+        UI.printOptions( characters, "Your characters:" );
 
-        for (int i = 0; i < characters.size(); i++) {
-            charsString += "\t" + (i+1) + ". " + characters.get(i) + "\n";
-        }
-        charsString += "-------------------------------------------------------";
-
-        System.out.println(charsString);
-        System.out.print("Please enter the number of the desired character here: ");
-        int input = sc.nextInt();
-
-        while (input < 1 || input > characters.size()) {
-            System.out.println("\nInvalid input!\n");
-            System.out.print("Please enter the number of the desired character here: ");
-            input = sc.nextInt();
-        }
+        int input = UI.promptInt( sc, "Select a character: ",
+                                  1, characters.size() );
 
         return characters.get(input-1);
     }
@@ -84,9 +73,10 @@ public class CharacterMenu implements Menu {
                          + "AND name = '" + charName.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
-            System.out.println(charName + " has been deleted!");
+            UI.printOutput(charName + " has been deleted!");
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            UI.printOutput( "There was an error deleting the character" );
         }
     }
 
@@ -100,7 +90,7 @@ public class CharacterMenu implements Menu {
             ResultSet results = stmt.executeQuery(query);
 
             if (!results.last()) {
-                System.out.println(charName + " is not in a party!");
+                UI.printOutput(charName + " is not in a party!");
             } else {
                 String updateQuery = "UPDATE character "
                                    + "SET party_id = NULL "
@@ -108,10 +98,11 @@ public class CharacterMenu implements Menu {
                                    + "AND name = '" + charName.replaceAll("'", "''") + "';";
                 Statement updateStmt = conn.createStatement();
                 updateStmt.executeUpdate(updateQuery);
-                System.out.println(charName + " has been successfully removed from the party!");
+                UI.printOutput(charName + " has been successfully removed from the party!");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            UI.printOutput( "There was an error removing the character from the party" );
         }
     }
 
@@ -146,21 +137,7 @@ public class CharacterMenu implements Menu {
             int experience = results.getInt("experience");
 
             // format story
-            if (story.length() > 35) {
-                String[] tokens = story.split(" ");
-                story = "";
-                int curLineLen = 0;
-                for (String tok : tokens) {
-                    if (curLineLen == 0) {
-                        story += "\n\t";
-                    }
-                    story += tok;
-                    curLineLen += tok.length();
-                    if (curLineLen > 40) {
-                        curLineLen = 0;
-                    }
-                }
-            }
+            story = ( story.length() > 46 ? "\n" + UI.formatParagraph( story, 46, 4 ) : story );
 
             String pString =
                 "\n-------------------------------------------------------\n" + // 50 chars
@@ -180,23 +157,32 @@ public class CharacterMenu implements Menu {
             String itemQuery = "SELECT * FROM character_item "
                              + "WHERE user_username = '" + this.username.replaceAll("'", "''") + "' "
                              + "AND character_name = '" + charName.replaceAll("'", "''") + "';";
-            Statement itemStmt = conn.createStatement();
-            ResultSet items = itemStmt.executeQuery(itemQuery);
 
-            items.beforeFirst();
-            while (items.next()) {
-                itemNames.add(items.getString("item_name"));
+            // these options to createStatement let us use beforeFirst() after using last()
+            Statement itemStmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY );
+            ResultSet items = itemStmt.executeQuery( itemQuery );
+
+            if ( items.last() ) {
+                items.beforeFirst();
+
+                while (items.next()) {
+                    itemNames.add(items.getString("item_name"));
+                }
+
+                if (itemNames.size() > 0) pString += "  Items:\n";
+                for (String name : itemNames) {
+                    pString += "    " + name + "\n";
+                }
             }
 
-            if (itemNames.size() > 0) pString += "  Items:\n";
-            for (String name : itemNames) {
-                pString += "    " + name + "\n";
-            }
+            System.out.println( pString );
 
-            pString += "-------------------------------------------------------\n";
-            System.out.println(pString);
+            UI.printDiv2();
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();s
+            UI.printOutput( "There was an error querying the character" );
         }
     }
 

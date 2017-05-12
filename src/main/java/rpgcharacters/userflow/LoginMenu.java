@@ -72,8 +72,9 @@ public class LoginMenu implements Menu {
         UI.clearScreen();
 
         UI.printMenuTitle( "Login Menu" );
+        UI.printDiv2();
 
-        System.out.println("\nEnter your username and password (enter nothing to cancel)");
+        UI.printOutput("Enter your username and password (enter nothing to cancel)");
 
         String user, pass;
         int wrongCount = 0;
@@ -82,14 +83,14 @@ public class LoginMenu implements Menu {
 
         do {
 
-            System.out.print("Username: ");
+            UI.printOutput("Username: ", false);
             user = sc.nextLine();
 
             if (user.isEmpty()) {
                 break;
             }
 
-            System.out.print("Password: ");
+            UI.printOutput("Password: ", false);
             pass = sc.nextLine();
 
             if ( pass.isEmpty() ) {
@@ -100,9 +101,9 @@ public class LoginMenu implements Menu {
 
             if (!validLogin) {
                 wrongCount++;
-                System.out.println(
-                    "\nThe username and/or password is incorrect " +
-                    "(Attempt " + wrongCount + "/" + wrongMax + ")\n"
+                UI.printOutput(
+                    "The username and/or password is incorrect " +
+                    "(Attempt " + wrongCount + "/" + wrongMax + ")"
                 );
             }
 
@@ -117,11 +118,11 @@ public class LoginMenu implements Menu {
 
         } else if (wrongCount >= wrongMax) {
 
-            System.out.println("Too many attempts! Returning...\n");
+            UI.printOutput("Too many attempts! Returning...");
 
         } else {
 
-            System.out.println("\nReturning...\n");
+            UI.printOutput("Returning...");
 
         }
 
