@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -21,63 +23,49 @@ public class PartyRemoveCharMenu implements Menu {
         this.conn = conn;
     }
 
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Remove Character From " + this.partyName);
-        System.out.println("-------------------------------------------------------");
-    }
-
     private String[] selectCharacter() {
         ArrayList<String> charNames = new ArrayList<String>();
         ArrayList<String> userNames = new ArrayList<String>();
+        ArrayList<String> options = new ArrayList<String>();
+        String optionFormat = "%s (Player: %s)";
 
         try {
+
             String query = "SELECT * FROM character as c "
                          + "LEFT OUTER JOIN party as p on c.party_id = p.id "
                          + "WHERE p.name = '" + this.partyName.replaceAll("'", "''") + "'";
-            Statement stmt = conn.createStatement();
-            ResultSet results = stmt.executeQuery(query);
+
+            // these options to createStatement let us use beforeFirst() after using last()
+            Statement stmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY );
+            ResultSet results = stmt.executeQuery( query );
+
+            if ( !results.last() ) {
+                // UI.printOutput( "There are no characters in the party!" );
+                return null;
+            }
 
             results.beforeFirst();
-            while (results.next()) {
-                charNames.add(results.getString("name"));
-                userNames.add(results.getString("user_username"));
+
+            while ( results.next() ) {
+                charNames.add( results.getString( "name" ) );
+                userNames.add( results.getString( "user_username" ) );
+                options.add( String.format( optionFormat,
+                               results.getString( "name" ),
+                               results.getString( "user_username" ) ) );
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        } catch ( SQLException e ) {
+            // e.printStackTrace();
+            UI.printOutput( "There was an error querying characters" );
         }
 
-        if (charNames.size() == 0) return null;
+        UI.printOptions( options, "Characters:" );
+        UI.printDiv2();
 
-        System.out.println("Characters:\n");
-        String pString = "";
-        int indLen = (charNames.size() + "").length() + 2;
-        for (int i = 0; i < charNames.size(); i++) {
-            String lineString1 = "";
-            String lineString2 = "";
-            lineString1 += (i+1) + ".";
-            while (lineString1.length() < indLen) {
-                lineString1 += " ";
-            }
-            while (lineString2.length() < indLen) {
-                lineString2 += " ";
-            }
-            lineString1 += "Character: " + charNames.get(i) + "\n";
-            lineString2 += "User: " + userNames.get(i) + "\n";
-            pString += lineString1 + lineString2 + "\n";
-        }
-        System.out.print(pString);
-
-        System.out.println("-------------------------------------------------------");
-        System.out.print("Enter corresponding number of the character to remove: ");
-        //sc.nextInt(); // clear buffer
-        int input = sc.nextInt();
-
-        while (input < 1 || input > charNames.size()) {
-            System.out.println("\nInvalid input...\n");
-            System.out.print("Enter corresponding number of the character to remove: ");
-            input = sc.nextInt();
-        }
+        int input = UI.promptInt( sc, "Enter number of character to remove: ",
+                                  1, charNames.size() );
 
         return new String[]{
             charNames.get(input-1),
@@ -92,11 +80,13 @@ public class PartyRemoveCharMenu implements Menu {
                          + "WHERE user_username = '" + charUsername.replaceAll("'", "''") + "' "
                          + "AND name = '" + charName.replaceAll("'", "''") + "';";
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate(query);
-            System.out.println(charName + " has been removed from " + this.partyName);
+            stmt.executeUpdate( query );
+
+            UI.printOutput( charName + " has been removed from " + this.partyName );
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            UI.printOutput( "There was an error removing the character from the party" );
             return false;
         }
     }
@@ -105,8 +95,8 @@ public class PartyRemoveCharMenu implements Menu {
     * Defines the loop for this menu
     */
     public void enter() {
-        printMenuTitle();
-        sc.nextLine();
+        UI.printMenuTitle( "Remove Character from " + this.partyName );
+
         boolean success = false;
         int wrongCount = 0;
 
@@ -114,19 +104,19 @@ public class PartyRemoveCharMenu implements Menu {
 
             String[] character = selectCharacter();
 
-            if (character == null) {
-                System.out.println("\nThere are no characters in this party!\n");
+            if ( character == null ) {
+                UI.printOutput( "There are no characters in this party!" );
                 success = true;
             } else {
-                success = removeChararacter(character[0], character[1]);
+                success = removeChararacter( character[0], character[1] );
             }
 
             wrongCount++;
 
-        } while (!success && wrongCount <= 3);
+        } while ( !success && wrongCount <= 3 );
 
         if (!success) {
-            System.out.println("\nToo many attempts... Returning...\n");
+            UI.printOutput( "Too many attempts... Returning..." );
         }
     }
 

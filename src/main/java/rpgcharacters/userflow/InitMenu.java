@@ -33,7 +33,6 @@ public class InitMenu implements Menu {
     public void enter() {
 
         UI.clearScreen();
-
         UI.printMenuTitle( "arpeegee.io" );
 
         String option = "";
@@ -44,7 +43,7 @@ public class InitMenu implements Menu {
             UI.printOptions( options );
 
             input = UI.promptInt( sc, "Select an option: ",
-                                  0, options.size() );
+                                  1, options.size() );
             option = options.get( input - 1 );
 
             switch ( option ) {
@@ -63,10 +62,10 @@ public class InitMenu implements Menu {
                     UI.printMenuTitle( "arpeegee.io" );
                     break;
                 case EXIT:
-                    UI.printOutput("\nExiting...");
+                    UI.printOutput("Exiting...");
                     break;
                 default:
-                    UI.printOutput("\nInvalid input...");
+                    UI.printOutput("Invalid input...");
             }
 
         } while ( !option.equals( EXIT ) );

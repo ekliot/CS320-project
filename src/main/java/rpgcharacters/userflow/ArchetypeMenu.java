@@ -169,9 +169,7 @@ public class ArchetypeMenu implements Menu {
     }
 
     public void enter() {
-
         UI.clearScreen();
-
         UI.printMenuTitle( "Archetypes Menu" );
 
         String option = "";
@@ -182,15 +180,17 @@ public class ArchetypeMenu implements Menu {
             UI.printOptions( options );
 
             input = UI.promptInt( sc, "Select an option: ",
-                                  0, options.size() );
+                                  1, options.size() );
             option = options.get( input - 1 );
 
             switch ( option ) {
                 case ARCH_LIST:
                     listArchetype();
+                    UI.printMenuTitle( "Archetypes Menu" );
                     break;
                 case ARCH_NEW:
                     newArchetype();
+                    UI.printMenuTitle( "Archetypes Menu" );
                     break;
                 case EXIT:
                     UI.printOutput( "Going back..." );

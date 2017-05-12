@@ -53,7 +53,7 @@ public class MainMenu implements Menu {
             UI.printOptions( options );
 
             input = UI.promptInt( sc, "Select an option: ",
-                                  0, options.size() );
+                                  1, options.size() );
             option = options.get( input - 1);
 
             switch (option) {
@@ -73,13 +73,14 @@ public class MainMenu implements Menu {
                     Menu adminMenu = new AdminMenu(sc, conn);
                     adminMenu.enter();
 
+                    UI.clearScreen();
                     UI.printMenuTitle( "Main Menu" );
                     break;
                 case LOG_OUT:
-                    UI.printOutput("\nLogging out...\n");
+                    UI.printOutput("Logging out...");
                     break;
                 default:
-                    UI.printOutput("\nInvalid input...\n");
+                    UI.printOutput("Invalid input...");
             }
 
         } while (!option.equals(LOG_OUT));

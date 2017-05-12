@@ -1,9 +1,13 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
-import java.util.Scanner;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
 
 public class CharacterMenu implements Menu {
 
@@ -12,6 +16,14 @@ public class CharacterMenu implements Menu {
 
     private String username;
 
+    private List<String> options;
+
+    private final String CHAR_CREATE = "Create a new character";
+    private final String CHAR_PRINT  = "Print character";
+    private final String CHAR_DELETE = "Delete character";
+    private final String CHAR_REMOVE = "Remove a character from a party";
+    private final String EXIT        = "Go back";
+
     /**
     * Constructor Method
     */
@@ -19,12 +31,7 @@ public class CharacterMenu implements Menu {
         this.sc = sc;
         this.username = username;
         this.conn = conn;
-    }
-
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Character Menu");
-        System.out.println("-------------------------------------------------------");
+        this.options = Arrays.asList( CHAR_CREATE, CHAR_PRINT, CHAR_DELETE, CHAR_REMOVE, EXIT );
     }
 
     private String printChars() {
@@ -193,67 +200,56 @@ public class CharacterMenu implements Menu {
         }
     }
 
-    private void printOptions() {
-        String optionsString =
-            "Available options:\n" +
-            "\t1: Create a new character\n" +
-            "\t2: Print character\n" +
-            "\t3: Delete character\n" +
-            "\t4: Remove a character from a party.\n" +
-            "\t5: Go back\n" +
-            "-------------------------------------------------------"; // 50 chars;
-
-        System.out.println(optionsString);
-        System.out.print("Please enter the number of the desired option here: ");
-    }
-
     /**
     * Defines the loop for this menu
     */
     public void enter() {
-        printMenuTitle();
-        int input = 0;
-        int exit = 5;
+        UI.printMenuTitle( "Character Menu" );
+
+        int input = -1;
+        String option = "";
+
         String character;
+
         do {
 
-            printOptions();
-            try {
-                input = sc.nextInt();
+            UI.printOptions( options );
+            input = UI.promptInt( sc, "Select an option: ",
+                                  1, options.size() );
+            option = options.get( input - 1 );
 
-                switch (input) {
-                    case 1:
-                        Menu createCharacterMenu = new CreateCharacterMenu(sc, this.username, conn);
-                        createCharacterMenu.enter();
-                        break;
-                    case 2:
-                        character = printChars();
-                        if (character == null) break;
-                        printCharacter(character);
-                        break;
-                    case 3:
-                        character = printChars();
-                        if (character == null) break;
-                        deleteCharacter(character);
-                        break;
-                    case 4:
-                        character = printChars();
-                        if (character == null) break;
-                        removeFromParty(character);
-                        break;
-                    case 5:
-                        System.out.println("\nGoing back...\n");
-                        break;
-                    default:
-                        System.out.println("\nInvalid input...\n");
-                }
-            }
-            catch (InputMismatchException e) {
-                System.out.println("\nInvalid input...\n");
-                continue;
+            switch ( option ) {
+                case CHAR_CREATE:
+                    Menu createCharacterMenu = new CreateCharacterMenu(sc, this.username, conn);
+                    createCharacterMenu.enter();
+                    UI.printMenuTitle( "Character Menu" );
+                    break;
+                case CHAR_PRINT:
+                    character = printChars();
+                    if (character == null) break;
+                    printCharacter(character);
+                    UI.printMenuTitle( "Character Menu" );
+                    break;
+                case CHAR_DELETE:
+                    character = printChars();
+                    if (character == null) break;
+                    deleteCharacter(character);
+                    UI.printMenuTitle( "Character Menu" );
+                    break;
+                case CHAR_REMOVE:
+                    character = printChars();
+                    if (character == null) break;
+                    removeFromParty(character);
+                    UI.printMenuTitle( "Character Menu" );
+                    break;
+                case EXIT:
+                    UI.printOutput("Going back...");
+                    break;
+                default:
+                    UI.printOutput("Invalid input...");
             }
 
-        } while (input != exit);
+        } while ( !option.equals( EXIT ) );
     }
 
 }

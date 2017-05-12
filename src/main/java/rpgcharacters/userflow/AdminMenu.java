@@ -29,7 +29,6 @@ public class AdminMenu implements Menu {
     }
 
     public void enter() {
-
         UI.clearScreen();
         UI.printMenuTitle( "Admin Menu" );
 
@@ -41,7 +40,7 @@ public class AdminMenu implements Menu {
             UI.printOptions( options );
 
             input = UI.promptInt( sc, "Select an option: ",
-                                  0, options.size() );
+                                  1, options.size() );
             option = options.get( input - 1 );
 
             switch ( option ) {
@@ -49,24 +48,28 @@ public class AdminMenu implements Menu {
                     Menu itemMenu = new ItemMenu( sc, conn );
                     itemMenu.enter();
 
+                    UI.clearScreen();
                     UI.printMenuTitle( "Admin Menu" );
                     break;
                 case MENU_QUEST:
                     Menu questMenu = new QuestMenu( sc, conn );
                     questMenu.enter();
 
+                    UI.clearScreen();
                     UI.printMenuTitle( "Admin Menu" );;
                     break;
                 case MENU_RACE:
                     Menu raceMenu = new RaceMenu( sc, conn );
                     raceMenu.enter();
 
+                    UI.clearScreen();
                     UI.printMenuTitle( "Admin Menu" );
                     break;
                 case MENU_ARCH:
                     Menu archetypeMenu = new ArchetypeMenu( sc, conn );
                     archetypeMenu.enter();
 
+                    UI.clearScreen();
                     UI.printMenuTitle( "Admin Menu" );
                     break;
                 // case MENU_GRANT:
@@ -76,10 +79,10 @@ public class AdminMenu implements Menu {
                 //     UI.printMenuTitle( "Admin Menu" );
                 //     break;
                 case EXIT:
-                    UI.printOutput( "\nGoing back...\n" );
+                    UI.printOutput( "Going back..." );
                     break;
                 default:
-                    UI.printOutput( "\nInvalid input...\n" );
+                    UI.printOutput( "Invalid input..." );
             }
 
         } while ( !option.equals( EXIT ) );

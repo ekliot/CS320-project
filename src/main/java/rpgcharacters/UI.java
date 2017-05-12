@@ -83,13 +83,18 @@ public class UI {
         System.out.println();
         System.out.println( div1 );
         System.out.println( title );
-        System.out.println( div2 );
 
     }
 
     public static void printOptions( List<String> options ) {
+        printOptions( options, "Available options:" );
+    }
 
-        String optionsString = "Available options:";
+    public static void printOptions( List<String> options, String title ) {
+
+        printDiv2();
+
+        String optionsString = title;
         String optionFormat  = "\n\t%d: %s";
 
         for ( int i = 0; i < options.size(); i++ ) {
@@ -115,25 +120,40 @@ public class UI {
     }
 
     public static void printParagraph( String p, int max_len ) {
+        printParagraph( p, max_len, 2 );
+    }
+
+    public static void printParagraph( String p, int max_len, int indent_len ) {
+        System.out.println( formatParagraph( p, max_len, indent_len ) );
+    }
+
+    public static String formatParagraph( String p, int max_len, int indent_len ) {
 
         String[] pTokens = p.split(" ");
-        String indent = "  ";
-        int curLen = indent.length();
 
-        System.out.print( indent );
+        String indent = "";
+        for ( int i = 0; i < indent_len; i++ ) {
+            indent += " ";
+        }
+
+        int curLen = indent_len;
+
+        String output = "";
+
+        output += indent;
 
         for ( String tok : pTokens ) {
             if ( curLen + tok.length() > max_len ) {
-                System.out.print( "\n" + indent + tok );
+                output += "\n" + indent + tok;
                 curLen = indent.length() + tok.length();
             }
             else {
-                System.out.print( tok + " " );
+                output += tok + " ";
                 curLen += tok.length() + 1;
             }
         }
 
-        System.out.println( "" );
+        return output;
 
     }
 
