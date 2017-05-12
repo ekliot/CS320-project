@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Scanner;
 
@@ -9,9 +11,6 @@ public class LoginMenu implements Menu {
     private Connection conn;
 
     private boolean isAdmin = false;
-
-    final String ANSI_CLS = "\u001b[2J";
-    final String ANSI_HOME = "\u001b[H";
 
     /**
      * Constructor Method
@@ -58,17 +57,11 @@ public class LoginMenu implements Menu {
 
         } catch (SQLException e) {
             System.out.println("There was an error validating the login");
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         return valid;
 
-    }
-
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Login Menu");
-        System.out.println("-------------------------------------------------------");
     }
 
     /**
@@ -76,15 +69,12 @@ public class LoginMenu implements Menu {
     **/
     public void enter() {
 
-        // clear the screen
-        System.out.print( ANSI_CLS + ANSI_HOME );
-        System.out.flush();
+        UI.clearScreen();
 
-        printMenuTitle();
+        UI.printMenuTitle( "Login Menu" );
+        UI.printDiv2();
 
-        System.out.println("\nEnter your username and password (enter nothing to cancel)");
-
-        sc.nextLine();
+        UI.printOutput("Enter your username and password (enter nothing to cancel)");
 
         String user, pass;
         int wrongCount = 0;
@@ -93,14 +83,14 @@ public class LoginMenu implements Menu {
 
         do {
 
-            System.out.print("Username: ");
+            UI.printOutput("Username: ", false);
             user = sc.nextLine();
 
             if (user.isEmpty()) {
                 break;
             }
 
-            System.out.print("Password: ");
+            UI.printOutput("Password: ", false);
             pass = sc.nextLine();
 
             if ( pass.isEmpty() ) {
@@ -111,32 +101,28 @@ public class LoginMenu implements Menu {
 
             if (!validLogin) {
                 wrongCount++;
-                System.out.println(
-                    "\nThe username and/or password is incorrect " +
-                    "(Attempt " + wrongCount + "/" + wrongMax + ")\n"
+                UI.printOutput(
+                    "The username and/or password is incorrect " +
+                    "(Attempt " + wrongCount + "/" + wrongMax + ")"
                 );
             }
 
         } while (!validLogin && wrongCount < wrongMax);
 
-        if (validLogin) {
+        if ( validLogin ) {
 
-            System.out.println("\nWelcome " + user + "!\n");
-
-            // clear the screen
-            System.out.print( ANSI_CLS + ANSI_HOME );
-            System.out.flush();
+            UI.clearScreen();
 
             Menu mainMenu = new MainMenu(sc, user, isAdmin, conn);
             mainMenu.enter();
 
         } else if (wrongCount >= wrongMax) {
 
-            System.out.println("Too many attempts... Returning...\n");
+            UI.printOutput("Too many attempts! Returning...");
 
         } else {
 
-            System.out.println("\nReturning...\n");
+            UI.printOutput("Returning...");
 
         }
 

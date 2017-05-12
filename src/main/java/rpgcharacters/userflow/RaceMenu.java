@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -57,13 +59,9 @@ public class RaceMenu implements Menu {
     private void printRace( String name, int[] mods ) {
         System.out.println( "Race: " + name );
         System.out.println( "Stat Modifiers:" );
-        System.out.println( "  POWER : PROFICIENCY : PERSONALITY : PERCEPTION" );
-        String modFormat =  "   %3d  :     %3d     :     %3d     :    %3d    ";
-        System.out.println( String.format( modFormat,
-                              mods[0],   mods[1],      mods[2],     mods[3] )
-        );
+        UI.printStats( mods );
 
-        System.out.println( "-------------------------------------------------------" ); // length 50
+        UI.printDiv2();
     }
 
     public void newRace() {
@@ -75,14 +73,14 @@ public class RaceMenu implements Menu {
         // take input for race name (which CANNOT be null)
 
         do {
-            System.out.print( "Enter race name: " );
+            UI.printOutput( "Enter race name: ", false );
             name = sc.nextLine();
 
             if ( name.isEmpty() ) {
                 if ( cancelling ) {
                     quit = true;
                 } else {
-                    System.out.println( "Race name cannot be empty! (enter empty name again to cancel)" );
+                    UI.printOutput( "Race name cannot be empty! (enter empty name again to cancel)" );
                     cancelling = true;
                 }
             }
@@ -90,7 +88,7 @@ public class RaceMenu implements Menu {
         } while ( name.isEmpty() && !quit );
 
         if ( quit ) {
-            System.out.println( "Cancelled race creation...\n" );
+            UI.printOutput( "Cancelled race creation..." );
             return;
         }
 
@@ -109,10 +107,10 @@ public class RaceMenu implements Menu {
         int stat_sum        = 0;
         int stat_balance    = 25;
 
-        System.out.println( "Enter race's stat modifiers" );
-        System.out.println( "Must format as four integers with a sum of 25 (e.g. `15 0 20 -10`)" );
-        System.out.println( "Order: Power Proficiency Personality Perception" );
-        System.out.println( "Enter nothing to cancel" );
+        UI.printOutput( "Enter race's stat modifiers" );
+        UI.printOutput( "Must format as four integers with a sum of 25 (e.g. `15 0 20 -10`)" );
+        UI.printOutput( "Order: Power Proficiency Personality Perception" );
+        UI.printOutput( "Enter nothing to cancel" );
 
         do {
             stat_input = sc.nextLine();
@@ -136,15 +134,15 @@ public class RaceMenu implements Menu {
                 if ( stat_sum == stat_balance ) {
                     stats_valid = true;
                 } else {
-                    System.out.println( "Stats add up to invalid sum (got " + stat_sum + ", need " + stat_balance + "), try again" );
+                    UI.printOutput( "Stats add up to invalid sum (got " + stat_sum + ", need " + stat_balance + "), try again" );
                 }
             } else {
-                System.out.println( "Input in invalid format, try again" );
+                UI.printOutput( "Input in invalid format, try again" );
             }
         } while ( !stats_valid );
 
         if ( quit ) {
-            System.out.println( "Cancelled archetype creation...\n" );
+            UI.printOutput( "Cancelled race creation...\n" );
             return;
         }
 
@@ -159,77 +157,47 @@ public class RaceMenu implements Menu {
             Statement stmt = conn.createStatement();
             stmt.execute( query );
 
-            System.out.println( "Race has been created!\n" );
+            UI.printOutput( "Race has been created!\n" );
             printRace( name, new int[]{
                 power_mod, proficiency_mod, personality_mod, perception_mod
             } );
+
+            System.out.println();
         } catch ( SQLException e ) {
-            System.out.println( "Could not create race, " + name + "\n" );
+            UI.printOutput( "Could not create race, " + name );
             e.printStackTrace();
         }
 
     }
 
-    private void printMenuTitle() {
-        System.out.println( "\n-------------------------------------------------------" );
-        System.out.println( "Race Menu" );
-        System.out.println( "-------------------------------------------------------" );
-    }
-
-    private void printOptions () {
-        String optionsString = "Available options:\n";
-        String optionFormat = "\t%d: %s\n";
-
-        for ( int i = 0; i < options.size(); i++ ) {
-            optionsString += String.format( optionFormat, (i+1), options.get( i ) );
-        }
-
-        optionsString += "-------------------------------------------------------"; // 50 chars;
-
-        System.out.println( optionsString );
-
-        System.out.print( "Please enter the number of the desired option here: " );
-    }
-
     public void enter() {
-        printMenuTitle();
+        UI.clearScreen();
+        UI.printMenuTitle( "Race Menu" );
 
         String option = "";
         int input = -1;
 
         do {
 
-            printOptions();
+            UI.printOptions( options );
+            input = UI.promptInt( sc, "Select an option: ",
+                                  1, options.size() );
+            option = options.get( input - 1 );
 
-            try {
-                input = sc.nextInt();
-
-                if ( input <= 0 || input > options.size() ) {
-                    option = "";
-                } else {
-                    option = options.get( input - 1 );
-                }
-
-                // swallow the next line, as it would auto complete on entering newRace()
-                // ref: http://stackoverflow.com/questions/7877529/java-string-scanner-input-does-not-wait-for-info-moves-directly-to-next-stateme
-                sc.nextLine();
-
-                switch ( option ) {
-                    case RACE_LIST:
-                        listRaces();
-                        break;
-                    case RACE_NEW:
-                        newRace();
-                        break;
-                    case EXIT:
-                        System.out.println( "\nGoing back...\n" );
-                        break;
-                    default:
-                        System.out.println( "\nInvalid input...\n" );
-                }
-            } catch ( InputMismatchException e ) {
-                System.out.println( "\nInvalid input...\n" );
-                continue;
+            switch ( option ) {
+                case RACE_LIST:
+                    listRaces();
+                    UI.printMenuTitle( "Race Menu" );
+                    break;
+                case RACE_NEW:
+                    newRace();
+                    UI.printMenuTitle( "Race Menu" );
+                    break;
+                case EXIT:
+                    UI.printOutput( "Going back..." );
+                    break;
+                default:
+                    UI.printOutput( "Invalid input..." );
             }
 
         } while ( !option.equals( EXIT ) );

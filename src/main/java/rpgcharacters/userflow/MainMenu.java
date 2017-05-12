@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -37,71 +39,48 @@ public class MainMenu implements Menu {
         }
     }
 
-    private void printMenuTitle() {
-        System.out.println("\n-------------------------------------------------------");
-        System.out.println("Main Menu");
-        System.out.println("-------------------------------------------------------");
-    }
-
-    private void printOptions() {
-        String optionsString = "Available options:\n";
-        String optionFormat = "\t%d: %s\n";
-
-        for (int i = 0; i < options.size(); i++) {
-            optionsString += String.format(optionFormat, (i+1), options.get(i));
-        }
-
-        optionsString += "-------------------------------------------------------"; // 50 chars;
-
-        System.out.println(optionsString);
-
-        System.out.print("Please enter the number of the desired option here: ");
-    }
-
     /**
     * Defines the loop for this menu
     */
     public void enter() {
-        printMenuTitle();
+        UI.printMenuTitle( "Main Menu" );
 
         String option = "";
         int input = -1;
 
         do {
 
-            printOptions();
+            UI.printOptions( options );
 
-            try {
-                input = sc.nextInt();
+            input = UI.promptInt( sc, "Select an option: ",
+                                  1, options.size() );
+            option = options.get( input - 1);
 
-                if (input <= 0 || input > options.size()) {
-                    option = "";
-                } else {
-                    option = options.get(input - 1);
-                }
+            switch (option) {
+                case MENU_CHAR:
+                    Menu characterMenu = new CharacterMenu(sc, this.username, conn);
+                    characterMenu.enter();
 
-                switch (option) {
-                    case MENU_CHAR:
-                        Menu characterMenu = new CharacterMenu(sc, this.username, conn);
-                        characterMenu.enter();
-                        break;
-                    case MENU_PARTY:
-                        Menu partyMenu = new PartyMenu(sc, this.username, conn);
-                        partyMenu.enter();
-                        break;
-                    case MENU_ADMIN:
-                        Menu adminMenu = new AdminMenu(sc, conn);
-                        adminMenu.enter();
-                        break;
-                    case LOG_OUT:
-                        System.out.println("\nLogging out...\n");
-                        break;
-                    default:
-                        System.out.println("\nInvalid input...\n");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("\nInvalid input...\n");
-                continue;
+                    UI.printMenuTitle( "Main Menu" );
+                    break;
+                case MENU_PARTY:
+                    Menu partyMenu = new PartyMenu(sc, this.username, conn);
+                    partyMenu.enter();
+
+                    UI.printMenuTitle( "Main Menu" );
+                    break;
+                case MENU_ADMIN:
+                    Menu adminMenu = new AdminMenu(sc, conn);
+                    adminMenu.enter();
+
+                    UI.clearScreen();
+                    UI.printMenuTitle( "Main Menu" );
+                    break;
+                case LOG_OUT:
+                    UI.printOutput("Logging out...");
+                    break;
+                default:
+                    UI.printOutput("Invalid input...");
             }
 
         } while (!option.equals(LOG_OUT));

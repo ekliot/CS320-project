@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Scanner;
 
@@ -28,9 +30,10 @@ public class CreateUserMenu implements Menu {
             return true;
         } catch (SQLException e) {
             if (e.getMessage().startsWith("Unique index or primary key violation")) {
-                System.out.println("\nUser already exists!\n");
+                UI.printOutput("User already exists!\n");
             } else {
-                e.printStackTrace();
+                // e.printStackTrace();
+                UI.printOutput( "There was an error creating a new user" );
             }
             return false;
         }
@@ -40,26 +43,26 @@ public class CreateUserMenu implements Menu {
      * Defines the loop for this menu
      */
     public void enter() {
-        sc.nextLine();
+
         boolean validUserInfo = false;
         int wrongCount = 0;
 
         do {
 
-            System.out.print("Username: ");
+            UI.printOutput("Username: ", false);
             String user = sc.nextLine();
 
-            System.out.print("Password: ");
+            UI.printOutput("Password: ", false);
             String pass = sc.nextLine();
 
-            System.out.print("Confirm password: ");
+            UI.printOutput("Confirm password: ", false);
             String confPass = sc.nextLine();
 
             if (pass.equals(confPass)) {
                 validUserInfo = createUser(user, pass);
             }
             else {
-                System.out.println("\nPasswords do not match. Please try again...\n");
+                UI.printOutput("Passwords do not match. Please try again...\n");
             }
 
             wrongCount++;
@@ -67,11 +70,12 @@ public class CreateUserMenu implements Menu {
         } while (!validUserInfo && wrongCount <= 3);
 
         if (validUserInfo) {
-            System.out.println("\nUser has been created!\n");
+            UI.printOutput("User has been created!");
         }
         else {
-            System.out.println("\nToo many attempts... Returning...\n");
+            UI.printOutput("Too many attempts... Returning...");
         }
+
     }
 
 }

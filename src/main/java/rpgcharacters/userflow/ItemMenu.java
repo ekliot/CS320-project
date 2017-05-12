@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -49,7 +51,8 @@ public class ItemMenu implements Menu {
 
             System.out.println( "" );
         } catch ( SQLException e ) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            UI.printOutput( "There was an error querying items" );
         }
     }
 
@@ -58,28 +61,9 @@ public class ItemMenu implements Menu {
         System.out.println( "Rewarded for: " + ( quest == null ? "Not rewarded" : quest ) );
         System.out.println( "Description:" );
 
-        if ( !desc.isEmpty() ) {
-            String[] descTokens = desc.split(" ");
-            String indent = "  ";
-            int curLen = indent.length();
+        UI.printParagraph( desc, 46, 4 );
 
-            System.out.print( indent );
-
-            for ( String tok : descTokens ) {
-                if ( curLen + tok.length() > 46 ) {
-                    System.out.print( "\n" + indent + tok );
-                    curLen = indent.length() + tok.length();
-                }
-                else {
-                    System.out.print( tok + " " );
-                    curLen += tok.length() + 1;
-                }
-            }
-
-            System.out.println( "" );
-        }
-
-        System.out.println( "-------------------------------------------------------" ); // length 50
+        UI.printDiv2();
     }
 
     private void newItem() {
@@ -98,7 +82,7 @@ public class ItemMenu implements Menu {
                 if ( cancelling ) {
                     quit = true;
                 } else {
-                    System.out.println( "Item name cannot be empty! (enter empty name again to cancel)" );
+                    UI.printOutput( "Item name cannot be empty! (enter empty name again to cancel)" );
                     cancelling = true;
                 }
             }
@@ -106,7 +90,7 @@ public class ItemMenu implements Menu {
         } while ( name.isEmpty() && !quit );
 
         if ( quit ) {
-            System.out.println( "Cancelled item creation...\n" );
+            UI.printOutput( "Cancelled item creation..." );
             return;
         }
 
@@ -114,7 +98,7 @@ public class ItemMenu implements Menu {
 
         // take input for item description (which CAN be null)
 
-        System.out.print( "Enter item description: " );
+        UI.printOutput( "Enter item description: ", false );
         description = sc.nextLine();
 
         // try to create the item
@@ -128,74 +112,40 @@ public class ItemMenu implements Menu {
             Statement stmt = conn.createStatement();
             stmt.execute( query );
 
-            System.out.println( "Item " + name + " has been created!\n" );
+            UI.printOutput( "Item " + name + " has been created!" );
         } catch ( SQLException e ) {
-            System.out.println( "Could not create item, " + name + "\n" );
-            e.printStackTrace();
+            UI.printOutput( "Could not create item, " + name );
+            // e.printStackTrace();
         }
 
-    }
-
-    private void printMenuTitle() {
-        System.out.println( "\n-------------------------------------------------------" );
-        System.out.println( "Item Menu" );
-        System.out.println( "-------------------------------------------------------" );
-    }
-
-    private void printOptions () {
-        String optionsString = "Available options:\n";
-        String optionFormat = "\t%d: %s\n";
-
-        for ( int i = 0; i < options.size(); i++ ) {
-            optionsString += String.format( optionFormat, (i+1), options.get( i ) );
-        }
-
-        optionsString += "-------------------------------------------------------"; // 50 chars;
-
-        System.out.println( optionsString );
-
-        System.out.print( "Please enter the number of the desired option here: " );
     }
 
     public void enter() {
-        printMenuTitle();
+        UI.printMenuTitle( "Item Menu" );
 
         String option = "";
         int input = -1;
 
         do {
 
-            printOptions();
+            UI.printOptions( options );
 
-            try {
-                input = sc.nextInt();
+            input = UI.promptInt( sc, "Select an option: ",
+                                  1, options.size() );
+            option = options.get( input - 1 );
 
-                if ( input <= 0 || input > options.size() ) {
-                    option = "";
-                } else {
-                    option = options.get( input - 1 );
-                }
-
-                // swallow the next line, as it would auto complete on entering newItem()
-                // ref: http://stackoverflow.com/questions/7877529/java-string-scanner-input-does-not-wait-for-info-moves-directly-to-next-stateme
-                sc.nextLine();
-
-                switch ( option ) {
-                    case ITEM_LIST:
-                        listItems();
-                        break;
-                    case ITEM_NEW:
-                        newItem();
-                        break;
-                    case EXIT:
-                        System.out.println( "\nGoing back...\n" );
-                        break;
-                    default:
-                        System.out.println( "\nInvalid input...\n" );
-                }
-            } catch ( InputMismatchException e ) {
-                System.out.println( "\nInvalid input...\n" );
-                continue;
+            switch ( option ) {
+                case ITEM_LIST:
+                    listItems();
+                    break;
+                case ITEM_NEW:
+                    newItem();
+                    break;
+                case EXIT:
+                    UI.printOutput( "Going back..." );
+                    break;
+                default:
+                    UI.printOutput( "Invalid input..." );
             }
 
         } while ( !option.equals( EXIT ) );

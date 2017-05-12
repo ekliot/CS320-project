@@ -1,5 +1,7 @@
 package rpgcharacters.userflow;
 
+import rpgcharacters.UI;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,11 +32,20 @@ public class QuestMenu implements Menu {
             String query = "SELECT * "
                          + "FROM quest;";
 
-            Statement stmt = conn.createStatement();
+            // these options to createStatement let us use beforeFirst() after using last()
+            Statement stmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY );
             ResultSet results = stmt.executeQuery( query );
 
-            System.out.println( "\nQuests:" );
-            System.out.println( "==============" );
+            if ( !results.last() ) {
+                UI.printOutput( "There are no quests in the database!" );
+                return;
+            }
+
+            System.out.println();
+            System.out.println( "Quests:" );
+            UI.printDiv1();
 
             results.beforeFirst();
 
@@ -53,33 +64,16 @@ public class QuestMenu implements Menu {
     }
 
     private void printQuest ( String name, String desc, int exp, String item ) {
-        System.out.println( "Name: " + name );
-        System.out.println( "Experience reward: " + exp );
-        System.out.println( "Item reward: " + item );
-        System.out.println( "Description:" );
+        System.out.println( name );
+        System.out.println( "  Experience: " + exp );
+        System.out.println( "  Item reward: " + item );
+        System.out.println( "  Description:" );
 
         if ( !desc.isEmpty() ) {
-            String[] descTokens = desc.split(" ");
-            String indent = "  ";
-            int curLen = indent.length();
-
-            System.out.print( indent );
-
-            for ( String tok : descTokens ) {
-                if ( curLen + tok.length() > 46 ) {
-                    System.out.print( "\n" + indent + tok );
-                    curLen = indent.length() + tok.length();
-                }
-                else {
-                    System.out.print( tok + " " );
-                    curLen += tok.length() + 1;
-                }
-            }
-
-            System.out.println( "" );
+            UI.printParagraph( desc, 46, 4 );
         }
 
-        System.out.println( "-------------------------------------------------------" ); // length 50
+        UI.printDiv2();
     }
 
     public void newQuest() {
@@ -93,14 +87,14 @@ public class QuestMenu implements Menu {
         // take input for item name (which CANNOT be null)
 
         do {
-            System.out.print( "Enter quest name: " );
+            UI.printOutput( "Enter quest name: ", false );
             name = sc.nextLine();
 
             if ( name.isEmpty() ) {
                 if ( cancelling ) {
                     quit = true;
                 } else {
-                    System.out.println( "Item name cannot be empty! (enter empty name again to cancel)" );
+                    UI.printOutput( "Item name cannot be empty! (enter empty name again to cancel)" );
                     cancelling = true;
                 }
             }
@@ -108,7 +102,7 @@ public class QuestMenu implements Menu {
         } while ( name.isEmpty() && !quit );
 
         if ( quit ) {
-            System.out.println( "Cancelled quest creation...\n" );
+            UI.printOutput( "Cancelled quest creation...\n" );
             return;
         }
 
@@ -116,32 +110,19 @@ public class QuestMenu implements Menu {
 
         // take input for quest description (which CAN be null)
 
-        System.out.print( "Enter quest description: " );
+        UI.printOutput( "Enter quest description: ", false );
         description = sc.nextLine();
 
         // take input for experience
-
-        boolean loop = true;
-
-        do {
-            try {
-                System.out.print( "Enter quest experience reward: " );
-                exp = sc.nextInt();
-                loop = false;
-            } catch ( InputMismatchException e ) {
-                System.out.println( "Invalid input..." );
-                // scrub the Scanner
-                sc.nextLine();
-            }
-        } while ( loop );
+        exp = UI.promptInt( sc, "Enter quest experience reward: ",
+                            0, Integer.MAX_VALUE );
 
         // offer choice of choosing an unassigned item, or creating a new one
 
-        System.out.println( "Select an item to assign as this quest's reward:" );
+        UI.printOutput( "Select an item to assign as this quest's reward:" );
         String item_name = selectItem();
 
         // try to create the quest
-
         try {
             String query = "INSERT INTO quest VALUES ("
                          + "'" + name.replaceAll("'", "''")        + "', "
@@ -153,9 +134,9 @@ public class QuestMenu implements Menu {
             Statement stmt = conn.createStatement();
             stmt.execute( query );
 
-            System.out.println( "Quest \"" + name + "\" has been created!\n" );
+            UI.printOutput( "Quest \"" + name + "\" has been created!\n" );
         } catch ( SQLException e ) {
-            System.out.println( "Could not create quest, \"" + name + "\"\n" );
+            UI.printOutput( "Could not create quest, \"" + name + "\"\n" );
             e.printStackTrace();
         }
 
@@ -186,7 +167,7 @@ public class QuestMenu implements Menu {
             e.printStackTrace();
         }
 
-        printItemSelection( items );
+        UI.printOptions( items, "Unassigned items:" );
 
         int selection = -1;
         String selectedItem;
@@ -195,45 +176,20 @@ public class QuestMenu implements Menu {
 
         do {
 
-            do {
-                try {
-                    System.out.print( "Enter selected item: " );
-                    selection = sc.nextInt();
-                } catch ( InputMismatchException e ) {
-                    System.out.println( "Invalid input..." );
-                    // scrub the Scanner
-                    sc.nextLine();
-                }
-                // keep looping until a valid value is selected
-            } while ( selection < 0 || selection >= items.size() );
+            selection = UI.promptInt( sc, "Select numbered item: ",
+                                      1, items.size() );
 
             // the first item of the list will always be "Create a new item"
-            if ( selection == 0 ) {
-                // scrub the Scanner
-                sc.nextLine();
+            if ( selection == 1 ) {
                 selectedItem = createItem();
             } else {
-                selectedItem = items.get( selection );
+                selectedItem = items.get( selection - 1 );
             }
 
             // keep looping in case createItem() fails somehow
         } while ( selectedItem.isEmpty() );
 
-
         return selectedItem;
-
-    }
-
-    private void printItemSelection( List<String> items ) {
-
-        String itemOptions      = "Unassigned items:\n";
-        String itemOptionFormat = "  %d: %s\n";
-
-        for ( int i = 0; i < items.size(); i++ ) {
-            itemOptions += String.format( itemOptionFormat, i, items.get( i ) );
-        }
-
-        System.out.println( itemOptions );
 
     }
 
@@ -246,14 +202,14 @@ public class QuestMenu implements Menu {
         // take input for item name (which CANNOT be null)
 
         do {
-            System.out.print( "Enter item name: " );
+            UI.printOutput( "Enter item name: ", false );
             name = sc.nextLine();
 
             if ( name.isEmpty() ) {
                 if ( cancelling ) {
                     quit = true;
                 } else {
-                    System.out.println( "Item name cannot be empty! (enter empty name again to cancel)" );
+                    UI.printOutput( "Item name cannot be empty! (enter empty name again to cancel)" );
                     cancelling = true;
                 }
             }
@@ -261,7 +217,7 @@ public class QuestMenu implements Menu {
         } while ( name.isEmpty() && !quit );
 
         if ( quit ) {
-            System.out.println( "Cancelled item creation...\n" );
+            UI.printOutput( "Cancelled item creation...\n" );
             return "";
         }
 
@@ -269,7 +225,7 @@ public class QuestMenu implements Menu {
 
         // take input for item description (which CAN be null)
 
-        System.out.print( "Enter item description: " );
+        UI.printOutput( "Enter item description: ", false );
         description = sc.nextLine();
 
         // try to create the item
@@ -283,10 +239,9 @@ public class QuestMenu implements Menu {
             Statement stmt = conn.createStatement();
             stmt.execute( query );
 
-            System.out.println( "Item " + name + " has been created!\n" );
+            UI.printOutput( "Item " + name + " has been created!" );
         } catch ( SQLException e ) {
-            System.out.println( "Could not create item, " + name + "\n" );
-            e.printStackTrace();
+            UI.printOutput( "Could not create item, " + name );
             name = ""; // make empty string for error checking on receiving end of this method
         }
 
@@ -294,66 +249,34 @@ public class QuestMenu implements Menu {
 
     }
 
-    private void printMenuTitle() {
-        System.out.println( "\n-------------------------------------------------------" );
-        System.out.println( "Quest Menu" );
-        System.out.println( "-------------------------------------------------------" );
-    }
-
-    private void printOptions () {
-        String optionsString = "Available options:\n";
-        String optionFormat = "\t%d: %s\n";
-
-        for ( int i = 0; i < options.size(); i++ ) {
-            optionsString += String.format( optionFormat, (i+1), options.get( i ) );
-        }
-
-        optionsString += "-------------------------------------------------------"; // 50 chars;
-
-        System.out.println( optionsString );
-
-        System.out.print( "Please enter the number of the desired option here: " );
-    }
-
     public void enter() {
-        printMenuTitle();
+        UI.clearScreen();
+        UI.printMenuTitle( "Quest Menu" );
 
         String option = "";
         int input = -1;
 
         do {
 
-            printOptions();
+            UI.printOptions( options );
+            input = UI.promptInt( sc, "Select an option: ",
+                                  1, options.size() );
+            option = options.get( input - 1 );
 
-            try {
-                input = sc.nextInt();
-
-                if ( input <= 0 || input > options.size() ) {
-                    option = "";
-                } else {
-                    option = options.get( input - 1 );
-                }
-
-                // swallow the next line, as it would auto complete on entering newItem()
-                // ref: http://stackoverflow.com/questions/7877529/java-string-scanner-input-does-not-wait-for-info-moves-directly-to-next-stateme
-                sc.nextLine();
-
-                switch ( option ) {
-                    case QUEST_LIST:
-                        listQuests();
-                        break;
-                    case QUEST_NEW:
-                        newQuest();
-                        break;
-                    case EXIT:
-                        System.out.println( "\nGoing back...\n" );
-                        break;
-                    default:
-                        System.out.println( "\nInvalid input...\n" );
-                }
-            } catch ( InputMismatchException e ) {
-                System.out.println( "\nInvalid input...\n" );
-                continue;
+            switch ( option ) {
+                case QUEST_LIST:
+                    listQuests();
+                    UI.printMenuTitle( "Quest Menu" );
+                    break;
+                case QUEST_NEW:
+                    newQuest();
+                    UI.printMenuTitle( "Quest Menu" );
+                    break;
+                case EXIT:
+                    UI.printOutput( "Going back..." );
+                    break;
+                default:
+                    UI.printOutput( "Invalid input..." );
             }
 
         } while ( !option.equals( EXIT ) );
